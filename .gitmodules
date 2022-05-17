@@ -4,3 +4,6 @@
 [submodule "src/fastapi"]
 	path = src/fastapi
 	url = https://github.com/Azure-Samples/opencensus-with-fastapi-and-azure-monitor.git
+[submodule "src/serverless-web-application"]
+	path = src/serverless-web-application
+	url = https://github.com/Azure-Samples/serverless-web-application.git

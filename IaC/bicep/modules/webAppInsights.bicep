@@ -1,16 +1,13 @@
-param project string
 @allowed([
   'dev'
   'stg'
   'prod'
 ])
 param env string
+param project string
 param location string
 param resourceGroup_id string
-param linuxFxVersion string = 'PYTHON|3.9'
 param appServicePlan object
-@secure()
-param appinsights object
 
 resource webapp 'Microsoft.Web/sites@2020-06-01' = {
   name: '${project}-webapp-${env}-${resourceGroup_id}'
@@ -18,10 +15,10 @@ resource webapp 'Microsoft.Web/sites@2020-06-01' = {
   kind: 'app,linux'
   properties: {
     httpsOnly: true
-    serverFarmId: appServicePlan.id
+    serverFarmId: appServicePlan.serverFarmId
     clientAffinityEnabled: false
     siteConfig: {
-      linuxFxVersion: linuxFxVersion
+      linuxFxVersion: 'PYTHON|3.9'
       minTlsVersion: '1.2'
       ftpsState: 'FtpsOnly'
       appSettings: [
@@ -50,4 +47,18 @@ resource webapp 'Microsoft.Web/sites@2020-06-01' = {
   }
 }
 
+resource appinsights 'Microsoft.Insights/components@2020-02-02-preview' = {
+  name: '${project}-appinsght-${env}-${resourceGroup_id}'
+  location: location
+  tags: {
+    DisplayName: 'Application Insights ${env}'
+    Environment: env
+  }
+  kind: 'other'
+  properties: {
+    Application_Type: 'other'
+  }
+}
+
+output appinsights_name string = appinsights.name
 output webapp_name string = webapp.name

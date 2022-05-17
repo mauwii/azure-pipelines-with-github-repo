@@ -7,3 +7,6 @@
 [submodule "src/serverless-web-application"]
 	path = src/serverless-web-application
 	url = https://github.com/Azure-Samples/serverless-web-application.git
+[submodule "src/azure-quickstart-templates"]
+	path = src/azure-quickstart-templates
+	url = https://github.com/Azure/azure-quickstart-templates.git

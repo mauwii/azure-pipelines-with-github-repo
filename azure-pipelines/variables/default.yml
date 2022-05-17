@@ -18,3 +18,6 @@ variables:
     value: 'false'
   - name: mkdocsSiteDir
     value: 'site'
+  - name: resourceGroupName
+    value: 'azure-pipelines-with-github-repo'
+    readonly: true

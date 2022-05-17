@@ -1,0 +1,38 @@
+parameters:
+  - name: pythonVersion
+    type: string
+  - name: resourceGroupName
+    type: string
+  - name: azureSubscription
+    type: string
+  - name: publishArtifact
+    type: boolean
+    default: False
+
+jobs:
+  - job: buildWebApp
+    displayName: 'build WebApp'
+    steps:
+      - template: steps/checkout_submodules.yml
+        parameters:
+          submodule: 'src/webapp'
+          checkoutSelf: true
+
+      - task: UsePythonVersion@0
+        displayName: 'Use Python version ${{ parameters.pythonVersion }}'
+        inputs:
+          addToPath: true
+          versionSpec: '${{ parameters.pythonVersion }}'
+          architecture: 'x64'
+
+      - template: 'steps/python_django_export_projectroot.yml'
+
+      - template: 'steps/get_appinsights_con_str.yml'
+        parameters:
+          resourceGroupName: '${{ parameters.resourceGroupName }}'
+          azureSubscription: '${{ parameters.azureSubscription }}'
+
+      - template: steps/build_webapp.yml
+        parameters:
+          pythonVersion: '${{ parameters.pythonVersion }}'
+          publishArtifact: ${{ parameters.publishArtifact }}

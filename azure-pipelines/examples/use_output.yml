@@ -1,0 +1,41 @@
+## https://docs.microsoft.com/en-us/azure/devops/pipelines/process/expressions?view=azure-devops#stage-depending-on-job-output
+
+stages:
+  - stage: build
+    jobs:
+      - deployment: build_job
+        environment:
+          name: Production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: PowerShell@2
+                  name: setRunTests
+                  inputs:
+                    targetType: inline
+                    pwsh: true
+                    script: |
+                      $runTests = "true"
+                      echo "setting runTests: $runTests"
+                      echo "##vso[task.setvariable variable=runTests;isOutput=true]$runTests"
+
+  - stage: test
+    dependsOn:
+      - 'build'
+    jobs:
+      - job: run_tests
+        condition: eq(stageDependencies.build.build_job.outputs['build_job.setRunTests.runTests'], 'True')
+        steps:
+          # https://docs.microsoft.com/en-us/azure/devops/azure-pipelines/process/conditions?view=azure-devops&tabs=yaml#use-the-pipeline-variable-created-from-a-step-in-a-condition-in-a-subsequent-step
+          # This step creates a new pipeline variable: doThing. This variable will be available to subsequent steps.
+          - bash: |
+              echo "##vso[task.setvariable variable=doThing]Yes"
+            displayName: Step 1
+
+          # This step is able to use doThing, so it uses it in its condition
+          - script: |
+              # You can access the variable from Step 1 as an environment variable.
+              echo "Value of doThing (as DOTHING env var): $DOTHING."
+            displayName: Step 2
+            condition: and(succeeded(), eq(variables['doThing'], 'Yes')) # or and(succeeded(), eq(variables.doThing, 'Yes'))

@@ -1,0 +1,28 @@
+parameters:
+  - name: pythonVersion
+    type: string
+    default: $(pythonVersion)
+  - name: mkdocsSiteDir
+    type: string
+    default: 'site'
+  - name: mkdocsDeploy
+    type: boolean
+    default: False
+
+jobs:
+  - job: mkdocs
+    displayName: MkDocs-Material
+    steps:
+      - template: steps/checkout_submodules.yml
+        parameters:
+          submodule: 'src/mkdocs-material'
+          checkoutSelf: True
+
+      - template: steps/build_mkdocs.yml
+        parameters:
+          pythonVersion: '${{ parameters.pythonVersion }}'
+          mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
+
+      - ${{ if eq(parameters.mkdocsDeploy, 'True') }}:
+          - script: mkdocs gh-deploy --force --site-dir '${{ parameters.mkdocsSiteDir }}' --verbose
+            displayName: deploy to GitHub-Pages

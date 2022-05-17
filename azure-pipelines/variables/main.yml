@@ -1,0 +1,13 @@
+parameters:
+  - name: publishArtifact
+    displayName: 'Publish build Artifacts?'
+    type: boolean
+    default: true
+
+variables:
+  - name: environmentName
+    value: 'development'
+  - name: mkdocsDeploy
+    value: 'True'
+  - name: mkdocsSiteDir
+    value: 'site'

@@ -1,0 +1,32 @@
+parameters:
+  - name: pythonVersion
+    type: string
+    default: '3.9'
+  - name: publishArtifact
+    type: boolean
+    default: False
+
+steps:
+  - task: UsePythonVersion@0
+    displayName: 'Use Python ${{ parameters.pythonVersion }}'
+    inputs:
+      versionSpec: '${{ parameters.pythonVersion }}'
+      addToPath: true
+      architecture: 'x64'
+
+  - script: |
+      python3 -m venv antenv
+      source antenv/bin/activate
+      pip install --upgrade pip wheel setuptools
+      # pip install setup
+      pip install -r requirements.txt
+    workingDirectory: $(projectRoot)
+    displayName: 'Install Requirements'
+
+  - task: PublishPipelineArtifact@1
+    enabled: ${{ parameters.publishArtifact }}
+    displayName: Publish Pipeline Artifact
+    inputs:
+      targetPath: $(projectRoot)
+      artifactName: WebApp
+      publishLocation: pipeline

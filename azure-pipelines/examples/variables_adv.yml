@@ -1,0 +1,37 @@
+variables:
+  - group: 'my-var-group' # variable group
+  - name: 'devopsAccount' # new variable defined in YAML
+    value: 'contoso'
+  - name: 'projectName' # new variable defined in YAML
+    value: 'contosoads'
+
+jobs:
+  - job:
+    steps:
+      - task: PowerShell@2
+        inputs:
+          targetType: 'inline'
+          script: |
+            # Encode the Personal Access Token (PAT)
+            # $env:USER is a normal variable in the variable group
+            # $env:MY_MAPPED_TOKEN is a mapped secret variable
+            $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $env:USER,$env:MY_MAPPED_TOKEN)))
+            # Get a list of releases
+            $uri = "https://vsrm.dev.azure.com/$(devopsAccount)/$(projectName)/_apis/release/releases?api-version=5.1"
+            # Invoke the REST call
+            $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
+            # Output releases in JSON
+            Write-Host $result.value
+        env:
+          MY_MAPPED_TOKEN: $(token) # Maps the secret variable $(token) from my-var-group
+
+  - job:
+    variables:
+      staticVar: 'my value' # static variable
+      compileVar: ${{ variables.staticVar }} # compile time expression
+      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')] # runtime expression
+    steps:
+      - script: |
+          echo ${{variables.staticVar}} # outputs my value
+          echo $(compileVar) # outputs my value
+          echo $(isMain) # outputs True

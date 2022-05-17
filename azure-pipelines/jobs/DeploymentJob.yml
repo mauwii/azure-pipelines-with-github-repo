@@ -1,0 +1,46 @@
+parameters:
+  - name: environmentName
+    type: string
+    default: '${{ variables.environmentName }}'
+  - name: pythonVersion
+    type: string
+    default: '${{ variables.pythonVersion }}'
+  - name: resourceGroupName
+    type: string
+  - name: azureSubscription
+    type: string
+jobs:
+  - deployment: DeploymentJob
+    environment: '${{ parameters.environmentName }}'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - task: UsePythonVersion@0
+              displayName: 'use python ${{ parameters.pythonVersion }}'
+              inputs:
+                versionSpec: '${{ parameters.pythonVersion }}'
+                addToPath: true
+                architecture: x64
+
+            - template: steps/deploy_webapp.yml
+              parameters:
+                resourceGroupName: '${{ parameters.resourceGroupName }}'
+                azureSubscription: '${{ parameters.azureSubscription }}'
+            # - task: UsePythonVersion@0
+            #   inputs:
+            #     versionSpec: '${{ parameters.pythonVersion }}'
+            #   displayName: 'Use Python version ${{ parameters.pythonVersion }}'
+
+            # - task: AzureWebApp@1
+            #   displayName: 'Deploy Azure Web App : {{ webAppName }}'
+            #   inputs:
+            #     appType: webAppLinux
+            #     azureSubscription: $(azureServiceConnectionId)
+            #     appName: $(webAppName)
+            #     package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+
+            #     # The following parameter is specific to the Flask example code. You may
+            #     # or may not need a startup command for your app.
+
+            #     startUpCommand: 'gunicorn --bind=0.0.0.0 --workers=4 startup:app'

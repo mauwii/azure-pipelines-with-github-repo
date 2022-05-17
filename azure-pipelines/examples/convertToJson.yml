@@ -1,0 +1,24 @@
+parameters:
+  - name: listOfValues
+    type: object
+    default:
+      this_is:
+        a_complex: object
+        with:
+          - one
+          - two
+
+steps:
+  - script: |
+      json=$(echo '${{ convertToJson(parameters.listOfValues) }}')
+
+# Example output
+# {
+#   this_is: {
+#     a_complex: object,
+#     with: [
+#       one,
+#       two
+#     ]
+#   }
+# }

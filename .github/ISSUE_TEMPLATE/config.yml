@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Support
+    url: https://support.github.com/
+    about: For help in case of problems with your GitHub Account
+  - name: DevOps - Status and Support
+    url: https://status.dev.azure.com
+    about: Status of Azure DevOps
+  - name: Azure Support
+    url: https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/overview
+    about: If you have problems regarding Azure Resources

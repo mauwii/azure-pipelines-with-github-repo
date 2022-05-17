@@ -1,0 +1,13 @@
+steps:
+  - task: Bash@3
+    displayName: 'Run Django Tests'
+    inputs:
+      targetType: inline
+      script: |
+        source antenv/bin/activate
+        [[ -n $SECRET_KEY ]] && echo "SECRET_KEY is not empty" || export SECRET_KEY=$(secretKey)
+        python3 manage.py test
+      workingDirectory: '$(projectRoot)'
+    env:
+      SECRET_KEY: $(secretKey)
+      APPLICATIONINSIGHTS_CONNECTION_STRING: $(connectionString)

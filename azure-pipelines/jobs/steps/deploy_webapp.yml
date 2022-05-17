@@ -1,0 +1,24 @@
+parameters:
+  - name: resourceGroupName
+    type: string
+  - name: azureSubscription
+    type: string
+
+steps:
+  # Download an artifact named 'WebApp' to 'bin' in $(Build.SourcesDirectory)
+  - task: DownloadPipelineArtifact@2
+    displayName: Download Pipeline Artifact
+    name: downloadPipelineArtifact
+    inputs:
+      artifactName: WebApp
+      path: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)/WebApp'
+
+  - task: AzureWebApp@1
+    displayName: Deploy Azure Web App
+    inputs:
+      azureSubscription: '${{ parameters.azureSubscription }}'
+      appType: webAppLinux
+      appName: $(webAppName)
+      package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)/WebApp'
+      runtimeStack: PYTHON|3.9
+      startUpCommand: python3.9 manage.py migrate

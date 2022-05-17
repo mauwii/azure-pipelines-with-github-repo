@@ -1,0 +1,46 @@
+{
+  "files.associations": {
+    "**/azure-pipelines/**/*.yml": "azure-pipelines",
+    "azure-pipelines.yml": "azure-pipelines"
+  },
+  "editor.tabCompletion": "off",
+  "editor.suggest.insertMode": "replace",
+  "search.followSymlinks": false,
+  "search.exclude": {
+    "src/mkdocs-material/material": true,
+    "**/node_modules": true,
+    "**/package-lock.json": true
+  },
+  "typescript.tsdk": "src/mkdocs-material/node_modules/typescript/lib",
+  // Settings related to Azure Pipelines
+  "azure-pipelines.configure": true,
+  "[azure-pipelines]": {
+    "gitlens.codeLens.scopes": [
+      "document"
+    ],
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.autoIndent": "full"
+  },
+  // Settings related to Markdown
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  "markdown.extension.syntax.plainTheme": true,
+  "markdown.extension.completion.root": "${workspaceFolder}",
+  "markdown.styles": [
+    "https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+  ],
+  // Settings related to YAML
+  "redhat.telemetry.enabled": false,
+  "yaml.format.singleQuote": true,
+  "yaml.schemas": {
+    "src/mkdocs-material/docs/schema.json": "/mkdocs.yml"
+  },
+  "sonarlint.disableTelemetry": true,
+}

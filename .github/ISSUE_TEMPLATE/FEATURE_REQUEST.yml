@@ -1,0 +1,42 @@
+name: Feature Request
+description: Request a new feature
+title: "[feature-request]: "
+labels: ["feature-request"]
+assignees:
+  - mauwii
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the feature you want to request
+      options:
+      - label: I have searched the existing issues
+        required: true
+  - type: input
+    id: jiraissue
+    attributes:
+      label: Jira Issue
+      description: If there is already a open issue in Jira, please enter the issue's ID surrounded in Brackets [], otherwise leave empty.
+      placeholder: "ex. [DG-42]"
+    validations:
+      required: false
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: whatisexpected
+    attributes:
+      label: What should this feature add?
+      description: Please explain the functionality this feature should add
+      placeholder: This feature should add ...
+    validations:
+      required: true

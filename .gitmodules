@@ -1,0 +1,6 @@
+[submodule "src/mkdocs-material"]
+	path = src/mkdocs-material
+	url = https://github.com/squidfunk/mkdocs-material
+[submodule "src/fastapi"]
+	path = src/fastapi
+	url = https://github.com/Azure-Samples/opencensus-with-fastapi-and-azure-monitor.git

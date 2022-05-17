@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "ms-azure-devops.azure-pipelines",
+    "redhat.vscode-yaml",
+    "DavidAnson.vscode-markdownlint",
+    "yzhang.markdown-all-in-one",
+    "bierner.github-markdown-preview"
+  ]
+}

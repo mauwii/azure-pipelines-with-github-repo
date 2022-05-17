@@ -1,0 +1,30 @@
+parameters:
+  - name: environmentName
+    type: string
+  - name: resourceGroupName
+    type: string
+  - name: azureSubscription
+    type: string
+
+jobs:
+  - deployment: DeployDjango
+    dependsOn: buildWebApp
+    condition: and(succeeded(), eq(variables.isMain, 'True'))
+    displayName: Deploy Django to WebApp
+    environment: ${{ parameters.environmentName }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - checkout: self
+              persistCredentials: true
+              submodules: false
+
+            - template: steps/get_webapp_name.yml
+              parameters:
+                resourceGroupName: ${{ parameters.resourceGroupName }}
+                azureSubscription: ${{ parameters.azureSubscription }}
+            - template: steps/deploy_webapp.yml
+              parameters:
+                resourceGroupName: ${{ parameters.resourceGroupName }}
+                azureSubscription: ${{ parameters.azureSubscription }}

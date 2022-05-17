@@ -24,6 +24,7 @@ jobs:
               parameters:
                 resourceGroupName: ${{ parameters.resourceGroupName }}
                 azureSubscription: ${{ parameters.azureSubscription }}
+
             - template: steps/deploy_webapp.yml
               parameters:
                 resourceGroupName: ${{ parameters.resourceGroupName }}

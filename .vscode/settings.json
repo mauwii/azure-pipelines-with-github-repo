@@ -14,6 +14,7 @@
   "typescript.tsdk": "src/mkdocs-material/node_modules/typescript/lib",
   // Settings related to Azure Pipelines
   "azure-pipelines.configure": true,
+  "azure-pipelines.customSchemaFile": ".vscode/my-schema.json",
   "[azure-pipelines]": {
     "gitlens.codeLens.scopes": [
       "document"

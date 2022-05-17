@@ -5,11 +5,14 @@ param project string
   'prod'
 ])
 param env string
-param location string = resourceGroup().location
+param location string
 param deployment_id string
 param linuxFxVersion string = 'PYTHON|3.9'
+param appServicePlan object
+@secure()
+param appinsights object
 
-resource webApp 'Microsoft.Web/sites@2020-06-01' = {
+resource webapp 'Microsoft.Web/sites@2020-06-01' = {
   name: '${project}-webapp-${env}-${deployment_id}'
   location: location
   kind: 'app,linux'
@@ -28,11 +31,11 @@ resource webApp 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: appInsights.properties.InstrumentationKey
+          value: appinsights.properties.InstrumentationKey
         }
         {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-          value: appInsights.properties.ConnectionString
+          value: appinsights.properties.ConnectionString
         }
         {
           name: 'XDT_MicrosoftApplicationInsights_Mode'
@@ -42,11 +45,9 @@ resource webApp 'Microsoft.Web/sites@2020-06-01' = {
           name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
           value: '~2'
         }
-        {
-          name: 'SECRET_KEY'
-          value: secretKey
-        }
       ]
     }
   }
 }
+
+output webapp_name string = webapp.name

@@ -1,0 +1,42 @@
+parameters:
+  - name: pythonVersion
+    type: string
+    default: $(pythonVersion)
+  - name: resourceGroupName
+    type: string
+  - name: azureSubscription
+    type: string
+  - name: publishArtifact
+    type: boolean
+    default: False
+  - name: stageVariables
+    type: object
+
+variables:
+  - template: variables/default.yml
+  - ${{ if eq(variables.isMain, 'True') }}:
+      - template: variables/main.yml
+  - ${{ if eq(variables.isStable, 'True') }}:
+      - template: variables/stable.yml
+
+pool:
+  vmImage: $(vmImageName)
+
+stages:
+  - stage: WebApp
+    ${{if ne(parameters.stagevariables, '') }}:
+      variables:
+        ${{ parameters['stageVariables.key'] }}: ${{ parameters['stageVariables.value'] }}
+    jobs:
+      - template: jobs/build_webapp.yml
+        parameters:
+          pythonVersion: ${{ parameters.pythonVersion}}
+          resourceGroupName: ${{ parameters.resourceGroupName}}
+          azureSubscription: ${{ parameters.azureSubscription}}
+          publishArtifact: ${{ parameters.publishArtifact}}
+
+      - template: jobs/deploy_webapp.yml
+        parameters:
+          environmentName: ${{ parameters.environmentName }}
+          resourceGroupName: ${{ parameters.resourceGroupName }}
+          azureSubscription: ${{ parameters.azureSubscription }}

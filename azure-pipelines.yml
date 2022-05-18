@@ -17,6 +17,6 @@ variables:
 stages:
   - stage:
     jobs:
-      - template: jobs/bicep_jobs.yml
+      - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
           workingDirectory: '$(System.DefaultWorkingDirectory)/IaC/bicep'

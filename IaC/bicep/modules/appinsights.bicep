@@ -7,7 +7,8 @@ param project string
 ])
 param env string
 param location string
-param resourceGroup_id string
+
+var resourceGroup_id = uniqueString(resourceGroup().id)
 
 resource appinsights 'Microsoft.Insights/components@2020-02-02-preview' = {
   name: '${project}-appi-${env}-${resourceGroup_id}'

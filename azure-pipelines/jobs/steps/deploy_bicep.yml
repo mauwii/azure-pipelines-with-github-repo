@@ -24,5 +24,3 @@ steps:
           --name $(Build.BuildNumber) \
           --resource-group $(ResourceGroupName) \
           --template-file main.bicep ${{ parameters.parameters }}
-    env:
-      secretKey: $(secretKey)

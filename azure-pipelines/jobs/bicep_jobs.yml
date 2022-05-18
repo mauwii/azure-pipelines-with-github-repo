@@ -11,7 +11,7 @@ jobs:
     displayName: Lint Bicep File
     continueOnError: false
     steps:
-      - script: az bicep build --file main.bicep ${{ parameters.parameters }}
+      - script: az bicep build --file main.bicep
         displayName: Run Bicep Linter
         name: LintBicepCode
         workingDirectory: ${{ parameters.workingDirectory }}

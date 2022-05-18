@@ -1,16 +1,31 @@
+@description('The Project`s Name will be the first Part of every Resource`s Name')
 param project string
+
+@description('For every choosen environment a WebApp and Application insights will be deployed')
 @allowed([
   'dev'
   'stg'
   'prod'
 ])
 param env string
+
+@description('The location where the Resource(s) will be deployed')
 param location string
-param resourceGroup_id string
-param linuxFxVersion string = 'PYTHON|3.9'
+
+@description('An Array of Name/Value Pairs which defines your Applicationsettings')
+param appSettings array
+
+@description('It is used to make the resource names unique but still predictable')
+param resourceGroup_id string = uniqueString(resourceGroup().id)
+
+@description('The Runtime you want to use in your WebApp')
+@allowed([
+  'PYTHON|3.9'
+])
+param linuxFxVersion string
+
+@description('The AppServicePlan which should be used by the webapp')
 param appServicePlan object
-@secure()
-param appinsights object
 
 resource webapp 'Microsoft.Web/sites@2020-06-01' = {
   name: '${project}-webapp-${env}-${resourceGroup_id}'
@@ -18,34 +33,13 @@ resource webapp 'Microsoft.Web/sites@2020-06-01' = {
   kind: 'app,linux'
   properties: {
     httpsOnly: true
-    serverFarmId: appServicePlan.id
+    serverFarmId: appServicePlan.serverFarmId
     clientAffinityEnabled: false
     siteConfig: {
       linuxFxVersion: linuxFxVersion
       minTlsVersion: '1.2'
       ftpsState: 'FtpsOnly'
-      appSettings: [
-        {
-          name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
-          value: 'false'
-        }
-        {
-          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: appinsights.properties.InstrumentationKey
-        }
-        {
-          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-          value: appinsights.properties.ConnectionString
-        }
-        {
-          name: 'XDT_MicrosoftApplicationInsights_Mode'
-          value: 'default'
-        }
-        {
-          name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
-          value: '~2'
-        }
-      ]
+      appSettings: appSettings
     }
   }
 }

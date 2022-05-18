@@ -12,7 +12,7 @@ variables:
   - name: location
     value: 'westeurope'
   - name: azureSubscription
-    value: 'ARM-mauwii'
+    value: 'mauwii'
 
 stages:
   - stage:

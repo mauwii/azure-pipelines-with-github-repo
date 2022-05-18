@@ -1,16 +1,10 @@
-// Parameters
 @description('The projects name will be used as the first Part of the resource name and added as a resource tag')
 param project string
 
-@description('The environment where you want to use this webapp')
-@allowed([
-  'dev'
-  'stg'
-  'prod'
-])
-param env string
+@description('The resource name')
+param webAppName string
 
-@description('The location where the Resource(s) will be deployed')
+@description('The location where the Resource will be deployed')
 param location string
 
 @description('An Array of Name/Value Pairs which defines your Applicationsettings')
@@ -22,15 +16,8 @@ param appSettings array
 ])
 param linuxFxVersion string
 
-@description('The AppServicePlan which should be used by the webapp')
-param appServicePlanName string
-
-// Variables
-var resourceGroup_id = string(uniqueString(resourceGroup().id))
-var subscriptionID = string(subscription().id)
-var groupName = string(resourceGroup().name)
-var serverFarmId = string('/subscriptions/${subscriptionID}/resourceGroups/${groupName}/providers/Microsoft.Web/serverfarms/${appServicePlanName}')
-var webAppName = string('${project}-webapp-${env}-${resourceGroup_id}')
+@description('The id of the AppServicePlan which should be used by the webapp')
+param serverFarmId string
 
 resource webapp 'Microsoft.Web/sites@2020-06-01' = {
   name: webAppName

@@ -20,4 +20,4 @@ stages:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
           workingDirectory: '$(System.DefaultWorkingDirectory)/IaC/bicep'
-          parameters: '--parameters location="westeurope" project="apwgr" workerCount=1 workerSizeId=0'
+          parameters: --parameters location=westeurope project=apwgr workerCount=1 workerSizeId=0 env=dev

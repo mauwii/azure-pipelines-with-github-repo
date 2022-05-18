@@ -7,6 +7,10 @@ parameters:
     default: ''
 
 jobs:
+  - job:
+    steps:
+      - script: env
+
   - job: lintBicep
     displayName: Lint Bicep File
     continueOnError: false

@@ -4,11 +4,8 @@ param location string
 @description('Tags to add to the resources')
 param tags object = {}
 
-@description('Application Insights resource name')
-param applicationInsightsName string
-
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: applicationInsightsName
+  name: 'applicationInsights-Module'
   location: location
   tags: tags
   kind: 'web'
@@ -27,3 +24,5 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
 }
 
 output applicationInsightsId string = applicationInsights.id
+output InstrumentationKey string = applicationInsights.properties.InstrumentationKey
+output ConnectionString string = applicationInsights.properties.ConnectionString

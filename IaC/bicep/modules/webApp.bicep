@@ -1,9 +1,6 @@
 @description('The projects name will be used as the first Part of the resource name and added as a resource tag')
 param project string
 
-@description('The resource name')
-param webAppName string
-
 @description('The location where the Resource will be deployed')
 param location string
 
@@ -20,7 +17,7 @@ param linuxFxVersion string
 param serverFarmId string
 
 resource webapp 'Microsoft.Web/sites@2020-06-01' = {
-  name: webAppName
+  name: 'webApp-Module'
   location: location
   kind: 'app,linux'
   tags: {

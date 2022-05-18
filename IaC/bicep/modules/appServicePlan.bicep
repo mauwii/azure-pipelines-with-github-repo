@@ -4,19 +4,10 @@ param project string
 @description('Resource Location.')
 param location string
 
-@description('Service tier of the resource SKU.')
-@allowed([
-  'Free'
-  'Basic'
-])
-param skuTier string
-
-@description('Name of the resource SKU.')
-@allowed([
-  'F1'
-  'B1'
-])
-param skuName string
+param appServicePlanSku object = {
+  name: 'F1'
+  tier: 'Free'
+}
 
 @description('Scaling worker size ID.')
 param workerSizeId int
@@ -35,10 +26,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   tags: {
     DisplayName: 'App Service Plan'
   }
-  sku: {
-    tier: skuTier
-    name: skuName
-  }
+  sku: appServicePlanSku
   kind: 'linux'
   properties: {
     targetWorkerSizeId: workerSizeId

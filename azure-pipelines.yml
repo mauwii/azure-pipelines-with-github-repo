@@ -1,99 +1,17 @@
-trigger:
-  batch: true
-  branches:
-    include:
-      - refs/heads/stable
-      - refs/heads/main
-      - feature/*
-      - issue/*
-      - update/*
-    exclude:
-      - feature/experimental/*
-
-pr:
-  branches:
-    include:
-      - stable
-      - main
+pool:
+  vmImage: ubuntu-latest
 
 variables:
-  - name: isMain
-    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
-    readonly: true
-  - name: isStable
-    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
-    readonly: true
-  - name: isPullRequest
-    value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
-    readonly: true
-  - name: sourceBranchName
-    value: $[ variables['Build.SourceBranchName'] ]
-    readonly: true
-  - template: azure-pipelines/variables/default.yml
-  - ${{ if eq(variables.isMain, 'True') }}:
-      - template: azure-pipelines/variables/main.yml
-  - ${{ if eq(variables.isStable, 'True') }}:
-      - template: azure-pipelines/variables/stable.yml
-
-pool:
-  vmImage: $(vmImageName)
+  - name: resourceGroupName
+    value: 'azure-pipelines-with-github-repo'
+  - name: location
+    value: 'westeurope'
+  - name: azureSubscription
+    value: 'ARM-mauwii'
 
 stages:
-  - stage: Bicep
-    dependsOn:
-    variables:
-      - group: django-dev
-      - group: django-superuser
+  - stage:
     jobs:
-      - template: azure-pipelines/jobs/bicep_jobs.yml
-
-  - stage: Testing
-    dependsOn: Bicep
-    condition: succeeded()
-    displayName: Run runTests
-    variables:
-      - group: django-dev
-    jobs:
-      - job: runTests
-        displayName: run python tests
-        steps:
-          - template: azure-pipelines/jobs/steps/checkout_submodules.yml
-            parameters:
-              submodule: 'src/webapp'
-          - template: azure-pipelines/jobs/steps/python_django_test.yml
-            parameters:
-              pythonVersions:
-                - $(pythonVersion)
-
-  - stage: WebApp
-    dependsOn: Testing
-    condition: succeeded()
-    variables:
-      - group: django-dev
-      - group: django-superuser
-    jobs:
-      - template: azure-pipelines/jobs/build_webapp.yml
+      - template: jobs/bicep_jobs.yml
         parameters:
-          pythonVersion: $(pythonVersion)
-          resourceGroupName: $(resourceGroupName)
-          azureSubscription: $(azureSubscription)
-          ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/stable') }}:
-            publishArtifact: true
-      - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/stable') }}:
-          - template: azure-pipelines/jobs/deploy_webapp.yml
-            parameters:
-              environmentName: $(environmentName)
-              resourceGroupName: $(resourceGroupName)
-              azureSubscription: $(azureSubscription)
-
-  - stage: MkDocs
-    displayName: MkDocs-Material
-    dependsOn: WebApp
-    condition: succeeded()
-    jobs:
-      - template: azure-pipelines/jobs/mkdocs-material.yml
-        parameters:
-          pythonVersion: $(pythonVersion)
-          mkdocsSiteDir: $(mkdocsSiteDir)
-          ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
-            mkdocsDeploy: True
+          workingDirectory: IaC/bicep

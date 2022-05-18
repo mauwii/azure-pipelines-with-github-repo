@@ -15,9 +15,6 @@ param location string
 @description('An Array of Name/Value Pairs which defines your Applicationsettings')
 param appSettings array
 
-@description('It is used to make the resource names unique but still predictable')
-param resourceGroup_id string = uniqueString(resourceGroup().id)
-
 @description('The Runtime you want to use in your WebApp')
 @allowed([
   'PYTHON|3.9'
@@ -26,6 +23,9 @@ param linuxFxVersion string
 
 @description('The AppServicePlan which should be used by the webapp')
 param appServicePlan object
+
+@description('It is used to make the resource names unique but still predictable')
+var resourceGroup_id = uniqueString(resourceGroup().id)
 
 resource webapp 'Microsoft.Web/sites@2020-06-01' = {
   name: '${project}-webapp-${env}-${resourceGroup_id}'

@@ -1,36 +1,46 @@
+@description('The Projects name will be the first Part of the resource name')
 param project string
-@allowed([
-  'dev'
-  'stg'
-  'prod'
-])
-param env string
-param location string = resourceGroup().location
-param deployment_id string
+
+@description('Resource Location.')
+param location string
+
+@description('Service tier of the resource SKU.')
 @allowed([
   'Free'
+  'Basic'
 ])
-param sku string = 'Free'
+param skuTier string
+
+@description('Name of the resource SKU.')
 @allowed([
   'F1'
+  'B1'
 ])
-param skuCode string = 'F1'
-param workerSize int = 0
+param skuName string
+
+@description('Scaling worker size ID.')
+param workerSizeId int
+
+@description('Scaling worker count.')
+param workerCount int
+
+@description('It is used to make the resource names unique but still predictable')
+var resourceGroup_id = uniqueString(resourceGroup().id)
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
-  name: '${project}-asp-${env}-${deployment_id}'
+  name: '${project}-asp-${resourceGroup_id}'
   location: location
   tags: {
     DisplayName: 'App Service Plan'
   }
   sku: {
-    tier: sku
-    name: skuCode
+    tier: skuTier
+    name: skuName
   }
   kind: 'linux'
   properties: {
-    targetWorkerSizeId: workerSize
-    targetWorkerCount: 1
+    targetWorkerSizeId: workerSizeId
+    targetWorkerCount: workerCount
     reserved: true
   }
 }

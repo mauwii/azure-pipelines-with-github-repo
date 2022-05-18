@@ -23,10 +23,10 @@ variables:
   - template: azure-pipelines/variables/default.yml
   - name: env
     value: dev
-  - ${{ if eq(variables.isMain, 'True') }}:
+  - ${{ if eq(variables['Build.SourceBranchName'], 'refs/heads/main') }}:
       - name: env
         value: stg
-  - ${{ if eq(variables.isStable, 'True') }}:
+  - ${{ if eq(variables.['Build.SourceBranchName'], 'refs/heads/stable') }}:
       - name: env
         value: prod
 

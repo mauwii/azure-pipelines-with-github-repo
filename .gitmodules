@@ -1,6 +1,6 @@
 [submodule "src/mkdocs-material"]
-    path = src/mkdocs-material
-    url = https://github.com/squidfunk/mkdocs-material
+	path = src/mkdocs-material
+	url = https://github.com/squidfunk/mkdocs-material
 [submodule "src/serverless-web-application"]
     path = src/serverless-web-application
     url = https://github.com/Azure-Samples/serverless-web-application.git

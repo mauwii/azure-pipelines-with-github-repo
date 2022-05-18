@@ -7,3 +7,6 @@
 [submodule "src/azure-quickstart-templates"]
     path = src/azure-quickstart-templates
     url = https://github.com/Azure/azure-quickstart-templates.git
+[submodule "src/opencensus-with-fastapi-and-azure-monitor"]
+	path = src/opencensus-with-fastapi-and-azure-monitor
+	url = https://github.com/Mauwii/opencensus-with-fastapi-and-azure-monitor.git

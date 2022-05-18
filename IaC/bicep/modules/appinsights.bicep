@@ -1,3 +1,4 @@
+@description('The Project`s Name will be the first Part of every Resource`s Name')
 param project string
 @allowed([
   'dev'
@@ -5,7 +6,7 @@ param project string
   'prod'
 ])
 param env string
-param location string = resourceGroup().location
+param location string
 param resourceGroup_id string
 
 resource appinsights 'Microsoft.Insights/components@2020-02-02-preview' = {

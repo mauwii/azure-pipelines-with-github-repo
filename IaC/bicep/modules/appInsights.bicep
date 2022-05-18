@@ -1,25 +1,29 @@
-@description('The Project`s Name will be the first Part of every Resource`s Name')
-param project string
-
-@description('The location where the Resource(s) will be deployed')
+@description('Azure region of the deployment')
 param location string
 
-@description('It is used to make the resource names unique but still predictable')
-var resourceGroup_id = uniqueString(resourceGroup().id)
+@description('Tags to add to the resources')
+param tags object = {}
 
-@description('Name of the Resource')
-var name = '${project}-appi-${resourceGroup_id}'
+@description('Application Insights resource name')
+param applicationInsightsName string
 
-resource appinsights 'Microsoft.Insights/components@2020-02-02-preview' = {
-  name: name
+resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: applicationInsightsName
   location: location
-  tags: {
-    Project: project
-  }
-  kind: 'other'
+  tags: tags
+  kind: 'web'
   properties: {
-    Application_Type: 'other'
+    Application_Type: 'web'
+    DisableIpMasking: false
+    DisableLocalAuth: false
+    Flow_Type: 'Bluefield'
+    ForceCustomerStorageForProfiler: false
+    ImmediatePurgeDataOn30Days: true
+    IngestionMode: 'ApplicationInsights'
+    publicNetworkAccessForIngestion: 'Enabled'
+    publicNetworkAccessForQuery: 'Disabled'
+    Request_Source: 'rest'
   }
 }
 
-output appinsights_name string = appinsights.name
+output applicationInsightsId string = applicationInsights.id

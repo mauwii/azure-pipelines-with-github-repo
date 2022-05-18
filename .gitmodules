@@ -1,12 +1,9 @@
 [submodule "src/mkdocs-material"]
-	path = src/mkdocs-material
-	url = https://github.com/squidfunk/mkdocs-material
-[submodule "src/fastapi"]
-	path = src/fastapi
-	url = https://github.com/Azure-Samples/opencensus-with-fastapi-and-azure-monitor.git
+    path = src/mkdocs-material
+    url = https://github.com/squidfunk/mkdocs-material
 [submodule "src/serverless-web-application"]
-	path = src/serverless-web-application
-	url = https://github.com/Azure-Samples/serverless-web-application.git
+    path = src/serverless-web-application
+    url = https://github.com/Azure-Samples/serverless-web-application.git
 [submodule "src/azure-quickstart-templates"]
-	path = src/azure-quickstart-templates
-	url = https://github.com/Azure/azure-quickstart-templates.git
+    path = src/azure-quickstart-templates
+    url = https://github.com/Azure/azure-quickstart-templates.git

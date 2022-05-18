@@ -26,7 +26,7 @@ variables:
   - ${{ if eq(variables['Build.SourceBranchName'], 'refs/heads/main') }}:
       - name: env
         value: stg
-  - ${{ if eq(variables.['Build.SourceBranchName'], 'refs/heads/stable') }}:
+  - ${{ if eq(variables['Build.SourceBranchName'], 'refs/heads/stable') }}:
       - name: env
         value: prod
 

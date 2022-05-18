@@ -1,7 +1,7 @@
-@description('The Project`s Name will be the first Part of every Resource`s Name')
+@description('The Projects name will be the first Part of the resource name')
 param project string
 
-@description('For every choosen environment a WebApp and Application insights will be deployed')
+@description('The environment where you want to use this webapp')
 @allowed([
   'dev'
   'stg'

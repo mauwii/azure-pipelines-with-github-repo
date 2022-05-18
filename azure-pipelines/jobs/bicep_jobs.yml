@@ -55,7 +55,7 @@ jobs:
       - lintBicep
       - validateBicepCode
       - previewAzureChanges
-    condition: and(succeeded(), eq(variables.isStable, 'True'))
+    condition: and(succeeded(), or(eq(variables.isStable, 'True'), eq(variables.isMain, 'True')))
     steps:
       - template: steps/deploy_bicep.yml
         parameters:

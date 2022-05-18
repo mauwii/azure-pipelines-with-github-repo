@@ -1,3 +1,8 @@
+parameters:
+  - name: workingDirectory
+    type: string
+    default: $(System.DefaultWorkingDirectory)
+
 steps:
   # - checkout: self
   #   submodules: no
@@ -11,6 +16,7 @@ steps:
       azureSubscription: $(azureSubscription)
       scriptType: bash
       scriptLocation: inlineScript
+      workingDirectory: ${{ parameters.workingDirectory }}
       inlineScript: |
         az deployment group create \
           --name $(Build.BuildNumber) \

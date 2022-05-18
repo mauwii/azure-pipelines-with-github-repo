@@ -1,24 +1,13 @@
-# pipeline to test if things would work
-trigger:
-  branches:
-    include:
-      - feature/experimental/*
-
-pr: none
-
 pool:
   vmImage: ubuntu-latest
 
 variables:
-  - group: django_gh
-  - name: pythonVersion
-    value: '3.9'
   - name: resourceGroupName
-    value: 'django_gh'
+    value: 'azure-pipelines-with-github-repo'
   - name: location
     value: 'westeurope'
   - name: azureSubscription
-    value: 'django_gh'
+    value: 'ARM-mauwii'
 
 stages:
   - stage:

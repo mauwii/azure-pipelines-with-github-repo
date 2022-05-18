@@ -1,3 +1,8 @@
+parameters:
+  - name: workingDirectory
+    type: string
+    default: $(System.DefaultWorkingDirectory)
+
 jobs:
   - job: lintBicep
     displayName: Lint Bicep File
@@ -6,6 +11,7 @@ jobs:
       - script: az bicep build --file main.bicep
         displayName: Run Bicep Linter
         name: LintBicepCode
+        workingDirectory: ${{ parameters.workingDirectory }}
 
   - job: validateBicepCode
     continueOnError: false
@@ -18,14 +24,11 @@ jobs:
           azureSubscription: $(azureSubscription)
           scriptType: bash
           scriptLocation: inlineScript
+          workingDirectory: ${{ parameters.workingDirectory }}
           inlineScript: |
             az deployment group validate \
               --resource-group $(ResourceGroupName) \
-              --template-file main.bicep \
-              --parameters \
-                secretKey=$(secretKey)
-        env:
-          secretKey: $(secretKey)
+              --template-file main.bicep
 
   - job: previewAzureChanges
     displayName: Preview Azure changes
@@ -38,14 +41,11 @@ jobs:
           azureSubscription: $(azureSubscription)
           scriptType: bash
           scriptLocation: inlineScript
+          workingDirectory: ${{ parameters.workingDirectory }}
           inlineScript: |
             az deployment group what-if \
               --resource-group $(ResourceGroupName) \
-              --template-file main.bicep \
-              --parameters \
-                secretKey=$(secretKey)
-        env:
-          secretKey: $(secretKey)
+              --template-file main.bicep
 
   - job: deployBicep
     dependsOn:
@@ -55,3 +55,5 @@ jobs:
     condition: and(succeeded(), eq(variables.isStable, 'True'))
     steps:
       - template: steps/deploy_bicep.yml
+        parameters:
+          workingDirectory: ${{ parameters.workingDirectory }}

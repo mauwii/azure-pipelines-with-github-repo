@@ -27,3 +27,8 @@ tab_width = 4
 
 [.editorconfig]
 insert_final_newline = false
+
+[*.azcli]
+indent_size = 4
+tab_width = 4
+indent_style = tab

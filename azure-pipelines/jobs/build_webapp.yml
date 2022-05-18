@@ -5,7 +5,13 @@ parameters:
     type: string
   - name: azureSubscription
     type: string
+  - name: getAppInsights
+    type: boolean
+    default: False
   - name: publishArtifact
+    type: boolean
+    default: False
+  - name: exportDjangoRoot
     type: boolean
     default: False
 
@@ -25,14 +31,17 @@ jobs:
           versionSpec: '${{ parameters.pythonVersion }}'
           architecture: 'x64'
 
-      - template: 'steps/python_django_export_projectroot.yml'
+      - ${{if eq(parameters.exportDjangoRoot, 'True') }}:
+          - template: 'steps/python_django_export_projectroot.yml'
 
-      - template: 'steps/get_appinsights_con_str.yml'
-        parameters:
-          resourceGroupName: '${{ parameters.resourceGroupName }}'
-          azureSubscription: '${{ parameters.azureSubscription }}'
+      - ${{if eq(parameters.getAppInsights, 'True') }}:
+          - template: 'steps/get_appinsights_con_str.yml'
+            parameters:
+              resourceGroupName: '${{ parameters.resourceGroupName }}'
+              azureSubscription: '${{ parameters.azureSubscription }}'
 
       - template: steps/build_webapp.yml
         parameters:
           pythonVersion: '${{ parameters.pythonVersion }}'
           publishArtifact: ${{ parameters.publishArtifact }}
+          sourceDir: $(projectRoot)

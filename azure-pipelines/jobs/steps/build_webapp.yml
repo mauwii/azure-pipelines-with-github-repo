@@ -5,6 +5,9 @@ parameters:
   - name: publishArtifact
     type: boolean
     default: False
+  - name: sourceDir
+    type: string
+    default: $(variables['Build.SourcesDirectory'])
 
 steps:
   - task: UsePythonVersion@0
@@ -27,6 +30,6 @@ steps:
     enabled: ${{ parameters.publishArtifact }}
     displayName: Publish Pipeline Artifact
     inputs:
-      targetPath: $(projectRoot)
+      targetPath: ${{ parameters.sourceDir }}
       artifactName: WebApp
       publishLocation: pipeline

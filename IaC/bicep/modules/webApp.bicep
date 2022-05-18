@@ -1,4 +1,5 @@
-@description('The Projects name will be the first Part of the resource name')
+// Parameters
+@description('The projects name will be used as the first Part of the resource name and added as a resource tag')
 param project string
 
 @description('The environment where you want to use this webapp')
@@ -22,18 +23,25 @@ param appSettings array
 param linuxFxVersion string
 
 @description('The AppServicePlan which should be used by the webapp')
-param appServicePlan object
+param appServicePlanName string
 
-@description('It is used to make the resource names unique but still predictable')
-var resourceGroup_id = uniqueString(resourceGroup().id)
+// Variables
+var resourceGroup_id = string(uniqueString(resourceGroup().id))
+var subscriptionID = string(subscription().id)
+var groupName = string(resourceGroup().name)
+var serverFarmId = string('/subscriptions/${subscriptionID}/resourceGroups/${groupName}/providers/Microsoft.Web/serverfarms/${appServicePlanName}')
+var webAppName = string('${project}-webapp-${env}-${resourceGroup_id}')
 
 resource webapp 'Microsoft.Web/sites@2020-06-01' = {
-  name: '${project}-webapp-${env}-${resourceGroup_id}'
+  name: webAppName
   location: location
   kind: 'app,linux'
+  tags: {
+    Project: project
+  }
   properties: {
     httpsOnly: true
-    serverFarmId: appServicePlan.serverFarmId
+    serverFarmId: serverFarmId
     clientAffinityEnabled: false
     siteConfig: {
       linuxFxVersion: linuxFxVersion
@@ -44,4 +52,4 @@ resource webapp 'Microsoft.Web/sites@2020-06-01' = {
   }
 }
 
-output webapp_name string = webapp.name
+output webappId string = webapp.id

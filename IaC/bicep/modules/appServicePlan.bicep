@@ -27,8 +27,10 @@ param workerCount int
 @description('It is used to make the resource names unique but still predictable')
 var resourceGroup_id = uniqueString(resourceGroup().id)
 
+var servicePlanName = '${project}-asp-${resourceGroup_id}'
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
-  name: '${project}-asp-${resourceGroup_id}'
+  name: servicePlanName
   location: location
   tags: {
     DisplayName: 'App Service Plan'

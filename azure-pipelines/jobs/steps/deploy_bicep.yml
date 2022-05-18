@@ -2,6 +2,8 @@ parameters:
   - name: workingDirectory
     type: string
     default: $(System.DefaultWorkingDirectory)
+  - name: parameters
+    type: string
 
 steps:
   # - checkout: self
@@ -21,7 +23,6 @@ steps:
         az deployment group create \
           --name $(Build.BuildNumber) \
           --resource-group $(ResourceGroupName) \
-          --template-file main.bicep \
-          --parameters secretKey=$(secretKey)
+          --template-file main.bicep ${{ parameters.parameters }}
     env:
       secretKey: $(secretKey)

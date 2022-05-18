@@ -2,13 +2,16 @@ parameters:
   - name: workingDirectory
     type: string
     default: $(System.DefaultWorkingDirectory)
+  - name: parameters
+    type: string
+    default: ''
 
 jobs:
   - job: lintBicep
     displayName: Lint Bicep File
     continueOnError: false
     steps:
-      - script: az bicep build --file main.bicep
+      - script: az bicep build --file main.bicep ${{ parameters.parameters }}
         displayName: Run Bicep Linter
         name: LintBicepCode
         workingDirectory: ${{ parameters.workingDirectory }}
@@ -28,7 +31,7 @@ jobs:
           inlineScript: |
             az deployment group validate \
               --resource-group $(ResourceGroupName) \
-              --template-file main.bicep
+              --template-file main.bicep ${{ parameters.parameters }}
 
   - job: previewAzureChanges
     displayName: Preview Azure changes
@@ -45,7 +48,7 @@ jobs:
           inlineScript: |
             az deployment group what-if \
               --resource-group $(ResourceGroupName) \
-              --template-file main.bicep
+              --template-file main.bicep ${{ parameters.parameters }}
 
   - job: deployBicep
     dependsOn:
@@ -57,3 +60,4 @@ jobs:
       - template: steps/deploy_bicep.yml
         parameters:
           workingDirectory: ${{ parameters.workingDirectory }}
+          parameters: ${{ parameters.parameters }}

@@ -4,9 +4,6 @@ trigger:
       - main
       - stable
 
-pool:
-  vmImage: ubuntu-latest
-
 variables:
   - name: isMain
     value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
@@ -30,11 +27,14 @@ variables:
       - name: env
         value: prod
 
+pool:
+  vmImage: $(vmImageName)
+
 stages:
   - stage:
     jobs:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
           workingDirectory: '$(System.DefaultWorkingDirectory)/IaC/bicep'
-          parameters: --parameters main.parameters.${{ variables.env }}.json
+          parameters: --parameters main.parameters.$(env).json
           # parameters: --parameters location=westeurope project=apwgr workerCount=1 workerSizeId=0 env=dev

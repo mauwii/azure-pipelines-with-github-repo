@@ -36,7 +36,7 @@ pool:
   vmImage: $(vmImageName)
 
 stages:
-  - stage:
+  - stage: bicep
     jobs:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
@@ -45,3 +45,10 @@ stages:
           # resourceGroupName: '<Name of the ResourceGroup to use>'
           # azureSubscription: '<Name of the ARM-Service connection>'
           # location: '<location of the ResourceGroup>'
+
+  - stage: mkdocs
+    jobs:
+      - template: azure-pipelines/jobs/mkdocs-material.yml
+        ${{ if eq(variables.isStable, 'True') }}:
+          parameters:
+            mkdocsDeploy: True

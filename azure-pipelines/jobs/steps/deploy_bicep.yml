@@ -17,4 +17,4 @@ steps:
           --name $(Build.BuildNumber) \
           --resource-group $(ResourceGroupName) \
           --template-file main.bicep \
-          --parameters @main.parameters.${{ variables.['Build.SourceBranchName'] }}.json
+          --parameters @main.parameters.$(sourceBranchName).json

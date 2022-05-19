@@ -78,4 +78,4 @@ jobs:
     steps:
       - template: steps/deploy_bicep.yml
         parameters:
-          bicepParameters: ${{ parameters.bicepParameters }}
+          bicepDir: ${{ parameters.bicepDir }}

@@ -50,4 +50,4 @@ stages:
     jobs:
       - template: azure-pipelines/jobs/mkdocs-material.yml
         parameters:
-          mkdocsDeploy: $(isMain)
+          mkdocsDeploy: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}

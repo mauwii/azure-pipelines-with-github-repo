@@ -12,6 +12,7 @@ trigger:
       - feature/experimental/*
 
 pr:
+  autoCancel: false
   branches:
     include:
       - main
@@ -51,6 +52,7 @@ stages:
     jobs:
       - template: azure-pipelines/jobs/mkdocs-material.yml
         parameters:
-          mkdocsDeploy: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/stable') }}
+          mkdocsDeploy: ${{variables.mkdocsDeploy}}
+          # mkdocsDeploy: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/stable') }}
           # pythonVersion: '<Python Version to use when building MkDocs-Material>'
           # mkdocsSiteDir: '<folder to create the site by mkdocs>' - defaults to 'site'

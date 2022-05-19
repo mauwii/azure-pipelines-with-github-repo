@@ -24,7 +24,7 @@ title: ToDo
 
 #### Maybe unnecessary
 
-- [ ] Overwrite YAML Triggers for Main pipeline (azure-pipeline.yml) to prevent running it from other Branches (still open since unsure if even necesarry)
+- [ ] Overwrite YAML Triggers for Main pipeline (azure-pipeline.yml) to prevent running it from other Branches (still open since unsure if even necessary)
 - [ ] Add Check to PR-Validation ,before building the WebApp, to see if the Resources already exist, since keys get read out while building the App, which is failing if they don't exist at all
 
 ### :material-head-lightbulb: Ideas

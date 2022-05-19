@@ -43,11 +43,11 @@ graph LR
   featureBranch[feature/*<br>issue/*] -- Pull Request ---> main;
   code[\update<br>Code/] -- Commit Changes --> featureBranch;
   main -. create branch .-> featureBranch;
-  main -- Trigger Build --> CheckFeature{Built<br>succesfull};
+  main -- Trigger Build --> CheckFeature{Built<br>successful};
   CheckFeature -- Yes --> mergePR[/merge PR/];
   CheckFeature -- No --> TryFixBugsFeature{Try to<br>fix bugs};
-  mergePR --> Deletefeature;
-  TryFixBugsFeature -- No --> Deletefeature[\Delete feature/issue branch\];
+  mergePR --> deleteFeature;
+  TryFixBugsFeature -- No --> deleteFeature[\Delete feature/issue branch\];
   TryFixBugsFeature -- Yes --> code;
 ```
 

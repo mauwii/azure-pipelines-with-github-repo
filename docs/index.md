@@ -17,6 +17,11 @@ I used a combination of these tools and frameworks to have a useful playground I
 - :fontawesome-brands-atlassian: [__Jira__](https://mauwii.atlassian.net/jira/software/c/projects/APWGR/issues) to manage issues
 - :material-file-document: [__MkDocs-Material__](https://squidfunk.github.io/mkdocs-material/) to host versionable documentation
 
+### comming soon...
+
+- :fontawesome-brands-python: [__FastAPI__](https://github.com/Azure-Samples/fastapi-on-azure-functions.git) since deploying an api could be useful
+- :fontawesome-solid-frog: [__Jfrog-Platform__](https://mauwii.jfrog.io) for artifacts like pip, containers, ...
+
 ## Expectations
 
 You should try to keep your expectations low, then you will be amazed even more while finding out about the things I am just finding out myself with this playground.

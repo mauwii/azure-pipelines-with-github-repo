@@ -18,14 +18,10 @@ variables:
     value: $[ variables['Build.SourceBranchName'] ]
     readonly: true
   - template: azure-pipelines/variables/default.yml
-  - name: environment
-    value: dev
-  - ${{ if eq(variables.SourceBranchName, 'main') }}:
-      - name: environment
-        value: stg
-  - ${{ if eq(variables.SourceBranchName, 'stable') }}:
-      - name: environment
-        value: prod
+  - ${{ if eq(variables.isMain, 'True') }}:
+      - template: azure-pipelines/variables/main.yml
+  - ${{ if eq(variables.isStable, 'True') }}:
+      - template: azure-pipelines/variables/stable.yml
 
 pool:
   vmImage: $(vmImageName)
@@ -37,4 +33,3 @@ stages:
         parameters:
           workingDirectory: '$(System.DefaultWorkingDirectory)/IaC/bicep'
           parameters: --parameters main.parameters.$(environment).json
-          # parameters: --parameters location=westeurope project=apwgr workerCount=1 workerSizeId=0 env=dev

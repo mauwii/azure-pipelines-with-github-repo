@@ -15,5 +15,5 @@ variables:
     value: 'azure-mauwii'
     readonly: true
   - ${{ if not(eq(variables['Build.SourceBranchName'], 'main')) }}:
-    name: mkdocsDeploy
-    value: ${{ True }}
+      - name: mkdocsDeploy
+        value: ${{ True }}

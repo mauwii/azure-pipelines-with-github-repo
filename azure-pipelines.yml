@@ -38,6 +38,7 @@ stages:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
           bicepDir: '$(System.DefaultWorkingDirectory)/IaC/bicep/webApp-with-insights'
-          # resourceGroupName: '$(resourceGroupName)'
-          # azureSubscription: '$(azureSubscription)'
-          # location: '$(location)'
+          # The following parameters are have the current variable set as default value ( like this: $(<parametername>) )
+          # resourceGroupName: '<Name of the ResourceGroup to use>'
+          # azureSubscription: '<Name of the ARM-Service connection>'
+          # location: '<location of the ResourceGroup>'

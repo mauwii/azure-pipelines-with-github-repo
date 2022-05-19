@@ -17,13 +17,13 @@ steps:
     name: DeployBicepFile
     displayName: Deploy Bicep file
     inputs:
-      azureSubscription: $(azureSubscription)
+      azureSubscription: ${{ parameters.azureSubscription }}
       scriptType: bash
       scriptLocation: inlineScript
       workingDirectory: ${{ parameters.bicepDir }}
       inlineScript: |
         az deployment group create \
           --name $(Build.BuildNumber) \
-          --resource-group $(ResourceGroupName) \
+          --resource-group ${{ parameters.ResourceGroupName }} \
           --template-file main.bicep \
           --parameters @main.parameters.$(sourceBranchName).json

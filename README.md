@@ -15,7 +15,7 @@ Of course this is one of the things which will obviously never finish, but the r
 - [Jira](https://mauwii.atlassian.net/jira/software/c/projects/APWGR/issues)
 - [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/)
 
-### added soon...
+### will be added soon...
 
 - [FastAPI](https://github.com/Azure-Samples/fastapi-on-azure-functions.git)
 - [Jfrog Platform](https://mauwii.jfrog.io)

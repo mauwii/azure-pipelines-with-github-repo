@@ -6,12 +6,6 @@ trigger:
 
 variables:
   - template: azure-pipelines/variables/default.yml
-  - ${{ if eq(variables.isMain, 'True') }}:
-      - name: environment
-        value: stg
-  - ${{ if eq(variables.isStable, 'True') }}:
-      - name: environment
-        value: prod
   - name: isMain
     value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
     readonly: true
@@ -33,5 +27,4 @@ stages:
     jobs:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
-          workingDirectory: '$(System.DefaultWorkingDirectory)/IaC/bicep'
-          parameters: '--parameters main.parameters.$(environment).json'
+          bicepDir: '$(System.DefaultWorkingDirectory)/IaC/bicep/webApp-with-insights'

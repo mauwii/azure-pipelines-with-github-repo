@@ -1,16 +1,9 @@
 parameters:
-  - name: workingDirectory
+  - name: bicepDir
     type: string
     default: $(System.DefaultWorkingDirectory)
-  - name: parameters
-    type: string
 
 steps:
-  # - checkout: self
-  #   submodules: no
-  #   persistCredentials: true
-  #   displayName: Checkout self
-
   - task: AzureCLI@2
     name: DeployBicepFile
     displayName: Deploy Bicep file
@@ -18,9 +11,10 @@ steps:
       azureSubscription: $(azureSubscription)
       scriptType: bash
       scriptLocation: inlineScript
-      workingDirectory: ${{ parameters.workingDirectory }}
+      workingDirectory: ${{ parameters.bicepDir }}
       inlineScript: |
         az deployment group create \
           --name $(Build.BuildNumber) \
           --resource-group $(ResourceGroupName) \
-          --template-file main.bicep ${{ parameters.parameters }}
+          --template-file main.bicep \
+          --parameters @main.parameters.${{ variables.['Build.SourceBranchName'] }}.json

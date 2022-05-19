@@ -14,5 +14,3 @@ variables:
   - name: azureSubscription
     value: 'azure-mauwii'
     readonly: true
-  - name: environment
-    value: dev

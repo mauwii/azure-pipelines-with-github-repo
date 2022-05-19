@@ -18,9 +18,9 @@ variables:
     value: $[ variables['Build.SourceBranchName'] ]
     readonly: true
   - ${{ if eq(variables.isMain, 'True') }}:
-      - template: azure-pipelines/variables/main.yml
+      template: azure-pipelines/variables/main.yml
   - ${{ if eq(variables.isStable, 'True') }}:
-      - template: azure-pipelines/variables/stable.yml
+      template: azure-pipelines/variables/stable.yml
   - template: azure-pipelines/variables/default.yml
 
 pool:

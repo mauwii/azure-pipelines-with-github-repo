@@ -31,7 +31,7 @@ Since I had the needs for things I could play around with build-pipelines as wel
 - is hostable for free
 - and maybe more ...
 
-You can find the Documentation [here](https://mauwii.github.io/azure-pipelines-with-github-repo/), while it's sources are located in the [docs](https://github.com/Mauwii/django_devops/tree/stable/docs) folder. Until yet I only build the stable Branch automatically, but I am already thinking about using the "mike" plugin to have the ability of versioning the Documentation.
+You can find the Documentation [here](https://mauwii.github.io/azure-pipelines-with-github-repo/), while it's sources are located in the [docs](https://github.com/Mauwii/azure-pipelines-with-github-repo/tree/stable/docs) folder. Until yet I only build the stable Branch automatically, but I am already thinking about using the "mike" plugin to have the ability of versioning the Documentation.
 
 Also one of my next steps will be to have a second Environment for the Docs where I will build the docs for the main branch, which you will find here as soon as I have done so.
 

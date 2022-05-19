@@ -6,15 +6,16 @@ trigger:
     include:
       - refs/heads/main
       - refs/heads/stable
-      - refs/pull/*
       - feature/*
       - issue/*
     exclude:
       - feature/experimental/*
 
 pr:
-  - main
-  - stable
+  branches:
+    include:
+      - main
+      - stable
 
 variables:
   - template: azure-pipelines/variables/default.yml

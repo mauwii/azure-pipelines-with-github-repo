@@ -30,3 +30,6 @@ stages:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
           bicepDir: '$(System.DefaultWorkingDirectory)/IaC/bicep/webApp-with-insights'
+          # resourceGroupName: '$(resourceGroupName)'
+          # azureSubscription: '$(azureSubscription)'
+          # location: '$(location)'

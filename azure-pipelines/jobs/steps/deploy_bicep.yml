@@ -2,6 +2,15 @@ parameters:
   - name: bicepDir
     type: string
     default: $(System.DefaultWorkingDirectory)
+  - name: resourceGroupName
+    default: $(resourceGroupName)
+    type: string
+  - name: azureSubscription
+    default: $(azureSubscription)
+    type: string
+  - name: location
+    default: $(location)
+    type: string
 
 steps:
   - task: AzureCLI@2

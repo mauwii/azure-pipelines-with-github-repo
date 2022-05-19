@@ -50,4 +50,4 @@ stages:
     jobs:
       - template: azure-pipelines/jobs/mkdocs-material.yml
         parameters:
-          mkdocsDeploy: $(isStable)
+          mkdocsDeploy: ${{ variables.isStable }}

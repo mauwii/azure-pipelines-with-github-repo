@@ -5,6 +5,13 @@ trigger:
       - stable
 
 variables:
+  - template: azure-pipelines/variables/default.yml
+  - ${{ if eq(variables.isMain, 'True') }}:
+      - name: environment
+        value: stg
+  - ${{ if eq(variables.isStable, 'True') }}:
+      - name: environment
+        value: prod
   - name: isMain
     value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
     readonly: true
@@ -17,11 +24,6 @@ variables:
   - name: sourceBranchName
     value: $[ variables['Build.SourceBranchName'] ]
     readonly: true
-  - ${{ if eq(variables.isMain, 'True') }}:
-      template: azure-pipelines/variables/main.yml
-  - ${{ if eq(variables.isStable, 'True') }}:
-      template: azure-pipelines/variables/stable.yml
-  - template: azure-pipelines/variables/default.yml
 
 pool:
   vmImage: $(vmImageName)
@@ -32,4 +34,4 @@ stages:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
           workingDirectory: '$(System.DefaultWorkingDirectory)/IaC/bicep'
-          parameters: --parameters main.parameters.$(environment).json
+          parameters: '--parameters main.parameters.$(environment).json'

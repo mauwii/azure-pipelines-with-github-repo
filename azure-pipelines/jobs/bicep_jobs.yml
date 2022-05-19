@@ -33,7 +33,7 @@ jobs:
 
   - job: validateBicepCode
     dependsOn: createResourceGroup
-    condition: or(eq(variables.sourceBranchName, 'main'), eq(variables.sourceBranchName, 'stable'))
+    condition: or(eq(variables.isMain, 'True'), eq(variables.isStable, 'True'))
     continueOnError: false
     displayName: Validate Bicep code
     steps:
@@ -53,7 +53,7 @@ jobs:
 
   - job: previewAzureChanges
     dependsOn: createResourceGroup
-    condition: or(eq(variables.sourceBranchName, 'main'), eq(variables.sourceBranchName, 'stable'))
+    condition: or(eq(variables.isMain, 'True'), eq(variables.isStable, 'True'))
     displayName: Preview Azure changes
     continueOnError: false
     steps:
@@ -76,7 +76,7 @@ jobs:
       - lintBicep
       - validateBicepCode
       - previewAzureChanges
-    condition: and(succeeded(), or(eq(variables.sourceBranchName, 'main'), eq(variables.sourceBranchName, 'stable')))
+    condition: and(succeeded(), or(eq(variables.isMain, 'True'), eq(variables.isStable, 'True')))
     steps:
       - template: steps/deploy_bicep.yml
         parameters:

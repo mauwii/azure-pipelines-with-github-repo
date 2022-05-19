@@ -1,0 +1,20 @@
+parameters:
+  - name: resourceGroupName
+    type: string
+  - name: azureSubscription
+    type: string
+  - name: location
+    type: string
+
+steps:
+  - task: AzureCLI@2
+    displayName: Create RG ${{ parameters.resourceGroupName }}
+    continueOnError: true
+    inputs:
+      azureSubscription: ${{ parameters.azureSubscription }}
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az group create \
+          --name ${{ parameters.resourceGroupName }} \
+          --location ${{ parameters.location }}

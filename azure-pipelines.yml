@@ -1,8 +1,10 @@
 trigger:
   branches:
     include:
-      - main
-      - stable
+      - refs/heads/main
+      - refs/heads/stable
+
+pr: none
 
 variables:
   - template: azure-pipelines/variables/default.yml
@@ -14,9 +16,6 @@ variables:
     readonly: true
   - name: isPullRequest
     value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
-    readonly: true
-  - name: sourceBranchName
-    value: $[ variables['Build.SourceBranchName'] ]
     readonly: true
 
 pool:

@@ -2,22 +2,26 @@ parameters:
   - name: bicepDir
     type: string
     default: $(System.DefaultWorkingDirectory)
+  - name: resourceGroupName
+    type: string
+  - name: azureSubscription
+    type: string
+  - name: location
+    type: string
+
+variables:
+  - name: sourceBranchName
+    value: $[ variables['Build.SourceBranchName'] ]
+    readonly: true
 
 jobs:
   - job: createResourceGroup
     steps:
-      - task: AzureCLI@2
-        displayName: Create RG $(resourceGroupName)
-        continueOnError: true
-        inputs:
-          azureSubscription: $(azureSubscription)
-          workingDirectory: ${{ parameters.bicepDir }}
-          scriptType: bash
-          scriptLocation: inlineScript
-          inlineScript: |
-            az group create \
-              --name $(resourceGroupName) \
-              --location $(location)
+      - template: steps/create_resourceGroup.yml
+        parameters:
+          resourceGroupName: ${{ parameters.resourceGroupName }}
+          azureSubscription: ${{ parameters.azureSubscription }}
+          location: ${{ parameters.location }}
 
   - job: lintBicep
     dependsOn: createResourceGroup
@@ -31,7 +35,7 @@ jobs:
 
   - job: validateBicepCode
     dependsOn: createResourceGroup
-    condition: or(eq(variables.isStable, 'True'), eq(variables.isMain, 'True'))
+    condition: or(eq(variables.sourceBranchName, 'main'), eq(variables.sourceBranchName, 'stable'))
     continueOnError: false
     displayName: Validate Bicep code
     steps:
@@ -39,19 +43,19 @@ jobs:
         name: RunPreflightValidation
         displayName: Run preflight validation
         inputs:
-          azureSubscription: $(azureSubscription)
+          azureSubscription: ${{ parameters.azureSubscription }}
           workingDirectory: ${{ parameters.bicepDir }}
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
             az deployment group validate \
-              --resource-group $(resourceGroupName) \
+              --resource-group ${{ parameters.resourceGroupName }} \
               --template-file main.bicep \
               --parameters @main.parameters.$(sourceBranchName).json
 
   - job: previewAzureChanges
     dependsOn: createResourceGroup
-    condition: or(eq(variables.isStable, 'True'), eq(variables.isMain, 'True'))
+    condition: or(eq(variables.sourceBranchName, 'main'), eq(variables.sourceBranchName, 'stable'))
     displayName: Preview Azure changes
     continueOnError: false
     steps:
@@ -59,13 +63,13 @@ jobs:
         name: RunWhatIf
         displayName: Run what-if
         inputs:
-          azureSubscription: $(azureSubscription)
+          azureSubscription: ${{ parameters.azureSubscription }}
           workingDirectory: ${{ parameters.bicepDir }}
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
             az deployment group what-if \
-              --resource-group $(resourceGroupName) \
+              --resource-group ${{ parameters.resourceGroupName }} \
               --template-file main.bicep \
               --parameters @main.parameters.$(sourceBranchName).json
 
@@ -74,7 +78,7 @@ jobs:
       - lintBicep
       - validateBicepCode
       - previewAzureChanges
-    condition: and(succeeded(), or(eq(variables.isStable, 'True'), eq(variables.isMain, 'True')))
+    condition: and(succeeded(), or(eq(variables.sourceBranchName, 'main'), eq(variables.sourceBranchName, 'stable')))
     steps:
       - template: steps/deploy_bicep.yml
         parameters:

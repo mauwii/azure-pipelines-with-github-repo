@@ -17,6 +17,9 @@ variables:
   - name: isPullRequest
     value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
     readonly: true
+  - name: sourceBranchName
+    value: $[ variables['Build.SourceBranchName'] ]
+    readonly: true
 
 pool:
   vmImage: $(vmImageName)

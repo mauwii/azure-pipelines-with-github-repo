@@ -9,11 +9,6 @@ parameters:
   - name: location
     type: string
 
-variables:
-  - name: sourceBranchName
-    value: $[ variables['Build.SourceBranchName'] ]
-    readonly: true
-
 jobs:
   - job: createResourceGroup
     steps:

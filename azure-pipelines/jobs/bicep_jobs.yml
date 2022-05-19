@@ -47,7 +47,7 @@ jobs:
             az deployment group validate \
               --resource-group $(resourceGroupName) \
               --template-file main.bicep \
-              --parameters @main.parameters.${{ variables.['Build.SourceBranchName'] }}.json
+              --parameters @main.parameters.$(sourceBranchName).json
 
   - job: previewAzureChanges
     dependsOn: createResourceGroup
@@ -67,7 +67,7 @@ jobs:
             az deployment group what-if \
               --resource-group $(resourceGroupName) \
               --template-file main.bicep \
-              --parameters @main.parameters.${{ variables.['Build.SourceBranchName'] }}.json
+              --parameters @main.parameters.$(sourceBranchName).json
 
   - job: deployBicep
     dependsOn:

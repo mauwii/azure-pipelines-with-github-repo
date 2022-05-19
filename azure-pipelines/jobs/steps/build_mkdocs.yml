@@ -2,8 +2,10 @@
 parameters:
   - name: pythonVersion
     type: string
+    default: $(pythonVersion)
   - name: mkdocsSiteDir
     type: string
+    default: 'site'
 
 steps:
   - task: UsePythonVersion@0

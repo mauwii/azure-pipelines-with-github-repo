@@ -16,11 +16,11 @@ title: ToDo
     - [x] select correct template by destination branch
 - [ ] use a naming convention
     - [ ] maybe even test if it is applied by using kind of RegEx
+- [x] create bicep templates
+- [x] link secrets between resources (like f.E. AppInsights Instrumentation Key into WebApp-Settings)
 - [ ] update bicep template
     - [ ] add a KeyVault to store:
         - [ ] application Insights
-            - [ ] secret
-            - [ ] connection string
 
 #### Maybe unnecessary
 

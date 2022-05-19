@@ -4,10 +4,8 @@ trigger:
       - main
       - stable
 
-pool:
-  vmImage: ubuntu-latest
-
 variables:
+  - template: azure-pipelines/variables/default.yml
   - name: isMain
     value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
     readonly: true
@@ -20,21 +18,13 @@ variables:
   - name: sourceBranchName
     value: $[ variables['Build.SourceBranchName'] ]
     readonly: true
-  - template: azure-pipelines/variables/default.yml
-  - name: env
-    value: dev
-  - ${{ if eq(variables.isMain, 'True') }}:
-      - name: env
-        value: stg
-  - ${{ if eq(variables.isStable, 'True') }}:
-      - name: env
-        value: prod
+
+pool:
+  vmImage: $(vmImageName)
 
 stages:
   - stage:
     jobs:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
-          workingDirectory: '$(System.DefaultWorkingDirectory)/IaC/bicep'
-          parameters: --parameters main.parameters.${{ variables.env }}.json
-          # parameters: --parameters location=westeurope project=apwgr workerCount=1 workerSizeId=0 env=dev
+          bicepDir: '$(System.DefaultWorkingDirectory)/IaC/bicep/webApp-with-insights'

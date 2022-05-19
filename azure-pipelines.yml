@@ -1,3 +1,5 @@
+name: 'azure-pipelines.yml'
+
 trigger:
   batch: true
   branches:

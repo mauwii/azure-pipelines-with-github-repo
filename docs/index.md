@@ -12,9 +12,9 @@ Welcome to the Docs of my DevOps / GitHub / Jira - Playground. I decided to host
 
 I used a combination of these tools and frameworks to have a useful playground I can experiment with:
 
-- :fontawesome-brands-github: [__GitHub__](https://github.com/mauwii/django_devops) to host repositories
-- :material-microsoft-azure-devops: [__Azure-DevOps__](https://dev.azure.com/mauwiidev/django_gh) to run the yaml pipelines
-- :fontawesome-brands-atlassian: [__Jira__](https://mauwii.atlassian.net/jira/software/c/projects/DG/issues) to manage issues
+- :fontawesome-brands-github: [__GitHub__](https://github.com/Mauwii/azure-pipelines-with-github-repo/) to host repositories
+- :material-microsoft-azure-devops: [__Azure-DevOps__](https://dev.azure.com/mauwiidev/azure-pipelines-with-github-repo) to run the yaml pipelines
+- :fontawesome-brands-atlassian: [__Jira__](https://mauwii.atlassian.net/jira/software/c/projects/APWGR/issues) to manage issues
 - :material-file-document: [__MkDocs-Material__](https://squidfunk.github.io/mkdocs-material/) to host versionable documentation
 
 ## Expectations

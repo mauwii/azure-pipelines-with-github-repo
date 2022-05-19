@@ -6,8 +6,8 @@ parameters:
     type: string
     default: 'site'
   - name: mkdocsDeploy
-    type: boolean
-    default: False
+    type: string
+    default: 'False'
 
 jobs:
   - job: mkdocs

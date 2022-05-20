@@ -1,3 +1,7 @@
+variables:
+  - name: sourceDirectory
+    value: $[ variables['Build.SourceDirectory'] ]
+
 parameters:
   - name: bicepDir
     default: $(bicepDir)

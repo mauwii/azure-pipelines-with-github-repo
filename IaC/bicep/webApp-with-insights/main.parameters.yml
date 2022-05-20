@@ -1,10 +1,6 @@
-variables:
-  - name: sourceDirectory
-    value: $['Build.SourceDirectory']
-
 parameters:
   - name: bicepDir
-    default: $(bicepDir)
+    default: $[ variables['Build.SourceDirectory'] ]
   - name: bicep_parameters_template
     type: object
     default:

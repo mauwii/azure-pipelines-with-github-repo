@@ -1,7 +1,7 @@
 parameters:
   - name: bicepDir
     type: string
-    default: $(bicepDir)
+    default: 'IaC/bicep/webApp-with-insights'
   - name: bicepParameter
     type: string
     default: dev

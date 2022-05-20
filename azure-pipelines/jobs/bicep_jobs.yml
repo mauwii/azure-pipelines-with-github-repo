@@ -25,7 +25,7 @@ jobs:
           azureSubscription: ${{ parameters.azureSubscription }}
           location: ${{ parameters.location }}
 
-  - job: lintBicep
+  - job: validateBicep
     dependsOn: createResourceGroup
     displayName: Lint Bicep File
     continueOnError: false
@@ -62,9 +62,7 @@ jobs:
               --parameters @main.parameters.${{parameters.bicepParameter}}.json
 
   - job: deployBicep
-    dependsOn:
-      - validateBicepCode
-      - previewAzureChanges
+    dependsOn: validateBicep
     condition: and(succeeded(), or(eq(variables.isMain, 'True'), eq(variables.isStable, 'True')))
     steps:
       - template: steps/deploy_bicep.yml

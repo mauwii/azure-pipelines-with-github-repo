@@ -1,6 +1,7 @@
 parameters:
   - name: bicepDir
     type: string
+    default: $(bicepDir)
   - name: bicepParameter
     type: string
     default: dev
@@ -29,7 +30,7 @@ jobs:
     displayName: Lint Bicep File
     continueOnError: false
     steps:
-      - template: ${{ variables['Build.SourceDirectory'] }}/IaC/bicep/webApp-with-insights/main.parameters.yml
+      - template: ${{ parameters.bicepDir }}/main.parameters.yml
         parameters:
           bicepDir: ${{ parameters.bicepDir }}
       - script: az bicep build --file main.bicep

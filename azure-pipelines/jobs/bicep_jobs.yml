@@ -16,25 +16,17 @@ parameters:
     default: $(location)
 
 jobs:
-  - job: createResourceGroup
-    dependsOn:
-    steps:
-      - template: steps/create_resourceGroup.yml
-        parameters:
-          resourceGroupName: ${{ parameters.resourceGroupName }}
-          azureSubscription: ${{ parameters.azureSubscription }}
-          location: ${{ parameters.location }}
-
   - job: validateBicep
-    dependsOn: createResourceGroup
     displayName: Lint Bicep File
     continueOnError: false
     steps:
       - template: '../../${{ parameters.bicepDir }}/main.parameters.yml'
+
       - script: az bicep build --file main.bicep
         displayName: Run Bicep Linter
         name: LintBicepCode
         workingDirectory: ${{ parameters.bicepDir }}
+
       - task: AzureCLI@2
         name: RunPreflightValidation
         displayName: Run preflight validation
@@ -48,6 +40,13 @@ jobs:
               --resource-group ${{ parameters.resourceGroupName }} \
               --template-file main.bicep \
               --parameters @main.parameters.${{parameters.bicepParameter}}.json
+
+      - template: steps/create_resourceGroup.yml
+        parameters:
+          resourceGroupName: ${{ parameters.resourceGroupName }}
+          azureSubscription: ${{ parameters.azureSubscription }}
+          location: ${{ parameters.location }}
+
       - task: AzureCLI@2
         name: RunWhatIf
         displayName: Run what-if
@@ -64,7 +63,7 @@ jobs:
 
   - job: deployBicep
     dependsOn: validateBicep
-    condition: and(succeeded(), or(eq(variables.isMain, 'True'), eq(variables.isStable, 'True')))
+    condition: and(succeeded(), eq(variables.isPullRequest, 'False'), or(eq(variables.isMain, 'True'), eq(variables.isStable, 'True')))
     steps:
       - template: steps/deploy_bicep.yml
         parameters:

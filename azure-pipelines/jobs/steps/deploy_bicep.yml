@@ -2,6 +2,8 @@ parameters:
   - name: bicepDir
     type: string
     default: $(System.DefaultWorkingDirectory)
+  - name: bicepTemplateDir
+    type: string
   - name: resourceGroupName
     default: $(resourceGroupName)
     type: string
@@ -23,7 +25,7 @@ steps:
       azureSubscription: ${{ parameters.azureSubscription }}
       scriptType: bash
       scriptLocation: inlineScript
-      workingDirectory: ${{ parameters.bicepDir }}
+      workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
       inlineScript: |
         az deployment group create \
           --name $(Build.BuildNumber) \

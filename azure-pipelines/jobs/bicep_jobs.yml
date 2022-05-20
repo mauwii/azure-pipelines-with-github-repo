@@ -21,6 +21,8 @@ jobs:
     continueOnError: false
     steps:
       - template: ${{ parameters.bicepDir }}/main.parameters.yml
+        parameters:
+          bicepDir: ${{ parameters.bicepDir }}
       - script: az bicep build --file main.bicep
         displayName: Run Bicep Linter
         name: LintBicepCode

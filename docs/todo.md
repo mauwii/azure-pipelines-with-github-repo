@@ -21,6 +21,7 @@ title: ToDo
 - [ ] update bicep template
     - [ ] add a KeyVault to store:
         - [ ] application Insights
+- [ ] use the defaults.yaml for configuration relevant things like f.E. default location of pipeline YAMLs or Bicep templates
 
 #### Maybe unnecessary
 

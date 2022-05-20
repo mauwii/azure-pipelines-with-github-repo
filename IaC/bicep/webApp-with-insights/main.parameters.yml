@@ -1,6 +1,6 @@
 variables:
   - name: sourceDirectory
-    value: $[ variables['Build.SourceDirectory'] ]
+    value: $['Build.SourceDirectory']
 
 parameters:
   - name: bicepDir

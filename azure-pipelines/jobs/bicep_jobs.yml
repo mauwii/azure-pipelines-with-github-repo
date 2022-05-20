@@ -19,8 +19,8 @@ parameters:
     default: $(location)
 
 jobs:
-  - job: validateBicep
-    displayName: validate Bicep
+  - job: bicep
+    displayName: validate and deploy
     continueOnError: false
     steps:
       - template: '../../${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}/main.parameters.yml'
@@ -67,7 +67,7 @@ jobs:
       - task: AzureCLI@2
         name: DeployBicepFile
         condition: succeeded()
-        displayName: Deploy Bicep file
+        displayName: Deploy Bicep Template
         inputs:
           azureSubscription: ${{ parameters.azureSubscription }}
           scriptType: bash

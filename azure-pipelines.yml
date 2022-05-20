@@ -35,6 +35,7 @@ pool:
 
 stages:
   - stage: bicep
+    displayName: Bicep
     jobs:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:

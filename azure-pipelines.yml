@@ -28,11 +28,6 @@ variables:
   - name: isPullRequest
     value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
     readonly: true
-  - name: defaultWorkingDirectory
-    value: $[ variables['System.DefaultWorkingDirectory'] ]
-    readonly: true
-  - name: sourceDirectory
-    value: $[ variables['Build.DefaultWorkingDirectory'] ]
   - template: azure-pipelines/variables/default.yml
 
 pool:
@@ -40,11 +35,12 @@ pool:
 
 stages:
   - stage: bicep
+    variables:
+      bicepDir: 'IaC/bicep/webApp-with-insights'
     jobs:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
           bicepParameter: $(bicepParameter)
-          bicepDir: ${{ variables['System.DefaultWorkingDirectory'] }}/IaC/bicep/webApp-with-insights
           # bicepDir: ${{ variables['System.DefaultWorkingDirectory'] }}/IaC/bicep/webApp-with-insights
           # bicepDir: IaC/bicep/webApp-with-insights
           # The following parameters default value are set like this: $(<parametername>) to reflect current value of the variable

@@ -70,5 +70,6 @@ jobs:
     steps:
       - template: steps/deploy_bicep.yml
         parameters:
-          bicepDir: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
+          bicepDir: ${{ parameters.bicepDir }}
+          bicepTemplateDir: ${{ parameters.bicepTemplateDir }}
           bicepParameter: ${{ parameters.bicepParameter }}

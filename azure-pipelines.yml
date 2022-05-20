@@ -28,8 +28,8 @@ variables:
   - name: isPullRequest
     value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
     readonly: true
-  - name: sourceBranchName
-    value: $[ variables['Build.SourceBranchName'] ]
+  - name: defaultWorkingDirectory
+    value: $[ variables['System.DefaultWorkingDirectory'] ]
     readonly: true
   - name: sourceDirectory
     value: $[ variables['Build.DefaultWorkingDirectory'] ]
@@ -44,8 +44,9 @@ stages:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
           bicepParameter: $(bicepParameter)
-          bicepDir: IaC/bicep/webApp-with-insights
+          bicepDir: $(defaultWorkingDirectory)/IaC/bicep/webApp-with-insights
           # bicepDir: ${{ variables['System.DefaultWorkingDirectory'] }}/IaC/bicep/webApp-with-insights
+          # bicepDir: IaC/bicep/webApp-with-insights
           # The following parameters default value are set like this: $(<parametername>) to reflect current value of the variable
           # if you do/can not use a variable named like the parameter, just use the parameters as normal
           # resourceGroupName: '<Name of the ResourceGroup>'

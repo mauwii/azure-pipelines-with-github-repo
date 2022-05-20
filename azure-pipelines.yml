@@ -35,8 +35,6 @@ pool:
 
 stages:
   - stage: bicep
-    variables:
-      bicepDir: 'IaC/bicep/webApp-with-insights'
     jobs:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:

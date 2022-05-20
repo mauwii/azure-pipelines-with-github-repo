@@ -44,7 +44,7 @@ stages:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
           bicepParameter: $(bicepParameter)
-          bicepDir: '$[System.DefaultWorkingDirectory]/IaC/bicep/webApp-with-insights'
+          bicepDir: '$[ variables[System.DefaultWorkingDirectory] ]/IaC/bicep/webApp-with-insights'
           # bicepDir: ${{ variables['System.DefaultWorkingDirectory'] }}/IaC/bicep/webApp-with-insights
           # bicepDir: IaC/bicep/webApp-with-insights
           # The following parameters default value are set like this: $(<parametername>) to reflect current value of the variable

@@ -14,6 +14,17 @@ variables:
   - name: azureSubscription
     value: 'azure-mauwii'
     readonly: true
-  - ${{ if not(eq(variables['Build.SourceBranchName'], 'main')) }}:
+  - name: mkdocsDeploy
+    value: ${{ False }}
+  - name: bicepDir
+    value: '$(System.DefaultWorkingDirectory)/IaC/bicep/webApp-with-insights'
+  - name: bicepParameter
+    value: 'dev'
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+      - name: bicepParameter
+        value: 'stg'
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/stable') }}:
+      - name: bicepParameter
+        value: 'prod'
       - name: mkdocsDeploy
         value: ${{ True }}

@@ -3,21 +3,21 @@ variables:
     value: '3.9'
     readonly: true
   - name: vmImageName
-    value: 'ubuntu-latest'
+    value: ubuntu-latest
     readonly: true
   - name: resourceGroupName
-    value: 'azure-pipelines-with-github-repo'
+    value: azure-pipelines-with-github-repo
     readonly: true
+  - name: projectName
+    value: apwgr
   - name: location
-    value: 'westeurope'
+    value: westeurope
     readonly: true
   - name: azureSubscription
-    value: 'azure-mauwii'
+    value: azure-mauwii
     readonly: true
   - name: mkdocsDeploy
     value: ${{ False }}
-  - name: bicepDir
-    value: '$(System.DefaultWorkingDirectory)/IaC/bicep/webApp-with-insights'
   - name: bicepParameter
     value: 'dev'
   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:

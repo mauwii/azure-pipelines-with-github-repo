@@ -1,4 +1,0 @@
-az deployment group create \
-	--resource-group azure-pipelines-with-github-repo \
-	--template-file IaC/bicep/main.bicep \
-	--parameters IaC/bicep/main.parameters.dev.json

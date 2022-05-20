@@ -28,9 +28,6 @@ variables:
   - name: isPullRequest
     value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
     readonly: true
-  - name: sourceBranchName
-    value: $[ variables['Build.SourceBranchName'] ]
-    readonly: true
   - template: azure-pipelines/variables/default.yml
 
 pool:
@@ -41,7 +38,8 @@ stages:
     jobs:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
-          bicepDir: $(bicepDir)
+          bicepDir: 'IaC/bicep'
+          bicepTemplateDir: 'webApp-with-insights'
           bicepParameter: $(bicepParameter)
           # The following parameters default value are set like this: $(<parametername>) to reflect current value of the variable
           # if you do/can not use a variable named like the parameter, just use the parameters as normal

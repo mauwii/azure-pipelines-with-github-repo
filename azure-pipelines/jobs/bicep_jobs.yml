@@ -30,7 +30,7 @@ jobs:
     displayName: Lint Bicep File
     continueOnError: false
     steps:
-      - template: ../../${{ parameters.bicepDir }}/main.parameters.yml
+      - template: ../../IaC/bicep/webApp-with-insights/main.parameters.yml
       - script: az bicep build --file main.bicep
         displayName: Run Bicep Linter
         name: LintBicepCode
@@ -42,7 +42,7 @@ jobs:
     continueOnError: false
     displayName: Validate Bicep code
     steps:
-      - template: ../../${{ parameters.bicepDir }}/main.parameters.yml
+      - template: ../../IaC/bicep/webApp-with-insights/main.parameters.yml
       - task: AzureCLI@2
         name: RunPreflightValidation
         displayName: Run preflight validation
@@ -63,7 +63,7 @@ jobs:
     displayName: Preview Azure changes
     continueOnError: false
     steps:
-      - template: ../../${{ parameters.bicepDir }}/main.parameters.yml
+      - template: ../../IaC/bicep/webApp-with-insights/main.parameters.yml
       - task: AzureCLI@2
         name: RunWhatIf
         displayName: Run what-if

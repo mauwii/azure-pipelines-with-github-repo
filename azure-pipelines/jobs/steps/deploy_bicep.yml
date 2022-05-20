@@ -11,6 +11,9 @@ parameters:
   - name: location
     default: $(location)
     type: string
+  - name: bicepParameter
+    type: string
+    default: dev
 
 steps:
   - task: AzureCLI@2
@@ -26,4 +29,4 @@ steps:
           --name $(Build.BuildNumber) \
           --resource-group ${{ parameters.ResourceGroupName }} \
           --template-file main.bicep \
-          --parameters @main.parameters.$(sourceBranchName).json
+          --parameters @main.parameters.${{parameters.bicepParameter}}.json

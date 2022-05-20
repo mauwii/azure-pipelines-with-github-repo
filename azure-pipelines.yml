@@ -12,6 +12,7 @@ trigger:
       - feature/experimental/*
 
 pr:
+  autoCancel: false
   branches:
     include:
       - main
@@ -40,10 +41,11 @@ stages:
     jobs:
       - template: azure-pipelines/jobs/bicep_jobs.yml
         parameters:
-          bicepDir: '$(System.DefaultWorkingDirectory)/IaC/bicep/webApp-with-insights'
-          # The following parameters default value is set like this: $(<parametername>) to reflect current variable
+          bicepDir: $(bicepDir)
+          bicepParameter: $(bicepParameter)
+          # The following parameters default value are set like this: $(<parametername>) to reflect current value of the variable
           # if you do/can not use a variable named like the parameter, just use the parameters as normal
-          # resourceGroupName: '<Name of the ResourceGroup to use>'
+          # resourceGroupName: '<Name of the ResourceGroup>'
           # azureSubscription: '<Name of the ARM-Service connection>'
           # location: '<location of the ResourceGroup>'
 
@@ -51,6 +53,6 @@ stages:
     jobs:
       - template: azure-pipelines/jobs/mkdocs-material.yml
         parameters:
-          mkdocsDeploy: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/stable') }}
+          mkdocsDeploy: ${{ variables.mkdocsDeploy }}
           # pythonVersion: '<Python Version to use when building MkDocs-Material>'
           # mkdocsSiteDir: '<folder to create the site by mkdocs>' - defaults to 'site'

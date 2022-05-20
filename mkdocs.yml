@@ -1,6 +1,6 @@
-site_name: 'Azure-Pipelines with GitHub-Repo'
-site_url: 'https://Mauwii.github.io/azure-pipelines-with-github-repo/'
-dev_addr: '127.0.0.1:8000'
+site_name: Azure-Pipelines with GitHub-Repo
+site_url: https://mauwii.github.io/azure-pipelines-with-github-repo/
+dev_addr: 127.0.0.1:8000
 site_author: mauwii
 site_description: >-
   Welcome to my Playground which I created to find out more about the
@@ -8,8 +8,8 @@ site_description: >-
   Files as Azure-Pipelines. Additionally Jira is used as Issue Tracker.
 
 # Repository
-repo_name: azure-pipelines-with-github-repo
-repo_url: https://github.com/Mauwii/azure-pipelines-with-github-repo.git
+repo_name: Mauwii/azure-pipelines-with-github-repo
+repo_url: https://github.com/Mauwii/azure-pipelines-with-github-repo
 edit_uri: edit/main/docs/
 
 # Copyright
@@ -52,12 +52,12 @@ theme:
     - media: '(prefers-color-scheme: light)'
       scheme: default
       toggle:
-        icon: material/toggle-switch-off-outline
+        icon: material/lightbulb
         name: Switch to dark mode
     - media: '(prefers-color-scheme: dark)'
       scheme: slate
       toggle:
-        icon: material/toggle-switch
+        icon: material/lightbulb-outline
         name: Switch to light mode
   font:
     text: Roboto
@@ -70,7 +70,7 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github-alt
-      link: https://github.com/mauwii
+      link: https://github.com/Mauwii/azure-pipelines-with-github-repo
     - icon: fontawesome/brands/keybase
       link: https://keybase.io/mauwi
     - icon: material/email-fast
@@ -102,8 +102,8 @@ markdown_extensions:
   - pymdownx.keys
   - pymdownx.magiclink:
       repo_url_shorthand: true
-      user: Mauwii
-      repo: django_devops
+      user: 'Mauwii'
+      repo: 'azure-pipelines-with-github-repo'
   - pymdownx.mark
   - pymdownx.smartsymbols
   - pymdownx.superfences:

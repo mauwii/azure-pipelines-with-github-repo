@@ -2,15 +2,18 @@ parameters:
   - name: bicepDir
     type: string
     default: $(System.DefaultWorkingDirectory)
+  - name: bicepParameter
+    type: string
+    default: dev
   - name: resourceGroupName
+    type: string
     default: $(resourceGroupName)
-    type: string
   - name: azureSubscription
+    type: string
     default: $(azureSubscription)
-    type: string
   - name: location
-    default: $(location)
     type: string
+    default: $(location)
 
 jobs:
   - job: createResourceGroup
@@ -49,7 +52,7 @@ jobs:
             az deployment group validate \
               --resource-group ${{ parameters.resourceGroupName }} \
               --template-file main.bicep \
-              --parameters @main.parameters.$(sourceBranchName).json
+              --parameters @main.parameters.${{parameters.bicepParameter}}.json
 
   - job: previewAzureChanges
     dependsOn: createResourceGroup
@@ -69,7 +72,7 @@ jobs:
             az deployment group what-if \
               --resource-group ${{ parameters.resourceGroupName }} \
               --template-file main.bicep \
-              --parameters @main.parameters.$(sourceBranchName).json
+              --parameters @main.parameters.${{parameters.bicepParameter}}.json
 
   - job: deployBicep
     dependsOn:
@@ -81,3 +84,4 @@ jobs:
       - template: steps/deploy_bicep.yml
         parameters:
           bicepDir: ${{ parameters.bicepDir }}
+          bicepParameter: ${{ parameters.bicepParameter }}

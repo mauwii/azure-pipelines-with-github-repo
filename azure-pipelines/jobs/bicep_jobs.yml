@@ -16,26 +16,27 @@ parameters:
     default: $(location)
 
 jobs:
-  - job: lintBicep
-    displayName: Lint Bicep File
-    continueOnError: false
-    steps:
-      - template: ${{ parameters.bicepDir }}/main.parameters.yml
-        parameters:
-          bicepDir: ${{ parameters.bicepDir }}
-      - script: az bicep build --file main.bicep
-        displayName: Run Bicep Linter
-        name: LintBicepCode
-        workingDirectory: ${{ parameters.bicepDir }}
-
   - job: createResourceGroup
-    dependsOn: lintBicep
+    dependsOn:
     steps:
       - template: steps/create_resourceGroup.yml
         parameters:
           resourceGroupName: ${{ parameters.resourceGroupName }}
           azureSubscription: ${{ parameters.azureSubscription }}
           location: ${{ parameters.location }}
+
+  - job: lintBicep
+    dependsOn: createResourceGroup
+    displayName: Lint Bicep File
+    continueOnError: false
+    steps:
+      - template: '${{ parameters.bicepDir }}/main.parameters.yml'
+        parameters:
+          bicepDir: '${{ parameters.bicepDir }}'
+      - script: az bicep build --file main.bicep
+        displayName: Run Bicep Linter
+        name: LintBicepCode
+        workingDirectory: '${{ parameters.bicepDir }}'
 
   - job: validateBicepCode
     dependsOn: createResourceGroup

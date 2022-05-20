@@ -1,6 +1,5 @@
 parameters:
   - name: bicepDir
-    type: string
     default: $(bicepDir)
   - name: bicep_parameters_template
     type: object
@@ -20,7 +19,10 @@ parameters:
           value: 1
 
 steps:
-  - script: echo "${JSON}" > ./main.parameters.$(bicepParameter).json
-    workingDirectory: ${{ parameters.bicepDir }}
+  - script: |
+      echo "${JSON}" > main.parameters.$(bicepParameter).json
+      file main.parameters.$(bicepParameter).json
+      cat main.parameters.$(bicepParameter).json
+    workingDirectory: $(bicepDir)
     env:
       JSON: ${{ convertToJson(parameters.bicep_parameters_template) }}

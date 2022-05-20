@@ -64,12 +64,18 @@ jobs:
               --template-file main.bicep \
               --parameters @main.parameters.${{parameters.bicepParameter}}.json
 
-  - job: deployBicep
-    dependsOn: validateBicep
-    condition: and(succeeded(), eq(variables.isPullRequest, 'False'), or(eq(variables.isMain, 'True'), eq(variables.isStable, 'True')))
-    steps:
-      - template: steps/deploy_bicep.yml
-        parameters:
-          bicepDir: ${{ parameters.bicepDir }}
-          bicepTemplateDir: ${{ parameters.bicepTemplateDir }}
-          bicepParameter: ${{ parameters.bicepParameter }}
+      - task: AzureCLI@2
+        name: DeployBicepFile
+        condition: succeeded()
+        displayName: Deploy Bicep file
+        inputs:
+          azureSubscription: ${{ parameters.azureSubscription }}
+          scriptType: bash
+          scriptLocation: inlineScript
+          workingDirectory: '${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}'
+          inlineScript: |
+            az deployment group create \
+              --name $(Build.BuildNumber) \
+              --resource-group ${{ parameters.ResourceGroupName }} \
+              --template-file main.bicep \
+              --parameters @main.parameters.${{parameters.bicepParameter}}.json

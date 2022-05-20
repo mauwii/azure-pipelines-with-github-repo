@@ -23,6 +23,6 @@ steps:
       echo "${JSON}" > main.parameters.$(bicepParameter).json
       file main.parameters.$(bicepParameter).json
       cat main.parameters.$(bicepParameter).json
-    workingDirectory: ${{ parameters.bicepDir }}
+    workingDirectory: $(bicepDir)
     env:
       JSON: ${{ convertToJson(parameters.bicep_parameters_template) }}

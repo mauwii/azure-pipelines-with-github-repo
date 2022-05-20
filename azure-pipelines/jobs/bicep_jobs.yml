@@ -29,7 +29,7 @@ jobs:
     displayName: Lint Bicep File
     continueOnError: false
     steps:
-      - template: ${{ parameters.bicepDir }}/main.parameters.yml
+      - template: ${{ variables['Build.SourceDirectory'] }}/IaC/bicep/webApp-with-insights/main.parameters.yml
         parameters:
           bicepDir: ${{ parameters.bicepDir }}
       - script: az bicep build --file main.bicep

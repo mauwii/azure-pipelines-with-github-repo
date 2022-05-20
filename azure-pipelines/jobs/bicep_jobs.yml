@@ -2,6 +2,9 @@ parameters:
   - name: bicepDir
     type: string
     default: $(variables.bicepDir)
+  - name: bicepTemplateDir
+    type: string
+    default: 'webApp-with-insights'
   - name: bicepParameter
     type: string
     default: dev
@@ -20,19 +23,19 @@ jobs:
     displayName: validate Bicep
     continueOnError: false
     steps:
-      - template: '../../${{ parameters.bicepDir }}/main.parameters.yml'
+      - template: '../../${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}/main.parameters.yml'
 
       - script: az bicep build --file main.bicep
         displayName: Run Bicep Linter
         name: LintBicepCode
-        workingDirectory: ${{ parameters.bicepDir }}
+        workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
 
       - task: AzureCLI@2
         name: RunPreflightValidation
         displayName: Run preflight validation
         inputs:
           azureSubscription: ${{ parameters.azureSubscription }}
-          workingDirectory: ${{ parameters.bicepDir }}
+          workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
@@ -67,5 +70,5 @@ jobs:
     steps:
       - template: steps/deploy_bicep.yml
         parameters:
-          bicepDir: ${{ parameters.bicepDir }}
+          bicepDir: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
           bicepParameter: ${{ parameters.bicepParameter }}

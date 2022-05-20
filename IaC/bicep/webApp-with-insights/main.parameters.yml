@@ -1,6 +1,4 @@
 parameters:
-  - name: bicepDir
-    default: $[ variables['Build.SourceDirectory'] ]/IaC/bicep/webApp-with-insights
   - name: bicep_parameters_template
     type: object
     default:
@@ -23,6 +21,6 @@ steps:
       echo "${JSON}" > main.parameters.$(bicepParameter).json
       file main.parameters.$(bicepParameter).json
       cat main.parameters.$(bicepParameter).json
-    workingDirectory: ${{ parameters.bicepDir }}
+    workingDirectory: IaC/bicep/webApp-with-insights
     env:
       JSON: ${{ convertToJson(parameters.bicep_parameters_template) }}

@@ -1,7 +1,8 @@
 {
   "files.associations": {
     "**/azure-pipelines/**/*.yml": "azure-pipelines",
-    "azure-pipelines.yml": "azure-pipelines"
+    "azure-pipelines.yml": "azure-pipelines",
+    "**/main.parameters.yml": "azure-pipelines"
   },
   "editor.tabCompletion": "off",
   "editor.suggest.insertMode": "replace",

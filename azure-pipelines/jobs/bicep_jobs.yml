@@ -40,7 +40,7 @@ jobs:
     continueOnError: false
     displayName: Validate Bicep code
     steps:
-      - template: $(bicepDir)/main.parameters.yml
+      - template: ${{ parameters.bicepDir }}/main.parameters.yml
       - task: AzureCLI@2
         name: RunPreflightValidation
         displayName: Run preflight validation
@@ -61,7 +61,7 @@ jobs:
     displayName: Preview Azure changes
     continueOnError: false
     steps:
-      - template: $(bicepDir)/main.parameters.yml
+      - template: ${{ parameters.bicepDir }}/main.parameters.yml
       - task: AzureCLI@2
         name: RunWhatIf
         displayName: Run what-if
@@ -82,7 +82,7 @@ jobs:
       - previewAzureChanges
     condition: and(succeeded(), or(eq(variables.isMain, 'True'), eq(variables.isStable, 'True')))
     steps:
-      - template: $(bicepDir)/main.parameters.yml
+      - template: ${{ parameters.bicepDir }}/main.parameters.yml
       - template: steps/deploy_bicep.yml
         parameters:
           bicepDir: ${{ parameters.bicepDir }}

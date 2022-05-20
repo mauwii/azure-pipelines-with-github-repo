@@ -55,7 +55,7 @@ jobs:
         displayName: Run what-if
         inputs:
           azureSubscription: ${{ parameters.azureSubscription }}
-          workingDirectory: ${{ parameters.bicepDir }}
+          workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |

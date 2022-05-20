@@ -1,7 +1,7 @@
 parameters:
   - name: bicepDir
     type: string
-    default: IaC/bicep/webApp-with-insights
+    default: $(variables.bicepDir)
   - name: bicepParameter
     type: string
     default: dev
@@ -17,7 +17,7 @@ parameters:
 
 jobs:
   - job: validateBicep
-    displayName: Lint Bicep File
+    displayName: validate Bicep
     continueOnError: false
     steps:
       - template: '../../${{ parameters.bicepDir }}/main.parameters.yml'

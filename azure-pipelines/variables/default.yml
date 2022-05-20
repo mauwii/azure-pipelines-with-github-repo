@@ -18,8 +18,6 @@ variables:
     readonly: true
   - name: mkdocsDeploy
     value: ${{ False }}
-  - name: bicepDir
-    value: ${{ variables['System.DefaultWorkingDirectory'] }}/IaC/bicep/webApp-with-insights
   - name: bicepParameter
     value: 'dev'
   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:

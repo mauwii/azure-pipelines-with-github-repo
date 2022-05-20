@@ -18,8 +18,8 @@ parameters:
 
 steps:
   - script: |
-      echo "${JSON}" > IaC/bicep/webApp-with-insights/main.parameters.$(bicepParameter).json
-      file main.parameters.$(bicepParameter).json
+      echo "${JSON}" > main.parameters.$(bicepParameter).json
+      ls -la
       cat main.parameters.$(bicepParameter).json
     env:
       JSON: ${{ convertToJson(parameters.bicep_parameters_template) }}

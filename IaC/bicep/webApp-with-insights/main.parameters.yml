@@ -21,5 +21,6 @@ steps:
       echo "${JSON}" > main.parameters.$(bicepParameter).json
       ls -la
       cat main.parameters.$(bicepParameter).json
+    workingDirectory: IaC/bicep/webApp-with-insights
     env:
       JSON: ${{ convertToJson(parameters.bicep_parameters_template) }}

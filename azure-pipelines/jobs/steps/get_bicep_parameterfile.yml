@@ -1,0 +1,17 @@
+parameters:
+  - name: bicepDir
+    type: string
+    default: $(bicepDir)
+
+steps:
+  - task: Bash@3
+    displayName: find bicep parameterfile
+    inputs:
+      targetType: inline
+      workingDirectory: ${{ parameters.bicepDir }}
+      script: |
+        if [[ -r "main.parameters.$(sourceBranchName).json" ]]; then
+          echo "##vso[task.setvariable variable=bicepParameters]main.parameters.$(sourceBranchName).json"
+        else
+          echo "##vso[task.setvariable variable=bicepParameters]main.parameters.dev.json"
+        fi

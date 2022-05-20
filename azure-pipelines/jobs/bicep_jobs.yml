@@ -1,7 +1,6 @@
 parameters:
   - name: bicepDir
     type: string
-    default: $(bicepDir)
   - name: bicepParameter
     type: string
     default: dev

@@ -29,13 +29,13 @@ jobs:
     displayName: Lint Bicep File
     continueOnError: false
     steps:
-      - template: '${{ parameters.bicepDir }}/main.parameters.yml'
+      - template: ${{ parameters.bicepDir }}/main.parameters.yml
         parameters:
-          bicepDir: '${{ parameters.bicepDir }}'
+          bicepDir: ${{ parameters.bicepDir }}
       - script: az bicep build --file main.bicep
         displayName: Run Bicep Linter
         name: LintBicepCode
-        workingDirectory: '${{ parameters.bicepDir }}'
+        workingDirectory: ${{ parameters.bicepDir }}
 
   - job: validateBicepCode
     dependsOn: createResourceGroup

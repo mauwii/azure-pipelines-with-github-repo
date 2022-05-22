@@ -35,4 +35,9 @@ Since the Human Brain not always works as well as cloud-storage, I will write do
 - [x] create a src older and move submodules of mkdocs-material and django_webapp into it
     - [x] search/replace old file path with the new one
 - [ ] auto-complete pull requests
-    - [ ] maybe based on [tags](https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/github?view=azure-devops&tabs=yaml#label-sources)
+    - [ ] maybe based upon [tags](https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/github?view=azure-devops&tabs=yaml#label-sources) which could be set for successful builds
+- [ ] Implement Automation to update submodules
+    - [ ] add repos to watch as resources
+    - [ ] trigger a build when defined branch has changes
+    - [ ] if build is successful, trigger a pipeline to update tested submodule
+    - [ ] this could then trigger the build of the submodule to staging

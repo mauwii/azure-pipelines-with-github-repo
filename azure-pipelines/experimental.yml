@@ -20,11 +20,12 @@ jobs:
           PULUMIUSER: $(PulumiUser)
           PULUMIPASSWORD: $(PulumiPassword)
           PULUMI_ACCESS_TOKEN: $(PulumiToken)
+      - script: pulumi stack select dev
+        env:
+          PULUMI_ACCESS_TOKEN: $(PulumiToken)
+        workingDirectory: IaC/pulumi/winquickstart
       - script: pulumi preview
         env:
-          TENANTID: $(TenantId)
-          PULUMIUSER: $(PulumiUser)
-          PULUMIPASSWORD: $(PulumiPassword)
           PULUMI_ACCESS_TOKEN: $(PulumiToken)
         workingDirectory: IaC/pulumi/winquickstart
           

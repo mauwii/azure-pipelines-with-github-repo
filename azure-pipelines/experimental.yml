@@ -27,17 +27,16 @@ jobs:
         displayName: Try to use Pulumi
         inputs:
           targetType: inline
+          workingDirectory: IaC/pulumi/winquickstart
           script: |
-            # confirm Installation
-            pulumi version
-            # create and open quickstart folder
-            mkdir winquickstart
-            cd winquickstart
             # login to azure-cli
             az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
-            # start new pulumi project
-            pulumi new azure-python --yes
-            pulumi config set azure-native:location westeurope --yes
+            # create venv
+            pulumi install plugin
+            # create resources
+            pulumi up --yes
+            # delete them again
+            pulumi destroy --yes
         env:
           TENANTID: $(TenantId)
           PULUMIUSER: $(PulumiUser)

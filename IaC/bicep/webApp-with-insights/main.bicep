@@ -1,6 +1,12 @@
 @description('This will be the first Part of the resource name and added as a resource tag')
 param project string
 
+@description('Which Pricing tier our App Service Plan to')
+param skuName string = 'F1'
+
+@description('How many instances of our app service will be scaled out to')
+param skuCapacity int = 1
+
 @description('The environment where you want to use this webapp')
 @allowed([
   'dev'
@@ -9,8 +15,8 @@ param project string
 ])
 param env string
 
-@description('The location where the Resource(s) will be deployed')
-param location string
+@description('Location for all resources.')
+param location string = resourceGroup().location
 
 @description('The Runtime you want to use in your WebApp')
 @allowed([
@@ -18,31 +24,25 @@ param location string
 ])
 param linuxFxVersion string = 'PYTHON|3.9'
 
-@description('The Pricing Tier of the AppService-Plan')
-param skuName string = 'F1'
-param skuTier string = 'Free'
+@description('Name that will be used to build associated artifacts')
+param appName string = uniqueString(resourceGroup().id)
 
-// Variables
-var resourceGroup_id = uniqueString(resourceGroup().id)
-var appServicePlanName = toLower('${project}-asp-${resourceGroup_id}')
-var webSiteName = toLower('${project}-webapp-${env}-${resourceGroup_id}')
-var appInsightName = toLower('${project}-appi-${resourceGroup_id}')
-var logAnalyticsName = toLower('${project}-la-${resourceGroup_id}')
+var appServicePlanName = toLower('${project}-asp-${appName}')
+var webSiteName = toLower('${project}-wapp-${env}-${appName}')
+var appInsightName = toLower('${project}-appi-${appName}')
+var logAnalyticsName = toLower('${project}-la-${appName}')
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   name: appServicePlanName
   location: location
-  tags: {
-    displayName: 'HostingPlan'
-    ProjectName: project
-  }
   sku: {
     name: skuName
-    tier: skuTier
+    capacity: skuCapacity
   }
   kind: 'linux'
-  properties: {
-    reserved: true
+  tags: {
+    displayName: 'HostingPlan'
+    ProjectName: appName
   }
 }
 
@@ -63,10 +63,9 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
-    reserved: true
     siteConfig: {
-      minTlsVersion: '1.2'
       linuxFxVersion: linuxFxVersion
+      minTlsVersion: '1.2'
     }
   }
 }
@@ -101,7 +100,7 @@ resource appServiceAppSettings 'Microsoft.Web/sites/config@2020-06-01' = {
     }
     httpLogs: {
       fileSystem: {
-        retentionInMb: 25
+        retentionInMb: 40
         enabled: true
       }
     }
@@ -117,7 +116,7 @@ resource appServiceAppSettings 'Microsoft.Web/sites/config@2020-06-01' = {
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: appInsightName
   location: location
-  kind: 'web'
+  kind: 'string'
   tags: {
     displayName: 'AppInsight'
     ProjectName: project
@@ -139,7 +138,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08
     sku: {
       name: 'PerGB2018'
     }
-    retentionInDays: 30
+    retentionInDays: 120
     features: {
       searchVersion: 1
       legacy: 0

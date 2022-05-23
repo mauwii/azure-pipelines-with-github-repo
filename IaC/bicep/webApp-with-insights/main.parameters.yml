@@ -11,6 +11,8 @@ parameters:
           value: $(bicepParameter)
         location:
           value: $(location)
+        pythonVersion:
+          value: $(pythonVersion)
 
 steps:
   - script: |

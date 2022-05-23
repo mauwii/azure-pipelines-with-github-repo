@@ -20,9 +20,9 @@ param location string = resourceGroup().location
 
 @description('The Runtime you want to use in your WebApp')
 @allowed([
-  'PYTHON|3.9'
+  '3.9'
 ])
-param linuxFxVersion string = 'PYTHON|3.9'
+param pythonVerison string
 
 @description('Name that will be used to build associated artifacts')
 param appName string = uniqueString(resourceGroup().id)
@@ -38,10 +38,6 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   sku: {
     name: skuName
     capacity: skuCapacity
-  }
-  kind: 'linux'
-  properties: {
-    reserved: true
   }
   tags: {
     displayName: 'HostingPlan'
@@ -62,14 +58,12 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
   dependsOn: [
     logAnalyticsWorkspace
   ]
-  kind: 'app,linux'
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
-    reserved: true
     siteConfig: {
       minTlsVersion: '1.2'
-      linuxFxVersion: linuxFxVersion
+      pythonVersion: pythonVerison
     }
   }
 }

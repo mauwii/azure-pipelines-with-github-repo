@@ -24,12 +24,6 @@ param skuName string = 'F1'
 @description('How many instances our AppService Plan will be able to scale out')
 param skuCapacity int = 1
 
-// @description('Scaling worker size ID.')
-// param workerSizeId int
-
-// @description('Scaling worker count.')
-// param workerCount int
-
 // Variables
 var resourceGroup_id = uniqueString(resourceGroup().id)
 var appServicePlanName = toLower('${project}-asp-${resourceGroup_id}')
@@ -49,11 +43,6 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
     capacity: skuCapacity
   }
   kind: 'linux'
-  // properties: {
-  //   targetWorkerSizeId: workerSizeId
-  //   targetWorkerCount: workerCount
-  //   reserved: true
-  // }
 }
 
 resource appService 'Microsoft.Web/sites@2020-06-01' = {
@@ -110,7 +99,7 @@ resource appServiceAppSettings 'Microsoft.Web/sites/config@2020-06-01' = {
     }
     httpLogs: {
       fileSystem: {
-        retentionInMb: 40
+        retentionInMb: 25
         enabled: true
       }
     }
@@ -126,7 +115,7 @@ resource appServiceAppSettings 'Microsoft.Web/sites/config@2020-06-01' = {
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: appInsightName
   location: location
-  kind: 'string'
+  kind: 'web'
   tags: {
     displayName: 'AppInsight'
     ProjectName: project
@@ -146,7 +135,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08
   }
   properties: {
     sku: {
-      name: 'PerGB2018'
+      name: 'Free'
     }
     retentionInDays: 30
     features: {

@@ -137,7 +137,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08
   }
   properties: {
     sku: {
-      name: 'Free'
+      name: 'Standard'
     }
     retentionInDays: 30
     features: {

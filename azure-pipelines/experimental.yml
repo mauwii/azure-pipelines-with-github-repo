@@ -13,6 +13,7 @@ jobs:
   - job:
     steps:
       - task: PowerShell@2
+        enabled: false
         name: installPulumiCli
         displayName: update Pulumi-CLI
         inputs:
@@ -38,10 +39,8 @@ jobs:
             # Get-ChildItem ./venv/bin
             # activate venv
             # ./venv/bin/Activate.ps1
-            # select stack
-            pulumi stack select dev
             # preview resources
-            pulumi preview
+            pulumi preview --stack dev
         env:
           TENANTID: $(TenantId)
           PULUMIUSER: $(PulumiUser)

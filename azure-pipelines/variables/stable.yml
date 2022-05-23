@@ -1,3 +1,7 @@
 variables:
   - name: environment
     value: prod
+  - name: bicepParameter
+    value: prod
+  - name: mkdocsDeploy
+    value: ${{ True }}

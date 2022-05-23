@@ -14,7 +14,7 @@ jobs:
     steps:
       # for curiousity I wanted to know if it works faster when using script ...
       - script: choco upgrade pulumi
-      - script: az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
+      - script: az login -u %PULUMIUSER% -p %PULUMIPASSWORD% -t %TENANTID%
         env:
           TENANTID: $(TenantId)
           PULUMIUSER: $(PulumiUser)

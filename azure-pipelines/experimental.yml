@@ -12,12 +12,12 @@ pool:
 jobs:
   - job:
     steps:
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: 3.x  # Required  # Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)
-          addToPath: true  # Required  # Whether to prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable.
-          architecture: x64 # Options: 'x86', 'x64' # Required  # The target architecture (x86, x64) of the Python interpreter.
-      
+      # for curiousity I wanted to know if it works faster when using script ...
+      - script: choco upgrade pulumi
+      - script: az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
+      - script: pulumi preview
+        workingDirectory: IaC/pulumi/winquickstart
+          
       - task: PowerShell@2
         enabled: false
         name: installPulumiCli
@@ -31,6 +31,7 @@ jobs:
             choco upgrade pulumi
 
       - task: PowerShell@2
+        enabled: false
         name: usePulumi
         displayName: Try to use Pulumi
         inputs:

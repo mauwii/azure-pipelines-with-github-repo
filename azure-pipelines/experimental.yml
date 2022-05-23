@@ -29,8 +29,15 @@ jobs:
         displayName: Try to use Pulumi
         inputs:
           targetType: inline
-          workingDirectory: IaC/pulumi/winquickstart
           script: |
+            # change directory to pulumi project
+            cd IaC/pulumi/winquickstart
+            # create venv manually
+            python -m venv venv
+            # activate venv
+            ./venv/bin/Activate.ps1
+            # install requirements
+            pip install -r requirements.txt
             # login to azure-cli
             az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
             # create venv

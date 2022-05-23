@@ -18,4 +18,17 @@ jobs:
         inputs:
           targetType: inline
           script: |
+            # install Pulumi
             choco install pulumi
+            # confirm Installation
+            pulumi version
+
+      - task: PowerShell@2
+        name: usePulumi
+        displayName: Try to use Pulumi
+        inputs:
+          targetType: inline
+          script: |
+            mkdir quickstart
+            cd quickstart
+            pulumi new azure-python

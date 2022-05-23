@@ -13,6 +13,7 @@ jobs:
   - job:
     steps:
       - task: PowerShell@2
+        enabled: false
         name: installPulumiCli
         displayName: install Pulumi-CLI
         inputs:
@@ -32,7 +33,7 @@ jobs:
             # login to azure-cli
             az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
             # create venv
-            pulumi install plugin
+            pulumi plugin install
             # create resources
             pulumi up --yes
             # delete them again

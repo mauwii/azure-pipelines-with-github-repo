@@ -20,9 +20,7 @@ param linuxFxVersion string = 'PYTHON|3.9'
 
 @description('The Pricing Tier of the AppService-Plan')
 param skuName string = 'F1'
-
-@description('How many instances our AppService Plan will be able to scale out')
-param skuCapacity int = 1
+param skuTier string = 'Free'
 
 // Variables
 var resourceGroup_id = uniqueString(resourceGroup().id)
@@ -40,9 +38,12 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   }
   sku: {
     name: skuName
-    capacity: skuCapacity
+    tier: skuTier
   }
   kind: 'linux'
+  properties: {
+    reserved: true
+  }
 }
 
 resource appService 'Microsoft.Web/sites@2020-06-01' = {
@@ -58,6 +59,7 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
   dependsOn: [
     logAnalyticsWorkspace
   ]
+  kind: 'app,linux'
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true

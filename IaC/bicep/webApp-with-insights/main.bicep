@@ -7,6 +7,19 @@ param skuName string = 'F1'
 @description('How many instances of our app service will be scaled out to')
 param skuCapacity int = 1
 
+@description('Pricing Tier for the LogAnalytics Workspace')
+@allowed([
+  'CapacityReservation'
+  'Free'
+  'LACluster'
+  'PerGB2018'
+  'PerNode'
+  'Premium'
+  'Standalone'
+  'Standard'
+])
+param skuNameLogAnalyticsWorkspace string
+
 @description('The environment where you want to use this webapp')
 @allowed([
   'dev'
@@ -60,6 +73,7 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
   ]
   properties: {
     serverFarmId: appServicePlan.id
+    reserved: true
     httpsOnly: true
     siteConfig: {
       minTlsVersion: '1.2'
@@ -122,6 +136,7 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   properties: {
     Application_Type: 'web'
     WorkspaceResourceId: logAnalyticsWorkspace.id
+
   }
 }
 
@@ -134,7 +149,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08
   }
   properties: {
     sku: {
-      name: 'PerGB2018'
+      name: skuNameLogAnalyticsWorkspace
     }
     retentionInDays: 120
     features: {

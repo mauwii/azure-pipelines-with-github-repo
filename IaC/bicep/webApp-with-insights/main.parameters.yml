@@ -13,6 +13,8 @@ parameters:
           value: $(location)
         pythonVersion:
           value: $(pythonVersion)
+        skuNameLogAnalyticsWorkspace:
+          value: 'Free'
 
 steps:
   - script: |

@@ -1,3 +1,4 @@
+
 # pipeline to test if things would work
 trigger:
   branches:
@@ -6,90 +7,16 @@ trigger:
 
 pr: none
 
-stages:
-  - stage: windows
-    pool:
-      vmImage: windows-2019
-    dependsOn:
-    jobs:
-      - job: pulumiWindows
-        displayName: Pulumi without addon
-        steps:
-          # for curiousity I wanted to know if it works faster when using script ...
-          - script: choco upgrade pulumi
-            displayName: upgrade Pulumi-CLI
+pool:
+  vmImage: windows-2019
 
-          - script: az login -u %PULUMIUSER% -p %PULUMIPASSWORD% -t %TENANTID%
-            displayName: login to Azure-CLI
-            env:
-              TENANTID: $(TenantId)
-              PULUMIUSER: $(PulumiUser)
-              PULUMIPASSWORD: $(PulumiPassword)
-              PULUMI_ACCESS_TOKEN: $(PulumiToken)
-
-          - script: pulumi stack select dev
-            displayName: select stack
-            env:
-              PULUMI_ACCESS_TOKEN: $(PulumiToken)
-            workingDirectory: IaC/pulumi/winquickstart
-
-          - script: pulumi preview
-            displayName: preview resources
-            workingDirectory: IaC/pulumi/winquickstart
-            env:
-              PULUMI_ACCESS_TOKEN: $(PulumiToken)
-
-          - script: pulumi up --yes
-            displayName: create resources
-            workingDirectory: IaC/pulumi/winquickstart
-            env:
-              PULUMI_ACCESS_TOKEN: $(PulumiToken)
-
-          - script: pulumi destroy --yes
-            displayName: remove resources
-            env:
-              PULUMI_ACCESS_TOKEN: $(PulumiToken)
-            workingDirectory: IaC/pulumi/winquickstart
-
-  - stage: linux
-    pool:
-      vmImage: ubuntu-latest
-    dependsOn:
-    jobs:
-      - job: pulumiLinux
-        displayName: Pulumi without addon
-        steps:
-          - script: brew install pulumi
-            displayName: install Pulumi-CLI
-
-          - script: az login -u $PULUMIUSER -p $PULUMIPASSWORD -t $TENANTID
-            displayName: login to Azure-CLI
-            env:
-              TENANTID: $(TenantId)
-              PULUMIUSER: $(PulumiUser)
-              PULUMIPASSWORD: $(PulumiPassword)
-              PULUMI_ACCESS_TOKEN: $(PulumiToken)
-
-          - script: pulumi stack select dev
-            displayName: select stack
-            env:
-              PULUMI_ACCESS_TOKEN: $(PulumiToken)
-            workingDirectory: IaC/pulumi/winquickstart
-
-          - script: pulumi preview
-            displayName: preview resources
-            workingDirectory: IaC/pulumi/winquickstart
-            env:
-              PULUMI_ACCESS_TOKEN: $(PulumiToken)
-
-          - script: pulumi up --yes
-            displayName: create resources
-            workingDirectory: IaC/pulumi/winquickstart
-            env:
-              PULUMI_ACCESS_TOKEN: $(PulumiToken)
-
-          - script: pulumi destroy --yes
-            displayName: remove resources
-            env:
-              PULUMI_ACCESS_TOKEN: $(PulumiToken)
-            workingDirectory: IaC/pulumi/winquickstart
+jobs:
+  - job:
+    steps:
+      - task: PowerShell@2
+        name: installPulumiCli
+        displayName: install Pulumi-CLI
+        inputs:
+          targetType: inline
+          script: |
+            choco install pulumi

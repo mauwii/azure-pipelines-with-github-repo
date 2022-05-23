@@ -1,9 +1,5 @@
-parameters:
-  - name: publishArtifact
-    displayName: 'Publish build Artifacts?'
-    type: boolean
-    default: true
-
 variables:
   - name: environment
-    value: stg
+    value: dev
+  - name: bicepParameter
+    value: dev

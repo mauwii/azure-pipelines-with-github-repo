@@ -28,8 +28,11 @@ variables:
   - name: isPullRequest
     value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
     readonly: true
+  - name: sourceBranchName
+    value: $[ variables['Build.SourceBranchName'] ]
   - template: azure-pipelines/variables/default.yml
-
+  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
+      - template: azure-pipelines/variables/$(sourceBranchName).yml
 pool:
   vmImage: $(vmImageName)
 

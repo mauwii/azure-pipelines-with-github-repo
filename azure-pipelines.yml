@@ -32,7 +32,7 @@ variables:
     value: $[ variables['Build.SourceBranchName'] ]
   - template: azure-pipelines/variables/default.yml
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
-      - template: azure-pipelines/variables/$(sourceBranchName).yml
+      - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
 pool:
   vmImage: $(vmImageName)
 

@@ -12,15 +12,15 @@ pool:
 jobs:
   - job:
     steps:
-      - task: PowerShell@2
-        name: installPulumiCli
-        displayName: install Pulumi-CLI
-        inputs:
-          targetType: inline
-          script: |
-            # install Pulumi
-            # choco install pulumi ## is already preinstalled
-            choco upgrade pulumi
+      # - task: PowerShell@2
+      #   name: installPulumiCli
+      #   displayName: install Pulumi-CLI
+      #   inputs:
+      #     targetType: inline
+      #     script: |
+      #       # install Pulumi
+      #       # choco install pulumi ## is already preinstalled
+      #       choco upgrade pulumi
 
       - task: PowerShell@2
         name: debug
@@ -33,10 +33,10 @@ jobs:
             write-output "${env:PULUMIPASSWORD}"
             write-output "${env:PULUMI_ACCESS_TOKEN}"
         env:
-          TENANTID: TenantId
-          PULUMIUSER: PulumiUser
-          PULUMIPASSWORD: PulumiPassword
-          PULUMI_ACCESS_TOKEN: PulumiToken
+          TENANTID: $(TenantId)
+          PULUMIUSER: $(PulumiUser)
+          PULUMIPASSWORD: $(PulumiPassword)
+          PULUMI_ACCESS_TOKEN: $(PulumiToken)
 
       - task: PowerShell@2
         name: usePulumi
@@ -54,7 +54,7 @@ jobs:
             # start new pulumi project
             pulumi new azure-python --yes
         env:
-          TENANTID: TenantId
-          PULUMIUSER: PulumiUser
-          PULUMIPASSWORD: PulumiPassword
-          PULUMI_ACCESS_TOKEN: PulumiToken
+          TENANTID: $(TenantId)
+          PULUMIUSER: $(PulumiUser)
+          PULUMIPASSWORD: $(PulumiPassword)
+          PULUMI_ACCESS_TOKEN: $(PulumiToken)

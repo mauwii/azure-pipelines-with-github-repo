@@ -28,38 +28,46 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: $(PulumiToken)
         workingDirectory: IaC/pulumi/winquickstart
-          
-      - task: PowerShell@2
-        enabled: false
-        name: installPulumiCli
-        displayName: update Pulumi-CLI
-        inputs:
-          targetType: inline
-          script: |
-            # install Pulumi
-            # choco install pulumi ## is already preinstalled
-            # upgrade pulumi
-            choco upgrade pulumi
-
-      - task: PowerShell@2
-        enabled: false
-        name: usePulumi
-        displayName: Try to use Pulumi
-        inputs:
-          targetType: inline
-          script: |
-            # change directory to pulumi project
-            cd IaC/pulumi/winquickstart
-            # login to azure-cli
-            az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
-            # preview resources
-            pulumi preview --stack dev --non-interactive
-            # deploy resources
-            pulumi up --yes
-            # destroy them again
-            pulumi destroy --yes
+      - script: pulumi up --yes
         env:
-          TENANTID: $(TenantId)
-          PULUMIUSER: $(PulumiUser)
-          PULUMIPASSWORD: $(PulumiPassword)
           PULUMI_ACCESS_TOKEN: $(PulumiToken)
+        workingDirectory: IaC/pulumi/winquickstart
+      - script: pulumi destroy --yes
+        env:
+          PULUMI_ACCESS_TOKEN: $(PulumiToken)
+        workingDirectory: IaC/pulumi/winquickstart
+          
+      # - task: PowerShell@2
+      #   enabled: false
+      #   name: installPulumiCli
+      #   displayName: update Pulumi-CLI
+      #   inputs:
+      #     targetType: inline
+      #     script: |
+      #       # install Pulumi
+      #       # choco install pulumi ## is already preinstalled
+      #       # upgrade pulumi
+      #       choco upgrade pulumi
+
+      # - task: PowerShell@2
+      #   enabled: false
+      #   name: usePulumi
+      #   displayName: Try to use Pulumi
+      #   inputs:
+      #     targetType: inline
+      #     script: |
+      #       # change directory to pulumi project
+      #       cd IaC/pulumi/winquickstart
+      #       # login to azure-cli
+      #       az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
+      #       # preview resources
+      #       pulumi preview --stack dev --non-interactive
+      #       # deploy resources
+      #       pulumi up --yes
+      #       # destroy them again
+      #       pulumi destroy --yes
+      #   env:
+      #     TENANTID: $(TenantId)
+      #     PULUMIUSER: $(PulumiUser)
+      #     PULUMIPASSWORD: $(PulumiPassword)
+      #     PULUMI_ACCESS_TOKEN: $(PulumiToken)

@@ -33,11 +33,9 @@ jobs:
             # change directory to pulumi project
             cd IaC/pulumi/winquickstart
             # create venv manually
-            python -m venv venv
-            # activate venv
-            ./venv/bin/Activate.ps1
+            python3 -m venv venv
             # install requirements
-            pip install -r requirements.txt
+            ./venv/bin/pip3 install -r requirements.txt
             # login to azure-cli
             az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
             # create venv

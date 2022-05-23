@@ -15,7 +15,17 @@ jobs:
       # for curiousity I wanted to know if it works faster when using script ...
       - script: choco upgrade pulumi
       - script: az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
+        env:
+          TENANTID: $(TenantId)
+          PULUMIUSER: $(PulumiUser)
+          PULUMIPASSWORD: $(PulumiPassword)
+          PULUMI_ACCESS_TOKEN: $(PulumiToken)
       - script: pulumi preview
+        env:
+          TENANTID: $(TenantId)
+          PULUMIUSER: $(PulumiUser)
+          PULUMIPASSWORD: $(PulumiPassword)
+          PULUMI_ACCESS_TOKEN: $(PulumiToken)
         workingDirectory: IaC/pulumi/winquickstart
           
       - task: PowerShell@2

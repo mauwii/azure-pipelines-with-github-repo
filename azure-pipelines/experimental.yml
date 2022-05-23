@@ -34,8 +34,10 @@ jobs:
             az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
             # create venv
             pulumi plugin install
+            # list Child-Items to see where I am
+            Get-ChildItem
             # activate venv
-            venv/bin/Activate.ps1
+            ./venv/bin/Activate.ps1
             # create resources
             pulumi up --yes
             # delete them again

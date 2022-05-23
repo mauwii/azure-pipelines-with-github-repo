@@ -40,6 +40,9 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
     capacity: skuCapacity
   }
   kind: 'linux'
+  properties: {
+    reserved: true
+  }
   tags: {
     displayName: 'HostingPlan'
     ProjectName: appName
@@ -63,9 +66,10 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
+    reserved: true
     siteConfig: {
-      linuxFxVersion: linuxFxVersion
       minTlsVersion: '1.2'
+      linuxFxVersion: linuxFxVersion
     }
   }
 }

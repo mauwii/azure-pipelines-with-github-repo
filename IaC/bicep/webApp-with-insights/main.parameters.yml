@@ -11,10 +11,10 @@ parameters:
           value: $(bicepParameter)
         location:
           value: $(location)
-        workerSizeId:
-          value: 0
-        workerCount:
-          value: 1
+        pythonVersion:
+          value: $(pythonVersion)
+        skuNameLogAnalyticsWorkspace:
+          value: 'PerGB2018'
 
 steps:
   - script: |

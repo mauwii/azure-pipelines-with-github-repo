@@ -1,6 +1,25 @@
 @description('This will be the first Part of the resource name and added as a resource tag')
 param project string
 
+@description('Which Pricing tier our App Service Plan to')
+param skuName string = 'F1'
+
+@description('How many instances of our app service will be scaled out to')
+param skuCapacity int = 1
+
+@description('Pricing Tier for the LogAnalytics Workspace')
+@allowed([
+  'CapacityReservation'
+  'Free'
+  'LACluster'
+  'PerGB2018'
+  'PerNode'
+  'Premium'
+  'Standalone'
+  'Standard'
+])
+param skuNameLogAnalyticsWorkspace string
+
 @description('The environment where you want to use this webapp')
 @allowed([
   'dev'
@@ -9,103 +28,134 @@ param project string
 ])
 param env string
 
-param tags object = {
-  project: project
-}
-
-@description('The location where the Resource(s) will be deployed')
-param location string
+@description('Location for all resources.')
+param location string = resourceGroup().location
 
 @description('The Runtime you want to use in your WebApp')
 @allowed([
-  'PYTHON|3.9'
+  '3.9'
 ])
-param linuxFxVersion string = 'PYTHON|3.9'
+param pythonVersion string
 
-param appServicePlanSku object = {
-  name: 'F1'
-  tier: 'Free'
-}
+@description('Name that will be used to build associated artifacts')
+param appName string = uniqueString(resourceGroup().id)
 
-@description('Scaling worker size ID.')
-param workerSizeId int
-
-@description('Scaling worker count.')
-param workerCount int
-
-// Variables
-var resourceGroup_id = string(uniqueString(resourceGroup().id))
-var appServicePlanName = string('${project}-asp-${resourceGroup_id}')
-var webAppName = string('${project}-webapp-${env}-${resourceGroup_id}')
-var appInsightsName = string('${project}-appi-${resourceGroup_id}')
-
-resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: appInsightsName
-  location: location
-  tags: tags
-  kind: 'web'
-  properties: {
-    Application_Type: 'web'
-    DisableIpMasking: false
-    DisableLocalAuth: false
-    Flow_Type: 'Bluefield'
-    ForceCustomerStorageForProfiler: false
-    ImmediatePurgeDataOn30Days: true
-    IngestionMode: 'ApplicationInsights'
-    publicNetworkAccessForIngestion: 'Enabled'
-    publicNetworkAccessForQuery: 'Disabled'
-    Request_Source: 'rest'
-  }
-}
+var appServicePlanName = toLower('${project}-asp-${appName}')
+var webSiteName = toLower('${project}-wapp-${env}-${appName}')
+var appInsightName = toLower('${project}-appi-${appName}')
+var logAnalyticsName = toLower('${project}-la-${appName}')
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   name: appServicePlanName
   location: location
-  tags: tags
-  sku: appServicePlanSku
-  kind: 'linux'
-  properties: {
-    targetWorkerSizeId: workerSizeId
-    targetWorkerCount: workerCount
-    reserved: true
+  sku: {
+    name: skuName
+    capacity: skuCapacity
+  }
+  tags: {
+    displayName: 'HostingPlan'
+    ProjectName: appName
   }
 }
 
-resource webapp 'Microsoft.Web/sites@2020-06-01' = {
-  name: webAppName
+resource appService 'Microsoft.Web/sites@2020-06-01' = {
+  name: webSiteName
   location: location
-  kind: 'app,linux'
-  tags: tags
+  identity: {
+    type: 'SystemAssigned'
+  }
+  tags: {
+    displayName: 'Website'
+    ProjectName: project
+  }
+  dependsOn: [
+    logAnalyticsWorkspace
+  ]
   properties: {
-    httpsOnly: true
     serverFarmId: appServicePlan.id
-    clientAffinityEnabled: false
+    reserved: true
+    httpsOnly: true
     siteConfig: {
-      linuxFxVersion: linuxFxVersion
       minTlsVersion: '1.2'
-      ftpsState: 'FtpsOnly'
-      appSettings: [
-        {
-          name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
-          value: 'false'
-        }
-        {
-          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: applicationInsights.properties.InstrumentationKey
-        }
-        {
-          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-          value: applicationInsights.properties.ConnectionString
-        }
-        {
-          name: 'XDT_MicrosoftApplicationInsights_Mode'
-          value: 'default'
-        }
-        {
-          name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
-          value: '~2'
-        }
-      ]
+      pythonVersion: pythonVersion
+    }
+  }
+}
+
+resource appServiceLogging 'Microsoft.Web/sites/config@2020-06-01' = {
+  parent: appService
+  name: 'appsettings'
+  properties: {
+    APPINSIGHTS_INSTRUMENTATIONKEY: appInsights.properties.InstrumentationKey
+  }
+  dependsOn: [
+    appServiceSiteExtension
+  ]
+}
+
+resource appServiceSiteExtension 'Microsoft.Web/sites/siteextensions@2020-06-01' = {
+  parent: appService
+  name: 'Microsoft.ApplicationInsights.AzureWebSites'
+  dependsOn: [
+    appInsights
+  ]
+}
+
+resource appServiceAppSettings 'Microsoft.Web/sites/config@2020-06-01' = {
+  parent: appService
+  name: 'logs'
+  properties: {
+    applicationLogs: {
+      fileSystem: {
+        level: 'Warning'
+      }
+    }
+    httpLogs: {
+      fileSystem: {
+        retentionInMb: 40
+        enabled: true
+      }
+    }
+    failedRequestsTracing: {
+      enabled: true
+    }
+    detailedErrorMessages: {
+      enabled: true
+    }
+  }
+}
+
+resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: appInsightName
+  location: location
+  kind: 'string'
+  tags: {
+    displayName: 'AppInsight'
+    ProjectName: project
+  }
+  properties: {
+    Application_Type: 'web'
+    WorkspaceResourceId: logAnalyticsWorkspace.id
+
+  }
+}
+
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08-01' = {
+  name: logAnalyticsName
+  location: location
+  tags: {
+    displayName: 'Log Analytics'
+    ProjectName: project
+  }
+  properties: {
+    sku: {
+      name: skuNameLogAnalyticsWorkspace
+    }
+    retentionInDays: 120
+    features: {
+      searchVersion: 1
+      legacy: 0
+      enableLogAccessUsingOnlyResourcePermissions: true
     }
   }
 }

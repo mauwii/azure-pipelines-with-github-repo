@@ -14,7 +14,7 @@ parameters:
         pythonVersion:
           value: $(pythonVersion)
         skuNameLogAnalyticsWorkspace:
-          value: 'Free'
+          value: 'PerGB2018'
 
 steps:
   - script: |

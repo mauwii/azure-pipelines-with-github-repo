@@ -1,3 +1,4 @@
+
 # pipeline to test if things would work
 trigger:
   branches:
@@ -7,22 +8,15 @@ trigger:
 pr: none
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-2019
 
-variables:
-  - group: django_gh
-  - name: pythonVersion
-    value: '3.9'
-  - name: resourceGroupName
-    value: 'django_gh'
-  - name: location
-    value: 'westeurope'
-  - name: azureSubscription
-    value: 'django_gh'
-
-stages:
-  - stage:
-    jobs:
-      - template: jobs/bicep_jobs.yml
-        parameters:
-          workingDirectory: IaC/bicep
+jobs:
+  - job:
+    steps:
+      - task: PowerShell@2
+        name: installPulumiCli
+        displayName: install Pulumi-CLI
+        inputs:
+          targetType: inline
+          script: |
+            choco install pulumi

@@ -22,7 +22,7 @@ param location string = resourceGroup().location
 @allowed([
   '3.9'
 ])
-param pythonVerison string
+param pythonVersion string
 
 @description('Name that will be used to build associated artifacts')
 param appName string = uniqueString(resourceGroup().id)
@@ -63,7 +63,7 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
     httpsOnly: true
     siteConfig: {
       minTlsVersion: '1.2'
-      pythonVersion: pythonVerison
+      pythonVersion: pythonVersion
     }
   }
 }

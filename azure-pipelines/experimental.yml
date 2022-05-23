@@ -23,22 +23,6 @@ jobs:
             choco upgrade pulumi
 
       - task: PowerShell@2
-        name: debug
-        displayName: debug env
-        inputs:
-          targetType: inline
-          script: |
-            write-output "${env:TENANTID}"
-            write-output "${env:PULUMIUSER}"
-            write-output "${env:PULUMIPASSWORD}"
-            write-output "${env:PULUMI_ACCESS_TOKEN}"
-        env:
-          TENANTID: $(TenantId)
-          PULUMIUSER: $(PulumiUser)
-          PULUMIPASSWORD: $(PulumiPassword)
-          PULUMI_ACCESS_TOKEN: $(PulumiToken)
-
-      - task: PowerShell@2
         name: usePulumi
         displayName: Try to use Pulumi
         inputs:

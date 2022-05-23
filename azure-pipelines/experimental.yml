@@ -13,14 +13,14 @@ jobs:
   - job:
     steps:
       - task: PowerShell@2
-        enabled: false
         name: installPulumiCli
-        displayName: install Pulumi-CLI
+        displayName: update Pulumi-CLI
         inputs:
           targetType: inline
           script: |
             # install Pulumi
             # choco install pulumi ## is already preinstalled
+            # upgrade pulumi
             choco upgrade pulumi
 
       - task: PowerShell@2
@@ -33,15 +33,15 @@ jobs:
             # login to azure-cli
             az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
             # create venv
-            pulumi plugin install
+            # pulumi plugin install
             # list Child-Items to see where I am
-            Get-ChildItem
+            # Get-ChildItem ./venv/bin
             # activate venv
-            ./venv/bin/Activate.ps1
-            # create resources
-            pulumi up --yes
-            # delete them again
-            pulumi destroy --yes
+            # ./venv/bin/Activate.ps1
+            # select stack
+            pulumi stack select dev
+            # preview resources
+            pulumi preview
         env:
           TENANTID: $(TenantId)
           PULUMIUSER: $(PulumiUser)

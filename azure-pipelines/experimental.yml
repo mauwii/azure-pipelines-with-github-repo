@@ -19,9 +19,24 @@ jobs:
           targetType: inline
           script: |
             # install Pulumi
-            choco install pulumi
+            # choco install pulumi ## is already preinstalled
             choco upgrade pulumi
-            
+
+      - task: PowerShell@2
+        name: debug
+        displayName: debug env
+        inputs:
+          targetType: inline
+          script: |
+            write-output "${env:TENANTID}"
+            write-output "${env:PULUMIUSER}"
+            write-output "${env:PULUMIPASSWORD}"
+            write-output "${env:PULUMI_ACCESS_TOKEN}"
+        env:
+          TENANTID: TenantId
+          PULUMIUSER: PulumiUser
+          PULUMIPASSWORD: PulumiPassword
+          PULUMI_ACCESS_TOKEN: PulumiToken
 
       - task: PowerShell@2
         name: usePulumi
@@ -35,7 +50,7 @@ jobs:
             mkdir quickstart
             cd quickstart
             # login to azure-cli
-            az login -u ${env:PULUMIUSER} -p ${env:PULUMIPASSWORD} --tenant ${env:TENANTID}
+            az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
             # start new pulumi project
             pulumi new azure-python --yes
         env:

@@ -6,68 +6,90 @@ trigger:
 
 pr: none
 
-pool:
-  vmImage: windows-2019
+stages:
+  - stage: windows
+    pool:
+      vmImage: windows-2019
+    dependsOn:
+    jobs:
+      - job: pulumiWindows
+        displayName: Pulumi without addon
+        steps:
+          # for curiousity I wanted to know if it works faster when using script ...
+          - script: choco upgrade pulumi
+            displayName: upgrade Pulumi-CLI
 
-jobs:
-  - job:
-    steps:
-      # for curiousity I wanted to know if it works faster when using script ...
-      - script: choco upgrade pulumi
-      - script: az login -u %PULUMIUSER% -p %PULUMIPASSWORD% -t %TENANTID%
-        env:
-          TENANTID: $(TenantId)
-          PULUMIUSER: $(PulumiUser)
-          PULUMIPASSWORD: $(PulumiPassword)
-          PULUMI_ACCESS_TOKEN: $(PulumiToken)
-      - script: pulumi stack select dev
-        env:
-          PULUMI_ACCESS_TOKEN: $(PulumiToken)
-        workingDirectory: IaC/pulumi/winquickstart
-      - script: pulumi preview
-        env:
-          PULUMI_ACCESS_TOKEN: $(PulumiToken)
-        workingDirectory: IaC/pulumi/winquickstart
-      - script: pulumi up --yes
-        env:
-          PULUMI_ACCESS_TOKEN: $(PulumiToken)
-        workingDirectory: IaC/pulumi/winquickstart
-      - script: pulumi destroy --yes
-        env:
-          PULUMI_ACCESS_TOKEN: $(PulumiToken)
-        workingDirectory: IaC/pulumi/winquickstart
-          
-      # - task: PowerShell@2
-      #   enabled: false
-      #   name: installPulumiCli
-      #   displayName: update Pulumi-CLI
-      #   inputs:
-      #     targetType: inline
-      #     script: |
-      #       # install Pulumi
-      #       # choco install pulumi ## is already preinstalled
-      #       # upgrade pulumi
-      #       choco upgrade pulumi
+          - script: az login -u %PULUMIUSER% -p %PULUMIPASSWORD% -t %TENANTID%
+            displayName: login to Azure-CLI
+            env:
+              TENANTID: $(TenantId)
+              PULUMIUSER: $(PulumiUser)
+              PULUMIPASSWORD: $(PulumiPassword)
+              PULUMI_ACCESS_TOKEN: $(PulumiToken)
 
-      # - task: PowerShell@2
-      #   enabled: false
-      #   name: usePulumi
-      #   displayName: Try to use Pulumi
-      #   inputs:
-      #     targetType: inline
-      #     script: |
-      #       # change directory to pulumi project
-      #       cd IaC/pulumi/winquickstart
-      #       # login to azure-cli
-      #       az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
-      #       # preview resources
-      #       pulumi preview --stack dev --non-interactive
-      #       # deploy resources
-      #       pulumi up --yes
-      #       # destroy them again
-      #       pulumi destroy --yes
-      #   env:
-      #     TENANTID: $(TenantId)
-      #     PULUMIUSER: $(PulumiUser)
-      #     PULUMIPASSWORD: $(PulumiPassword)
-      #     PULUMI_ACCESS_TOKEN: $(PulumiToken)
+          - script: pulumi stack select dev
+            displayName: select stack
+            env:
+              PULUMI_ACCESS_TOKEN: $(PulumiToken)
+            workingDirectory: IaC/pulumi/winquickstart
+
+          - script: pulumi preview
+            displayName: preview resources
+            workingDirectory: IaC/pulumi/winquickstart
+            env:
+              PULUMI_ACCESS_TOKEN: $(PulumiToken)
+
+          - script: pulumi up --yes
+            displayName: create resources
+            workingDirectory: IaC/pulumi/winquickstart
+            env:
+              PULUMI_ACCESS_TOKEN: $(PulumiToken)
+
+          - script: pulumi destroy --yes
+            displayName: remove resources
+            env:
+              PULUMI_ACCESS_TOKEN: $(PulumiToken)
+            workingDirectory: IaC/pulumi/winquickstart
+
+  - stage: linux
+    pool:
+      vmImage: ubuntu-latest
+    dependsOn:
+    jobs:
+      - job: pulumiLinux
+        displayName: Pulumi without addon
+        steps:
+          - script: brew install pulumi
+            displayName: install Pulumi-CLI
+
+          - script: az login -u $PULUMIUSER -p $PULUMIPASSWORD -t $TENANTID
+            displayName: login to Azure-CLI
+            env:
+              TENANTID: $(TenantId)
+              PULUMIUSER: $(PulumiUser)
+              PULUMIPASSWORD: $(PulumiPassword)
+              PULUMI_ACCESS_TOKEN: $(PulumiToken)
+
+          - script: pulumi stack select dev
+            displayName: select stack
+            env:
+              PULUMI_ACCESS_TOKEN: $(PulumiToken)
+            workingDirectory: IaC/pulumi/winquickstart
+
+          - script: pulumi preview
+            displayName: preview resources
+            workingDirectory: IaC/pulumi/winquickstart
+            env:
+              PULUMI_ACCESS_TOKEN: $(PulumiToken)
+
+          - script: pulumi up --yes
+            displayName: create resources
+            workingDirectory: IaC/pulumi/winquickstart
+            env:
+              PULUMI_ACCESS_TOKEN: $(PulumiToken)
+
+          - script: pulumi destroy --yes
+            displayName: remove resources
+            env:
+              PULUMI_ACCESS_TOKEN: $(PulumiToken)
+            workingDirectory: IaC/pulumi/winquickstart

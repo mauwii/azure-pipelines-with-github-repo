@@ -597,6 +597,7 @@
 </li>
 </ul>
 </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> use the defaults.yaml for configuration relevant things like f.E. default location of pipeline YAMLs or Bicep templates</li>
 </ul>
 <h4 id="maybe-unnecessary">Maybe unnecessary<a class="headerlink" href="#maybe-unnecessary" title="Permanent link">&para;</a></h4>
 <ul class="task-list">
@@ -611,7 +612,14 @@
 </ul>
 </li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> auto-complete pull requests<ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> maybe based on <a href="https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/github?view=azure-devops&amp;tabs=yaml#label-sources">tags</a></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> maybe based upon <a href="https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/github?view=azure-devops&amp;tabs=yaml#label-sources">tags</a> which could be set for successful builds</li>
+</ul>
+</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Implement Automation to update submodules<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> add repos to watch as resources</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> trigger a build when defined branch has changes</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> if build is successful, trigger a pipeline to update tested submodule</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> this could then trigger the build of the submodule to staging</li>
 </ul>
 </li>
 </ul>
@@ -621,7 +629,7 @@
   <small>
     
       Last update:
-      2022-05-20
+      2022-05-22
     
   </small>
 </div>

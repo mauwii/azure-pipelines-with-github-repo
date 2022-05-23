@@ -8,6 +8,7 @@ parameters:
 
 steps:
   - task: AzureCLI@2
+    condition: succeeded()
     displayName: Create RG ${{ parameters.resourceGroupName }}
     continueOnError: true
     inputs:

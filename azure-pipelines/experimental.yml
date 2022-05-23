@@ -12,15 +12,15 @@ pool:
 jobs:
   - job:
     steps:
-      # - task: PowerShell@2
-      #   name: installPulumiCli
-      #   displayName: install Pulumi-CLI
-      #   inputs:
-      #     targetType: inline
-      #     script: |
-      #       # install Pulumi
-      #       # choco install pulumi ## is already preinstalled
-      #       choco upgrade pulumi
+      - task: PowerShell@2
+        name: installPulumiCli
+        displayName: install Pulumi-CLI
+        inputs:
+          targetType: inline
+          script: |
+            # install Pulumi
+            # choco install pulumi ## is already preinstalled
+            choco upgrade pulumi
 
       - task: PowerShell@2
         name: debug
@@ -47,12 +47,13 @@ jobs:
             # confirm Installation
             pulumi version
             # create and open quickstart folder
-            mkdir quickstart
-            cd quickstart
+            mkdir winquickstart
+            cd winquickstart
             # login to azure-cli
             az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
             # start new pulumi project
             pulumi new azure-python --yes
+            pulumi config set azure-native:location westeurope
         env:
           TENANTID: $(TenantId)
           PULUMIUSER: $(PulumiUser)

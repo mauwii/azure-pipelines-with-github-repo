@@ -12,6 +12,12 @@ pool:
 jobs:
   - job:
     steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: 3.x  # Required  # Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)
+          addToPath: true  # Required  # Whether to prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable.
+          architecture: x64 # Options: 'x86', 'x64' # Required  # The target architecture (x86, x64) of the Python interpreter.
+      
       - task: PowerShell@2
         enabled: false
         name: installPulumiCli
@@ -36,6 +42,10 @@ jobs:
             az login -u "${env:PULUMIUSER}" -p "${env:PULUMIPASSWORD}" -t "${env:TENANTID}"
             # preview resources
             pulumi preview --stack dev --non-interactive
+            # deploy resources
+            pulumi up --yes
+            # destroy them again
+            pulumi destroy --yes
         env:
           TENANTID: $(TenantId)
           PULUMIUSER: $(PulumiUser)

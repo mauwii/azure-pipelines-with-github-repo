@@ -17,7 +17,6 @@ insert_final_newline = false
 
 # YAML Files
 [*.{yml,yaml}]
-insert_final_newline = false
 trim_trailing_whitespace = false
 
 # Python

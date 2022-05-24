@@ -5,23 +5,35 @@ parameters:
       $schema: https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#
       contentVersion: '1.0.0.0'
       parameters:
-        project:
-          value: $(projectName)
-        env:
-          value: $(bicepParameter)
         location:
           value: $(location)
-        pythonVersion:
-          value: $(pythonVersion)
-        skuNameLogAnalyticsWorkspace:
-          value: 'PerGB2018'
+        name:
+          value: $(containername)
+        image:
+          value: $(containerimage)
+        port:
+          value: 8080
+        cpucores:
+          value: 1
+        memoryInGb:
+          value: 2
+        restartPolicy:
+          value: $(restartPolicy)
+        AZP_URL:
+          value: $(AZP_URL)
+        AZP_TOKEN:
+          value: $(AZP_TOKEN)
+        AZP_AGENT_NAME:
+          value: $(AZP_AGENT_NAME)
+        AZP_POOL:
+          value: $(AZP_POOL)
 
 steps:
   - script: |
       echo "${JSON}" > main.parameters.$(bicepParameter).json
       ls -la
       cat main.parameters.$(bicepParameter).json
-    workingDirectory: IaC/bicep/webApp-with-insights
+    workingDirectory: IaC/bicep/aci/devopsagent
     displayName: Create Bicep Parameters
     env:
       JSON: ${{ convertToJson(parameters.bicep_parameters_template) }}

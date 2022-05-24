@@ -6,6 +6,15 @@ trigger:
     include:
       - feature/experimental/*
 
+resources:
+  repositories:
+    - repository: DevOpsBuildAgent
+      endpoint: Mauwii
+      trigger:
+        branches:
+          include:
+            - main
+
 variables:
   - name: isMain
     value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
@@ -25,8 +34,12 @@ variables:
 pool:
   vmImage: $(vmImageName)
 
-extends:
-  template: main.yml
-  parameters:
-    mkdocsDeploy: False
-    bicepParameter: ${{ variables['bicepParameter'] }}
+stages:
+  - stage: build
+    displayName: Build Container
+    jobs:
+      - job:
+        steps:
+          - checkout: DevOpsBuildAgent
+            path: src/Repo
+            submodules: false

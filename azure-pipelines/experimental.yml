@@ -46,4 +46,4 @@ stages:
             path: src/Repo
             displayName: checkout DevOpsBuildAgent
             submodules: false
-          - script: ls src/Repo
+          - script: ls $(Build.Repository.LocalPath)/src/Repo

@@ -62,8 +62,7 @@ stages:
               buildContext: '$(Build.Repository.LocalPath)/**'
               tags: |
                 latest
-                $(Build.DefinitionName)
-                $(Build.BuildNumber)
+                $(Build.BuildId)
               arguments: '--build-arg TARGETARCH=$(Agent.OS)-$(Agent.OSArchitecture)'
           - task: JFrogAudit@1
             inputs:

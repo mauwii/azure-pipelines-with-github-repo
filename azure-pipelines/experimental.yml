@@ -33,11 +33,14 @@ variables:
   - template: variables/aci/devopsagent.yml
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
       - template: variables/${{ variables['Build.SourceBranchName'] }}.yml
+
 pool:
   vmImage: $(vmImageName)
 
 stages:
   - stage: build
+    pool:
+      
     displayName: Build Container
     jobs:
       - job:
@@ -46,4 +49,20 @@ stages:
             path: src/Repo
             displayName: checkout DevOpsBuildAgent
             submodules: false
-          - script: ls $(Build.Repository.LocalPath)
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'docker-jfrog'
+              command: 'login'
+          - task: Docker@2
+            displayName: Build Dockercontainer
+            name: buildDockerfile
+            inputs:
+              containerRegistry: 'docker-jfrog'
+              repository: 'default-docker-local'
+              command: 'build'
+              Dockerfile: '$(Build.Repository.LocalPath)/Dockerfile'
+              buildContext: '$(Build.Repository.LocalPath)/**'
+              tags: |
+                latest
+                $(Build.BuildId)
+              arguments: '--build-arg TARGETARCH=$(Agent.OS)-$(Agent.OSArchitecture)'

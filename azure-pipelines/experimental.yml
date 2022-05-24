@@ -51,10 +51,6 @@ stages:
             inputs:
               containerRegistry: 'docker-jfrog'
               command: 'login'
-          - task: JFrogToolsInstaller@1
-            inputs:
-              artifactoryConnection: 'artifactory'
-              cliInstallationRepo: 'jfrog-cli-remote'
           - task: Docker@2
             displayName: Build Dockercontainer
             name: buildDockerfile
@@ -76,10 +72,3 @@ stages:
               tags: |
                 latest
                 $(Build.BuildId)
-          - task: JFrogBuildScan@1
-            inputs:
-              xrayConnection: 'xray-mauwii'
-              buildName: '$(Build.BuildId)'
-              buildNumber: '$(Build.BuildNumber)'
-              allowFailBuild: true
-              vuln: false

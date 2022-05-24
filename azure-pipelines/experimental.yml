@@ -56,11 +56,17 @@ stages:
             name: buildDockerfile
             inputs:
               containerRegistry: 'docker-jfrog'
-              repository: 'default-docker-local'
+              repository: 'default-docker-local/devopsbuildagent'
               command: 'build'
               Dockerfile: '$(Build.Repository.LocalPath)/Dockerfile'
               buildContext: '$(Build.Repository.LocalPath)/**'
               tags: |
                 latest
                 $(Build.BuildId)
+              arguments: '--build-arg TARGETARCH=$(Agent.OS)-$(Agent.OSArchitecture)'
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'docker-jfrog'
+              repository: 'default-docker-local/devopsbuildagent'
+              command: 'push'
               arguments: '--build-arg TARGETARCH=$(Agent.OS)-$(Agent.OSArchitecture)'

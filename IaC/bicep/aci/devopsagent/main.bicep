@@ -28,7 +28,7 @@ param restartPolicy string = 'Always'
 param AZP_URL string
 
 @description('ADO-PAT with permission to Read/Write Build-Agents')
-@secret()
+@secure()
 param AZP_TOKEN string
 
 @description('Name of the DevOps-Agent')

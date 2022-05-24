@@ -19,15 +19,17 @@ variables:
   - name: sourceBranchName
     value: $[ variables['Build.SourceBranchName'] ]
   - template: variables/default.yml
+  - template: variables/aci/devopsagent.yml
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
       - template: variables/${{ variables['Build.SourceBranchName'] }}.yml
 pool:
   vmImage: $(vmImageName)
 
 stages:
-  - stage: bicep
-    displayName: Bicep
+  - stage:
     jobs:
-      - template: containerinstance.yml
+      - template: jobs/bicep_jobs.yml
         parameters:
-          containerinstance: devopsagent
+          bicepDir: 'IaC/bicep/aci'
+          bicepTemplateDir: devopsagent
+          bicepParameter: $(bicepParameter)

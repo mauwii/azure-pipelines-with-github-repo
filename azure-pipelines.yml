@@ -5,6 +5,11 @@ trigger:
   branches:
     include:
       - refs/heads/main
+      - refs/heads/stable
+      - feature/*
+      - issue/*
+    exclude:
+      - feature/experimental/*
 
 pr:
   autoCancel: false

@@ -15,8 +15,8 @@ variables:
     value: OnFailure
   - name: AZP_URL
     value: 'https://dev.azure.com/mauwiidev'
-  - name: AZP_TOKEN
-    value: $(AZP_TOKEN)
+  # - name: AZP_TOKEN
+  #   value: $(AZP_TOKEN)
   - name: AZP_AGENT_NAME
     value: testagent-eu
   - name: AZP_POOL

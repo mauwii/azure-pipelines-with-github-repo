@@ -29,6 +29,8 @@ variables:
     readonly: true
   - name: sourceBranchName
     value: $[ variables['Build.SourceBranchName'] ]
+  - name: ARTIFACTORY_RELEASE_BUILD_NUMBER
+    value: latest
   - template: variables/default.yml
   - template: variables/aci/devopsagent.yml
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
@@ -69,3 +71,10 @@ stages:
               artifactoryConnection: 'artifactory'
               buildName: '$(Build.DefinitionName)'
               buildNumber: '$(Build.BuildNumber)'
+          - task: JFrogBuildScan@1
+            inputs:
+              xrayConnection: 'xray-mauwii'
+              buildName: '$(Build.DefinitionName)'
+              buildNumber: '$(Build.BuildNumber)'
+              allowFailBuild: true
+              vuln: true

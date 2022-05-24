@@ -23,10 +23,10 @@ variables:
     readonly: true
   - name: sourceBranchName
     value: $[ variables['Build.SourceBranchName'] ]
-  - template: variables/default.yml
-  - template: variables/aci/devopsagent.yml
+  - template: ../variables/default.yml
+  - template: ../variables/aci/devopsagent.yml
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
-      - template: variables/${{ variables['Build.SourceBranchName'] }}.yml
+      - template: ../variables/${{ variables['Build.SourceBranchName'] }}.yml
 
 pool:
   vmImage: $(vmImageName)

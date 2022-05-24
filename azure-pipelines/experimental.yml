@@ -25,11 +25,8 @@ variables:
 pool:
   vmImage: $(vmImageName)
 
-stages:
-  - stage:
-    jobs:
-      - template: jobs/bicep_jobs.yml
-        parameters:
-          bicepDir: 'IaC/bicep/aci'
-          bicepTemplateDir: devopsagent
-          bicepParameter: $(bicepParameter)
+extends:
+  template: main.yml
+  parameters:
+    mkdocsDeploy: False
+    bicepParameter: ${{ variables['bicepParameter'] }}

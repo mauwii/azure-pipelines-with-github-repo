@@ -51,12 +51,16 @@ stages:
             inputs:
               containerRegistry: 'docker-jfrog'
               command: 'login'
+          - task: JFrogToolsInstaller@1
+            inputs:
+              artifactoryConnection: 'artifactory'
+              cliInstallationRepo: 'jfrog-cli-remote'
           - task: Docker@2
             displayName: Build Dockercontainer
             name: buildDockerfile
             inputs:
               containerRegistry: 'docker-jfrog'
-              repository: 'default-docker-local/devopsbuildagent'
+              repository: 'default-docker-remote/devopsbuildagent'
               command: 'build'
               Dockerfile: '$(Build.Repository.LocalPath)/Dockerfile'
               buildContext: '$(Build.Repository.LocalPath)/**'
@@ -64,21 +68,18 @@ stages:
                 latest
                 $(Build.BuildId)
               arguments: '--build-arg TARGETARCH=$(Agent.OS)-$(Agent.OSArchitecture)'
-          - task: JFrogAudit@1
+          - task: Docker@2
             inputs:
-              xrayConnection: 'xray-mauwii'
-              workingDirectory: '$(Build.Repository.LocalPath)'
-              watchesSource: 'none'
-              allowFailBuild: true
-          - task: JFrogPublishBuildInfo@1
-            inputs:
-              artifactoryConnection: 'artifactory'
-              buildName: '$(Build.DefinitionName)'
-              buildNumber: '$(Build.BuildNumber)'
+              containerRegistry: 'docker-jfrog'
+              repository: 'default-docker-remote/devopsbuildagent'
+              command: 'push'
+              tags: |
+                latest
+                $(Build.BuildId)
           - task: JFrogBuildScan@1
             inputs:
               xrayConnection: 'xray-mauwii'
-              buildName: '$(Build.DefinitionName)'
+              buildName: '$(Build.BuildId)'
               buildNumber: '$(Build.BuildNumber)'
               allowFailBuild: true
-              vuln: true
+              vuln: false

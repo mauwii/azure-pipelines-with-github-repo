@@ -1,0 +1,39 @@
+parameters:
+  - name: bicep_parameters_template
+    type: object
+    default:
+      $schema: https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#
+      contentVersion: '1.0.0.0'
+      parameters:
+        location:
+          value: $(location)
+        name:
+          value: $(containername)
+        image:
+          value: $(containerimage)
+        port:
+          value: $(containerport)
+        cpucores:
+          value: $(cpuCores)
+        memoryInGb:
+          value: $(memoryInGb)
+        restartPolicy:
+          value: $(restartPolicy)
+        AZP_URL:
+          value: $(AZP_URL)
+        AZP_TOKEN:
+          value: $(AZP_TOKEN)
+        AZP_AGENT_NAME:
+          value: $(AZP_AGENT_NAME)
+        AZP_POOL:
+          value: $(AZP_POOL)
+
+steps:
+  - script: |
+      echo "${JSON}" > main.parameters.json
+      ls -la
+      cat main.parameters.json
+    workingDirectory: IaC/bicep/webApp-with-insights
+    displayName: Create Bicep Parameters
+    env:
+      JSON: ${{ convertToJson(parameters.bicep_parameters_template) }}

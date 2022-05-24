@@ -34,5 +34,8 @@ variables:
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
       - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
 
+pool:
+  vmImage: $(vmImageName)
+
 extends:
   template: azure-pipelines/main.yml

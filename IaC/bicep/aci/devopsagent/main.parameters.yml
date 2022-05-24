@@ -16,7 +16,7 @@ parameters:
         cpucores:
           value: 1
         memoryInGb:
-          value: 1.5
+          value: 2
         restartPolicy:
           value: $(restartPolicy)
         AZP_URL:

@@ -5,11 +5,6 @@ trigger:
   branches:
     include:
       - refs/heads/main
-      - refs/heads/stable
-      - feature/*
-      - issue/*
-    exclude:
-      - feature/experimental/*
 
 pr:
   autoCancel: false
@@ -33,6 +28,9 @@ variables:
   - template: azure-pipelines/variables/default.yml
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
       - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/stable') }}:
+      - name: mkdocsDeploy
+        value: ${{ True }}
 
 pool:
   vmImage: $(vmImageName)
@@ -40,5 +38,4 @@ pool:
 extends:
   template: azure-pipelines/main.yml
   parameters:
-    ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
-      mkdocsDeploy: ${{ True }}
+    mkdocsDeploy: ${{ variables['mkdocsDeploy'] }}

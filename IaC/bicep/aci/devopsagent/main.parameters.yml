@@ -33,7 +33,7 @@ steps:
       echo "${JSON}" > main.parameters.$(bicepParameter).json
       ls -la
       cat main.parameters.$(bicepParameter).json
-    workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
+    workingDirectory: IaC/bicep/aci/devopsagent
     displayName: Create Bicep Parameters
     env:
       JSON: ${{ convertToJson(parameters.bicep_parameters_template) }}

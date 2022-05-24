@@ -67,7 +67,7 @@ jobs:
 
       - task: AzureCLI@2
         name: DeployBicepFile
-        condition: succeeded()
+        condition: and(succeeded(), in('True', variables['isMain'], variables['isStable']))
         displayName: Deploy Bicep Template
         inputs:
           azureSubscription: ${{ parameters.azureSubscription }}

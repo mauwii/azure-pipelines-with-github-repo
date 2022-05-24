@@ -64,8 +64,8 @@ stages:
                 latest
                 $(Build.BuildId)
               arguments: '--build-arg TARGETARCH=$(Agent.OS)-$(Agent.OSArchitecture)'
-          - task: Docker@2
+          - task: JFrogPublishBuildInfo@1
             inputs:
-              containerRegistry: 'docker-jfrog'
-              repository: 'default-docker-local/devopsbuildagent'
-              command: 'push'
+              artifactoryConnection: 'artifactory'
+              buildName: '$(Build.DefinitionName)'
+              buildNumber: '$(Build.BuildNumber)'

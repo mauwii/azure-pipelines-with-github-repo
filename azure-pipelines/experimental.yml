@@ -30,7 +30,7 @@ variables:
   - name: sourceBranchName
     value: $[ variables['Build.SourceBranchName'] ]
   - name: ARTIFACTORY_RELEASE_BUILD_NUMBER
-    value: latest
+    value: LATEST
   - template: variables/default.yml
   - template: variables/aci/devopsagent.yml
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:

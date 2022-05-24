@@ -11,6 +11,8 @@ trigger:
     exclude:
       - feature/experimental/*
 
+pr: none
+
 variables:
   - name: isMain
     value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]

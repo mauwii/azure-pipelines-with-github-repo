@@ -50,6 +50,7 @@ jobs:
               --resource-group ${{ parameters.resourceGroupName }} \
               --template-file main.bicep \
               --parameters @main.parameters.${{parameters.bicepParameter}}.json
+
       - task: AzureCLI@2
         name: RunWhatIf
         displayName: Run what-if
@@ -63,15 +64,16 @@ jobs:
               --resource-group ${{ parameters.resourceGroupName }} \
               --template-file main.bicep \
               --parameters @main.parameters.${{parameters.bicepParameter}}.json
+
       - task: AzureCLI@2
         name: DeployBicepFile
-        condition: succeeded()
+        condition: and(succeeded(), in('True', variables['isMain'], variables['isStable']))
         displayName: Deploy Bicep Template
         inputs:
           azureSubscription: ${{ parameters.azureSubscription }}
           scriptType: bash
           scriptLocation: inlineScript
-          workingDirectory: '${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}'
+          workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
           inlineScript: |
             az deployment group create \
               --name $(Build.BuildNumber) \

@@ -1,0 +1,29 @@
+parameters:
+  - name: mkdocsDeploy
+    type: boolean
+    default: False
+  - name: bicepParameter
+    type: string
+
+stages:
+  - stage: bicep
+    displayName: Bicep
+    jobs:
+      - template: jobs/bicep_jobs.yml
+        parameters:
+          bicepDir: 'IaC/bicep'
+          bicepTemplateDir: 'webApp-with-insights'
+          bicepParameter: ${{ parameters.bicepParameter }}
+          # The following parameters default value are set like this: $(<parametername>) to reflect current value of the variable
+          # if you do/can not use a variable named like the parameter, just use the parameters as normal
+          # resourceGroupName: '<Name of the ResourceGroup>'
+          # azureSubscription: '<Name of the ARM-Service connection>'
+          # location: '<location of the ResourceGroup>'
+
+  - stage: mkdocs
+    jobs:
+      - template: jobs/mkdocs-material.yml
+        parameters:
+          mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
+          # pythonVersion: '<Python Version to use when building MkDocs-Material>'
+          # mkdocsSiteDir: '<folder to create the site by mkdocs>' - defaults to 'site'

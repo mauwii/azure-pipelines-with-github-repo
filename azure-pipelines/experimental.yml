@@ -9,6 +9,8 @@ trigger:
 resources:
   repositories:
     - repository: DevOpsBuildAgent
+      type: github
+      name: Mauwii/DevOpsBuildAgent
       endpoint: Mauwii
       trigger:
         branches:
@@ -42,4 +44,6 @@ stages:
         steps:
           - checkout: DevOpsBuildAgent
             path: src/Repo
+            displayName: checkout DevOpsBuildAgent
             submodules: false
+          - script: ls src/Repo

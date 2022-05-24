@@ -12,11 +12,11 @@ parameters:
         image:
           value: $(containerimage)
         port:
-          value: $(containerport)
+          value: 8080
         cpucores:
-          value: $(cpuCores)
+          value: 1
         memoryInGb:
-          value: $(memoryInGb)
+          value: 1.5
         restartPolicy:
           value: $(restartPolicy)
         AZP_URL:

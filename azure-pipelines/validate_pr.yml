@@ -24,7 +24,7 @@ pool:
   vmImage: $(vmImageName)
 
 extends:
-  template: azure-pipelines/main.yml
+  template: main.yml
   parameters:
     mkdocsDeploy: False
     bicepParameter: ${{ variables['bicepParameter'] }}

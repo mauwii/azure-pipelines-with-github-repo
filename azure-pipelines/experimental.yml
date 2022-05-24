@@ -60,7 +60,7 @@ stages:
             name: buildDockerfile
             inputs:
               containerRegistry: 'docker-jfrog'
-              repository: 'default-docker-remote/devopsbuildagent'
+              repository: 'default-docker-local/devopsbuildagent'
               command: 'build'
               Dockerfile: '$(Build.Repository.LocalPath)/Dockerfile'
               buildContext: '$(Build.Repository.LocalPath)/**'
@@ -71,7 +71,7 @@ stages:
           - task: Docker@2
             inputs:
               containerRegistry: 'docker-jfrog'
-              repository: 'default-docker-remote/devopsbuildagent'
+              repository: 'default-docker-local/devopsbuildagent'
               command: 'push'
               tags: |
                 latest

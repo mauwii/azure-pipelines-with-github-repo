@@ -1,0 +1,17 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+parameters:
+  - name: containerinstance
+    type: string
+
+variables:
+  template: 'variables/aci/${{ parameters.containerinstance }}.yml'
+
+jobs:
+  - template: jobs/bicep_jobs.yml
+    parameters:
+      bicepDir: 'IaC/bicep/aci'
+      bicepTemplateDir: '${{ parameters.containerinstance }}'
+      bicepParameter: $(bicepParameter)

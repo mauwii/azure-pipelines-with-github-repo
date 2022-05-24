@@ -30,9 +30,9 @@ parameters:
 
 steps:
   - script: |
-      echo "${JSON}" > main.parameters.json
+      echo "${JSON}" > main.parameters.$(bicepParameter).json
       ls -la
-      cat main.parameters.json
+      cat main.parameters.$(bicepParameter).json
     workingDirectory: IaC/bicep/webApp-with-insights
     displayName: Create Bicep Parameters
     env:

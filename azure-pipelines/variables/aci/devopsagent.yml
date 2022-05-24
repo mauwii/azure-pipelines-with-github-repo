@@ -1,0 +1,23 @@
+variables:
+  - name: location
+    value: westeurope
+  - name: containername
+    value: devopsagent-westeurope-mauwiidev
+  - name: containerimage
+    value: mauwii/devopsbuildagent
+  - name: containerport
+    value: 8080
+  - name: cpuCores
+    value: 1
+  - name: memoryInGb
+    value: 1.5
+  - name: restartPolicy
+    value: OnFailure
+  - name: AZP_URL
+    value: 'https://dev.azure.com/mauwiidev'
+  - name: AZP_TOKEN
+    value: $(AZP_TOKEN)
+  - name: AZP_AGENT_NAME
+    value: testagent-eu
+  - name: AZP_POOL
+    value: ACI

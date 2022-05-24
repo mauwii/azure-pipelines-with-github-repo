@@ -1,5 +1,7 @@
 name: 'validate_pr.yml'
 
+trigger: none
+
 pr:
   autoCancel: false
   branches:

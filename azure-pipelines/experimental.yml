@@ -39,8 +39,6 @@ pool:
 
 stages:
   - stage: build
-    pool:
-      
     displayName: Build Container
     jobs:
       - job:

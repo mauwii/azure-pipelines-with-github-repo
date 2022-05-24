@@ -62,8 +62,15 @@ stages:
               buildContext: '$(Build.Repository.LocalPath)/**'
               tags: |
                 latest
-                $(Build.BuildId)
+                $(Build.DefinitionName)
+                $(Build.BuildNumber)
               arguments: '--build-arg TARGETARCH=$(Agent.OS)-$(Agent.OSArchitecture)'
+          - task: JFrogAudit@1
+            inputs:
+              xrayConnection: 'xray-mauwii'
+              workingDirectory: '$(Build.Repository.LocalPath)'
+              watchesSource: 'none'
+              allowFailBuild: true
           - task: JFrogPublishBuildInfo@1
             inputs:
               artifactoryConnection: 'artifactory'

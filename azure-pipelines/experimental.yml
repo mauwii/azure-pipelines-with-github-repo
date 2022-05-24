@@ -1,22 +1,33 @@
+name: 'experimental.yml'
 
-# pipeline to test if things would work
 trigger:
+  batch: true
   branches:
     include:
       - feature/experimental/*
 
-pr: none
-
+variables:
+  - name: isMain
+    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
+    readonly: true
+  - name: isStable
+    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
+    readonly: true
+  - name: isPullRequest
+    value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
+    readonly: true
+  - name: sourceBranchName
+    value: $[ variables['Build.SourceBranchName'] ]
+  - template: variables/default.yml
+  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
+      - template: variables/${{ variables['Build.SourceBranchName'] }}.yml
 pool:
-  vmImage: windows-2019
+  vmImage: $(vmImageName)
 
-jobs:
-  - job:
-    steps:
-      - task: PowerShell@2
-        name: installPulumiCli
-        displayName: install Pulumi-CLI
-        inputs:
-          targetType: inline
-          script: |
-            choco install pulumi
+stages:
+  - stage: bicep
+    displayName: Bicep
+    jobs:
+      - template: containerinstance.yml
+        parameters:
+          containerinstance: devopsagent

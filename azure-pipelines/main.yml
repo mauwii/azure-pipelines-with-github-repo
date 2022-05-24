@@ -1,3 +1,8 @@
+parameters:
+  - name: mkdocsDeploy
+    type: boolean
+    default: ${{ False }}
+
 stages:
   - stage: bicep
     displayName: Bicep
@@ -17,6 +22,6 @@ stages:
     jobs:
       - template: jobs/mkdocs-material.yml
         parameters:
-          mkdocsDeploy: $(mkdocsDeploy)
+          mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
           # pythonVersion: '<Python Version to use when building MkDocs-Material>'
           # mkdocsSiteDir: '<folder to create the site by mkdocs>' - defaults to 'site'

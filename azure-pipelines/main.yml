@@ -2,7 +2,7 @@ stages:
   - stage: bicep
     displayName: Bicep
     jobs:
-      - template: azure-pipelines/jobs/bicep_jobs.yml
+      - template: jobs/bicep_jobs.yml
         parameters:
           bicepDir: 'IaC/bicep'
           bicepTemplateDir: 'webApp-with-insights'
@@ -15,7 +15,7 @@ stages:
 
   - stage: mkdocs
     jobs:
-      - template: azure-pipelines/jobs/mkdocs-material.yml
+      - template: jobs/mkdocs-material.yml
         parameters:
           mkdocsDeploy: ${{ variables.mkdocsDeploy }}
           # pythonVersion: '<Python Version to use when building MkDocs-Material>'

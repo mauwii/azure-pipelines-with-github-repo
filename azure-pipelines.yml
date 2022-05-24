@@ -11,13 +11,6 @@ trigger:
     exclude:
       - feature/experimental/*
 
-pr:
-  autoCancel: false
-  branches:
-    include:
-      - main
-      - stable
-
 variables:
   - name: isMain
     value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
@@ -44,3 +37,4 @@ extends:
   template: azure-pipelines/main.yml
   parameters:
     mkdocsDeploy: ${{ variables['mkdocsDeploy'] }}
+    bicepParameter: ${{ variables['bicepParameter'] }}

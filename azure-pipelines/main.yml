@@ -2,6 +2,8 @@ parameters:
   - name: mkdocsDeploy
     type: boolean
     default: False
+  - name: bicepParameter
+    type: string
 
 stages:
   - stage: bicep
@@ -11,7 +13,7 @@ stages:
         parameters:
           bicepDir: 'IaC/bicep'
           bicepTemplateDir: 'webApp-with-insights'
-          bicepParameter: $(bicepParameter)
+          bicepParameter: ${{ parameters.bicepParameter }}
           # The following parameters default value are set like this: $(<parametername>) to reflect current value of the variable
           # if you do/can not use a variable named like the parameter, just use the parameters as normal
           # resourceGroupName: '<Name of the ResourceGroup>'

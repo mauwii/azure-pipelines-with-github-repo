@@ -1,63 +1,30 @@
-trigger:
-  - main
-
 pr:
   autoCancel: false
   branches:
     include:
       - main
-      - feature/*
-      - issue/*
-    exclude:
-      - feature/experimental/*
+      - stable
 
 variables:
-  - group: django_gh
-  - name: pythonVersion
-    value: '3.9'
-  - name: resourceGroupName
-    value: 'django_gh'
-  - name: location
-    value: 'westeurope'
-  - name: azureSubscription
-    value: 'django_gh'
+  - name: isMain
+    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
+    readonly: true
+  - name: isStable
+    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
+    readonly: true
+  - name: isPullRequest
+    value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
+    readonly: true
+  - name: sourceBranchName
+    value: $[ variables['Build.SourceBranchName'] ]
+  - template: azure-pipelines/variables/default.yml
+
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: $(vmImageName)
 
-stages:
-  - stage: ValidateBicep
-    dependsOn:
-    displayName: Bicep Validation
-    jobs:
-      - template: jobs/validate_bicep.yml
-
-  - stage: BuildWebApp
-    dependsOn:
-    displayName: Build and Test
-
-    jobs:
-      - job: BuildWebApp
-        displayName: Build Django
-        variables:
-          - group: django-superuser
-          - group: django-dev
-
-        steps:
-          - template: jobs/steps/checkout_submodules.yml
-            parameters:
-              submodule: 'src/webapp'
-
-          - template: jobs/steps/get_appinsights_con_str.yml
-            parameters:
-              azureSubscription: $(azureSubscription)
-              resourceGroupName: $(resourceGroupName)
-
-          - template: jobs/steps/build_webapp.yml
-            parameters:
-              pythonVersion: $(pythonVersion)
-
-          - template: jobs/steps/python_django_test_experimental.yml
-            parameters:
-              pythonVersions:
-                - $(pythonVersion)
+extends:
+  template: azure-pipelines/main.yml
+  parameters:
+    mkdocsDeploy: False
+    bicepParameter: ${{ variables['bicepParameter'] }}

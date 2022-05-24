@@ -69,4 +69,3 @@ stages:
               containerRegistry: 'docker-jfrog'
               repository: 'default-docker-local/devopsbuildagent'
               command: 'push'
-              arguments: '--build-arg TARGETARCH=$(Agent.OS)-$(Agent.OSArchitecture)'

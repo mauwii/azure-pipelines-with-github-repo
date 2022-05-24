@@ -6,11 +6,11 @@ variables:
   - name: containerimage
     value: mauwii/devopsbuildagent
   - name: containerport
-    value: 8080
+    value: ${{ 8080 }}
   - name: cpuCores
-    value: 1
+    value: ${{ 1 }}
   - name: memoryInGb
-    value: 1.5
+    value: ${{ 1.5 }}
   - name: restartPolicy
     value: OnFailure
   - name: AZP_URL

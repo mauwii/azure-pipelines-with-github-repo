@@ -33,12 +33,12 @@ stages:
               repository: 'devopsbuildagent'
               command: 'build'
               Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
-              buildContext: 'src/DevOpsBuildAgent/**'
+              buildContext: 'src/DevOpsBuildAgent/'
               tags: |
                 latest
                 linux-x64
                 linux-x64-$(Build.BuildId)
-              arguments: '--build-arg  BASE_IMAGE=amd64/ubuntu:18.04 TARGETARCH=linux-x64'
+              arguments: '--build-arg  "BASE_IMAGE=amd64/ubuntu:18.04" "TARGETARCH=linux-x64"'
 
           - task: Docker@2
             displayName: build arm64
@@ -48,11 +48,11 @@ stages:
               repository: 'devopsbuildagent'
               command: 'build'
               Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
-              buildContext: 'src/DevOpsBuildAgent/**'
+              buildContext: 'src/DevOpsBuildAgent/'
               tags: |
                 linux-arm64
                 linux-arm64-$(Build.BuildId)
-              arguments: '--build-arg  BASE_IMAGE=arm64v8/ubuntu:18.04 TARGETARCH=linux-arm64'
+              arguments: '--build-arg  "BASE_IMAGE=arm64v8/ubuntu:18.04" "TARGETARCH=linux-arm64"'
 
           - task: Docker@2
             displayName: push to dockerhub

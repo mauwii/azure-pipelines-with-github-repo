@@ -33,12 +33,11 @@ stages:
               repository: 'devopsbuildagent'
               command: 'build'
               Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
-              buildContext: 'src/DevOpsBuildAgent/'
               tags: |
-                latest
-                linux-x64
-                linux-x64-$(Build.BuildId)
-              arguments: '--build-arg  "BASE_IMAGE=amd64/ubuntu:18.04" "TARGETARCH=linux-x64"'
+                'latest'
+                'linux-x64'
+                'linux-x64-$(Build.BuildId)'
+              arguments: '--build-arg  BASE_IMAGE=amd64/ubuntu:18.04 TARGETARCH=linux-x64'
 
           - task: Docker@2
             displayName: build arm64
@@ -48,11 +47,10 @@ stages:
               repository: 'devopsbuildagent'
               command: 'build'
               Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
-              buildContext: 'src/DevOpsBuildAgent/'
               tags: |
-                linux-arm64
-                linux-arm64-$(Build.BuildId)
-              arguments: '--build-arg  "BASE_IMAGE=arm64v8/ubuntu:18.04" "TARGETARCH=linux-arm64"'
+                'linux-arm64'
+                'linux-arm64-$(Build.BuildId)'
+              arguments: '--build-arg  BASE_IMAGE=arm64v8/ubuntu:18.04 TARGETARCH=linux-arm64'
 
           - task: Docker@2
             displayName: push to dockerhub
@@ -61,11 +59,11 @@ stages:
               repository: 'devopsbuildagent'
               command: 'push'
               tags: |
-                latest
-                linux-x64
-                linux-x64-$(Build.BuildId)
-                linux-arm64
-                linux-arm64-$(Build.BuildId)
+                'latest'
+                'linux-x64'
+                'linux-x64-$(Build.BuildId)'
+                'linux-arm64'
+                'linux-arm64-$(Build.BuildId)'
 
           - script: |
               docker manifest create mauwii/devopsbuildagent:latest mauwii/devopsbuildagent:linux-x64 mauwii/devopsbuildagent:linux-arm64

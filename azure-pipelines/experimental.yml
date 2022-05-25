@@ -8,8 +8,9 @@ stages:
     displayName: Docker
     dependsOn:
     jobs:
-      - job: build
-        displayName: build and push
+      - job: buildx64
+        dependsOn:
+        displayName: build x64
         steps:          
           - template: jobs/steps/checkout_submodules.yml
             parameters:
@@ -41,6 +42,34 @@ stages:
               DOCKER_DEFAULT_PLATFORM: linux/amd64
 
           - task: Docker@2
+            displayName: push x64
+            inputs:
+              containerRegistry: 'docker-mauwii'
+              repository: 'mauwii/devopsbuildagent'
+              command: 'push'
+              tags: |
+                linux-x64
+                linux-x64-$(Build.BuildId)
+
+      - job: buildarm64
+        dependsOn:
+        displayName: build arm64
+        steps:          
+          - template: jobs/steps/checkout_submodules.yml
+            parameters:
+              submodule: src/DevOpsBuildAgent
+
+          - task: Docker@2
+            displayName: login to dockerhub
+            inputs:
+              containerRegistry: 'docker-mauwii'
+              command: 'login'
+
+          - script: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+            name: qemu
+            displayName: register QEMU binary
+
+          - task: Docker@2
             displayName: build arm64
             name: buildarm64
             inputs:
@@ -56,17 +85,22 @@ stages:
               DOCKER_DEFAULT_PLATFORM: linux/arm64
 
           - task: Docker@2
-            displayName: push to dockerhub
+            displayName: push arm64
             inputs:
               containerRegistry: 'docker-mauwii'
               repository: 'mauwii/devopsbuildagent'
               command: 'push'
               tags: |
-                linux-x64
-                linux-x64-$(Build.BuildId)
                 linux-arm64
                 linux-arm64-$(Build.BuildId)
 
+      - job: manifest
+        displayName: create manifest
+        dependsOn:
+          buildx64          
+          buildarm64
+        condition: succeeded()
+        steps:
           - script: |
               docker manifest create mauwii/devopsbuildagent:latest mauwii/devopsbuildagent:linux-x64 mauwii/devopsbuildagent:linux-arm64
               docker manifest annotate mauwii/devopsbuildagent:latest mauwii/devopsbuildagent:linux-x64 --os linux --arch amd64

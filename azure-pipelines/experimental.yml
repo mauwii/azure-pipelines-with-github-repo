@@ -97,8 +97,8 @@ stages:
       - job: manifest
         displayName: create manifest
         dependsOn:
-          buildx64          
-          buildarm64
+          - buildx64          
+          - buildarm64
         condition: succeeded()
         steps:
           - script: |

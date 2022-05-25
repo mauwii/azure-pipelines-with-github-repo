@@ -1,5 +1,8 @@
 name: 'devopsbuildagent'
 
+pool:
+  vmImage: ubuntu-latest
+
 resources:
   repositories:
     - repository: DevOpsBuildAgent
@@ -7,9 +10,6 @@ resources:
       name: Mauwii/DevOpsBuildAgent
       trigger:
         - main
-
-pool:
-  vmImage: ubuntu-latest
 
 stages:
   - stage: docker

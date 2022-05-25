@@ -34,7 +34,6 @@ stages:
               command: 'build'
               Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
               tags: |
-                latest
                 linux-x64
                 linux-x64-$(Build.BuildId)
               arguments: '--build-arg BASE_IMAGE=amd64/ubuntu:18.04 --build-arg TARGETARCH=linux-x64'
@@ -59,7 +58,6 @@ stages:
               repository: 'mauwii/devopsbuildagent'
               command: 'push'
               tags: |
-                latest
                 linux-x64
                 linux-x64-$(Build.BuildId)
                 linux-arm64

@@ -1,5 +1,8 @@
 name: 'devopsbuildagent'
 
+trigger: none
+pr: none
+
 resources:
   repositories:
     - repository: DevOpsBuildAgent

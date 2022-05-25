@@ -1,74 +1,75 @@
 name: 'experimental'
 
-trigger:
-  batch: true
-  branches:
-    include:
-      - feature/experimental/*
-
-resources:
-  repositories:
-    - repository: DevOpsBuildAgent
-      type: github
-      name: Mauwii/DevOpsBuildAgent
-      endpoint: Mauwii
-      trigger:
-        branches:
-          include:
-            - main
-
-variables:
-  - name: isMain
-    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
-    readonly: true
-  - name: isStable
-    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
-    readonly: true
-  - name: isPullRequest
-    value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
-    readonly: true
-  - name: sourceBranchName
-    value: $[ variables['Build.SourceBranchName'] ]
-  - template: variables/default.yml
-  - template: variables/aci/devopsagent.yml
-  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
-      - template: variables/${{ variables['Build.SourceBranchName'] }}.yml
-
 pool:
-  vmImage: $(vmImageName)
+  vmImage: ubuntu-latest
 
 stages:
-  - stage: build
-    displayName: Build Container
+  - stage: docker
+    displayName: Docker
+    dependsOn:
     jobs:
-      - job:
-        steps:
-          - checkout: DevOpsBuildAgent
-            path: src/Repo
-            displayName: checkout DevOpsBuildAgent
-            submodules: false
+      - job: build
+        displayName: build and push
+        steps:          
+          - template: jobs/steps/checkout_submodules.yml
+            parameters:
+              submodule: devopsbuildagent
+
           - task: Docker@2
+            displayName: login to dockerhub
             inputs:
-              containerRegistry: 'docker-jfrog'
+              containerRegistry: 'docker-mauwii'
               command: 'login'
+
+          - script: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+            name: qemu
+            displayName: register QEMU binary
+
           - task: Docker@2
-            displayName: Build Dockercontainer
-            name: buildDockerfile
+            displayName: Build x64
+            name: buildx64
             inputs:
-              containerRegistry: 'docker-jfrog'
-              repository: 'default-docker-local/devopsbuildagent'
+              containerRegistry: 'docker-mauwii'
+              repository: 'devopsbuildagent'
               command: 'build'
               Dockerfile: '$(Build.Repository.LocalPath)/Dockerfile'
               buildContext: '$(Build.Repository.LocalPath)/**'
               tags: |
                 latest
-                $(Build.BuildId)
-              arguments: '--build-arg TARGETARCH=$(Agent.OS)-$(Agent.OSArchitecture)'
+                linux-x64
+                linux-x64-$(Build.BuildId)
+              arguments: '--build-arg  BASE_IMAGE=amd64/ubuntu:18.04 TARGETARCH=linux-x64'
+
           - task: Docker@2
+            displayName: build arm64
+            name: buildarm64
             inputs:
-              containerRegistry: 'docker-jfrog'
-              repository: 'default-docker-local/devopsbuildagent'
+              containerRegistry: 'docker-mauwii'
+              repository: 'devopsbuildagent'
+              command: 'build'
+              Dockerfile: '$(Build.Repository.LocalPath)/Dockerfile'
+              buildContext: '$(Build.Repository.LocalPath)/**'
+              tags: |
+                linux-arm64
+                linux-arm64-$(Build.BuildId)
+              arguments: '--build-arg  BASE_IMAGE=arm64v8/ubuntu:18.04 TARGETARCH=linux-arm64'
+
+          - task: Docker@2
+            displayName: push to dockerhub
+            inputs:
+              containerRegistry: 'docker-mauwii'
+              repository: 'devopsbuildagent'
               command: 'push'
               tags: |
                 latest
-                $(Build.BuildId)
+                linux-x64
+                linux-x64-$(Build.BuildId)
+                linux-arm64
+                linux-arm64-$(Build.BuildId)
+
+          - script: |
+              docker manifest create mauwii/devopsbuildagent:latest mauwii/devopsbuildagent:linux-x64 mauwii/devopsbuildagent:linux-arm64
+              docker manifest annotate mauwii/devopsbuildagent:latest mauwii/devopsbuildagent:linux-x64 --os linux --arch amd64
+              docker manifest annotate mauwii/devopsbuildagent:latest mauwii/devopsbuildagent:linux-arm64 --os linux --arch arm64 --variant v8
+              docker manifest push --purge mauwii/devopsbuildagent:latest
+            displayName: create and push manifest

@@ -1,13 +1,13 @@
 name: 'artifactory_ado_agent'
 
-resources:
-  repositories:
-    - repository: DevOpsBuildAgent
-      type: github
-      name: Mauwii/DevOpsBuildAgent
-      endpoint: Mauwii
-      trigger:
-        - main
+# resources:
+#   repositories:
+#     - repository: DevOpsBuildAgent
+#       type: github
+#       name: Mauwii/DevOpsBuildAgent
+#       endpoint: Mauwii
+#       trigger:
+#         - main
 
 variables:
   - name: isMain

@@ -32,8 +32,8 @@ stages:
               containerRegistry: 'docker-mauwii'
               repository: 'devopsbuildagent'
               command: 'build'
-              Dockerfile: '$(Build.Repository.LocalPath)/Dockerfile'
-              buildContext: '$(Build.Repository.LocalPath)/**'
+              Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
+              buildContext: 'src/DevOpsBuildAgent/**'
               tags: |
                 latest
                 linux-x64
@@ -47,8 +47,8 @@ stages:
               containerRegistry: 'docker-mauwii'
               repository: 'devopsbuildagent'
               command: 'build'
-              Dockerfile: '$(Build.Repository.LocalPath)/Dockerfile'
-              buildContext: '$(Build.Repository.LocalPath)/**'
+              Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
+              buildContext: 'src/DevOpsBuildAgent/**'
               tags: |
                 linux-arm64
                 linux-arm64-$(Build.BuildId)

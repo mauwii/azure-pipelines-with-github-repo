@@ -1,0 +1,26 @@
+name: 'IaC-Trigger'
+
+variables:
+  - name: resourceGroupName
+    value: 'azure-pipelines-with-github-repo'
+  - name: location
+    value: 'westeurope'
+  - name: azureSubscription
+    value: 'ARM-mauwii'
+
+trigger:
+  branches:
+    include:
+      - feature/*
+      - main
+  paths:
+    include:
+      - IaC/bicep
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+  - job: 
+    steps:
+    - script: export

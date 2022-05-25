@@ -82,7 +82,7 @@ stages:
                 linux-arm64-$(Build.BuildId)
               arguments: '--build-arg BASE_IMAGE=arm64v8/ubuntu:18.04 --build-arg TARGETARCH=linux-arm64'
             env:
-              DOCKER_DEFAULT_PLATFORM: linux/arm64
+              DOCKER_DEFAULT_PLATFORM: linux/arm64v8
 
           - task: Docker@2
             displayName: push arm64

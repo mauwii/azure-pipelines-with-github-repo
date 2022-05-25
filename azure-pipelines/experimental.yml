@@ -95,8 +95,8 @@ stages:
               repository: 'mauwii/devopsbuildagent'
               command: 'push'
               tags: |
-                linux-arm64
-                linux-arm64-$(Build.BuildId)
+                linux-arm64v8
+                linux-arm64v8-$(Build.BuildId)
 
       - job: manifest
         displayName: push and create manifest

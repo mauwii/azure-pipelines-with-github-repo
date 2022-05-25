@@ -1,7 +1,4 @@
-name: 'devopsbuildagent'
-
-trigger: none
-pr: none
+name: 'artifactory_ado_agent'
 
 resources:
   repositories:
@@ -10,9 +7,7 @@ resources:
       name: Mauwii/DevOpsBuildAgent
       endpoint: Mauwii
       trigger:
-        branches:
-          include:
-            - main
+        - main
 
 variables:
   - name: isMain

@@ -1,4 +1,12 @@
-name: 'experimental'
+name: 'devopsbuildagent'
+
+resources:
+  repositories:
+    - repository: DevOpsBuildAgent
+      endpoint: Mauwii
+      name: Mauwii/DevOpsBuildAgent
+      trigger:
+        - main
 
 pool:
   vmImage: ubuntu-latest
@@ -9,8 +17,8 @@ stages:
     dependsOn:
     jobs:
       - job: buildx64
+        displayName: linux-x64
         dependsOn:
-        displayName: build x64
         steps:
           - template: jobs/steps/checkout_submodules.yml
             parameters:
@@ -22,9 +30,11 @@ stages:
               containerRegistry: 'docker-mauwii'
               command: 'login'
 
-          - script: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          - script: |
+              docker run --rm --privileged \
+              multiarch/qemu-user-static --reset -p yes
             name: qemu
-            displayName: register QEMU binary
+            displayName: run QEMU
 
           - task: Docker@2
             displayName: Build x64
@@ -52,8 +62,8 @@ stages:
                 linux-x64-$(Build.BuildId)
 
       - job: buildarm64
+        displayName: linux-arm64v8
         dependsOn:
-        displayName: build arm64
         steps:
           - template: jobs/steps/checkout_submodules.yml
             parameters:
@@ -65,9 +75,11 @@ stages:
               containerRegistry: 'docker-mauwii'
               command: 'login'
 
-          - script: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          - script: |
+              docker run --rm --privileged \
+              multiarch/qemu-user-static --reset -p yes
             name: qemu
-            displayName: register QEMU binary
+            displayName: run QEMU
 
           - task: Docker@2
             displayName: build arm64
@@ -78,11 +90,11 @@ stages:
               command: 'build'
               Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
               tags: |
-                linux-arm64
-                linux-arm64-$(Build.BuildId)
+                linux-arm64v8
+                linux-arm64v8-$(Build.BuildId)
               arguments: '--build-arg BASE_IMAGE=arm64v8/ubuntu:18.04 --build-arg TARGETARCH=linux-arm64'
             env:
-              DOCKER_DEFAULT_PLATFORM: linux/arm64v8
+              DOCKER_DEFAULT_PLATFORM: linux/arm64
 
           - task: Docker@2
             displayName: push arm64
@@ -91,11 +103,11 @@ stages:
               repository: 'mauwii/devopsbuildagent'
               command: 'push'
               tags: |
-                linux-arm64
-                linux-arm64-$(Build.BuildId)
+                linux-arm64v8
+                linux-arm64v8-$(Build.BuildId)
 
       - job: manifest
-        displayName: create manifest
+        displayName: push and create manifest
         dependsOn:
           - buildx64
           - buildarm64
@@ -108,8 +120,18 @@ stages:
               command: 'login'
 
           - script: |
-              docker manifest create mauwii/devopsbuildagent:latest mauwii/devopsbuildagent:linux-x64 mauwii/devopsbuildagent:linux-arm64
-              docker manifest annotate mauwii/devopsbuildagent:latest mauwii/devopsbuildagent:linux-x64 --os linux --arch amd64
-              docker manifest annotate mauwii/devopsbuildagent:latest mauwii/devopsbuildagent:linux-arm64 --os linux --arch arm64 --variant v8
-              docker manifest push --purge mauwii/devopsbuildagent:latest
-            displayName: create and push manifest
+              docker manifest create \
+                mauwii/devopsbuildagent:latest \
+                mauwii/devopsbuildagent:linux-x64 \
+                mauwii/devopsbuildagent:linux-arm64v8 \
+              && docker manifest annotate \
+                mauwii/devopsbuildagent:latest \
+                mauwii/devopsbuildagent:linux-x64 \
+                --os linux --arch amd64 \
+              && docker manifest annotate \
+                mauwii/devopsbuildagent:latest \
+                mauwii/devopsbuildagent:linux-arm64v8 \
+                --os linux --arch arm64 --variant v8 \
+              && docker manifest push --purge \
+                mauwii/devopsbuildagent:latest
+            name: manifest

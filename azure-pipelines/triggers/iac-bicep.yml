@@ -39,8 +39,9 @@ jobs:
   - job: getFolders
     steps:
       - powershell: |
-          $folders = "(convertTo-Json (Get-ChildItem ${{ variables.bicepDir }} -Name))"
-          Write-Host "##vso[task.setvariable variable=templateFolders]$folders"
+          $folders = Get-ChildItem ${{ variables.bicepDir }} -Name
+          $foldersObject = convertTo-Json $folders
+          Write-Host "##vso[task.setvariable variable=templateFolders]$foldersObject"
         name: getTemplateFolders
         displayName: Get Template Folders
       - script: 'echo $(templateFolders)'

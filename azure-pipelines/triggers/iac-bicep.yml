@@ -28,7 +28,7 @@ parameters:
       - webApp-with-insights
   - name: bicepPath
     type: string
-    default: IaC/bicep
+    default: IaC/bicep/deploy
 
 steps:
   - ${{ each value in parameters.deploy }}:

@@ -13,9 +13,9 @@ trigger:
     include:
       - feature/*
       - main
-  paths:
-    include:
-      - IaC/bicep
+  # paths:
+  #   include:
+  #     - IaC/bicep
 
 pool:
   vmImage: ubuntu-latest

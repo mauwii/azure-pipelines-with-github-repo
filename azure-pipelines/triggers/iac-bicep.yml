@@ -23,8 +23,7 @@ pool:
 parameters:
   - name: deploy
     type: string
-    default:
-      - acr
+    default: acr
   - name: bicepPath
     type: string
     default: IaC/bicep

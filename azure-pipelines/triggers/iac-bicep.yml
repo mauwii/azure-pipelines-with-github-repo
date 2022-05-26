@@ -18,7 +18,7 @@ variables:
     readonly: true
   - name: sourceBranchName
     value: $[ variables['Build.SourceBranchName'] ]
-  - template: azure-pipelines/variables/default.yml
+  - template: ../variables/default.yml
 
 trigger:
   branches:

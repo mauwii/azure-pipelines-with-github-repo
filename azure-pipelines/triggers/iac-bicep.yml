@@ -43,7 +43,7 @@ jobs:
       - template: ../jobs/steps/bicep_steps.yml
         parameters:
           bicepDir: ${{ variables.bicepDir }}
-          bicepTemplateDir: ${{ variables.templateFolders }}
+          bicepTemplateDir: $(templateFolders)
           bicepParameter: ${{ variables.bicepParameter }}
   # - job:
   #   dependsOn: getFolders

@@ -48,7 +48,7 @@ jobs:
       templateFolders: $[ dependencies.getFolders.outputs['passOutput.templateFolders'] ]
     steps:
       - powershell: Write-Host $(templateFolders)
-      - ${{ each value in '${{ templateFolders }}' }}:
+      - ${{ each value in variables.templateFolders }}:
           - template: ../jobs/bicep_jobs.yml
             parameters:
               bicepDir: ${{ parameters.bicepDir }}

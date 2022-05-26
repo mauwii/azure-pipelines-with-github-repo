@@ -1,0 +1,25 @@
+parameters:
+    - name: bicep_parameters_template
+      type: object
+      default:
+        $schema: https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#
+        contentVersion: '1.0.0.0'
+        parameters:
+          acrName:
+            value: bicep
+          location:
+            value: westeurope
+          acrSku:
+            value: Basic
+          enableDeleteLock:
+            value: ${{ True }}
+
+steps:
+  - script: |
+      echo "${JSON}" > main.parameters.$(bicepParameter).json
+      ls -la
+      cat main.parameters.$(bicepParameter).json
+    workingDirectory: IaC/bicep/aci/devopsagent
+    displayName: Create Bicep Parameters
+    env:
+      JSON: ${{ convertToJson(parameters.bicep_parameters_template) }}

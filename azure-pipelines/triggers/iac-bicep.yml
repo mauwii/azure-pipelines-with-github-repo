@@ -19,6 +19,10 @@ variables:
   - name: sourceBranchName
     value: $[ variables['Build.SourceBranchName'] ]
   - template: ../variables/default.yml
+  - name: bicepDir
+    value: IaC/bicep/deploy
+  - name: bicepParameter
+    value: dev
 
 trigger:
   branches:
@@ -31,11 +35,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-parameters:
-  - name: bicepDir
-    type: string
-    default: IaC/bicep/deploy
-
 jobs:
   - job: getFolders
     steps:
@@ -43,9 +42,9 @@ jobs:
         name: passOutput
       - template: ../jobs/bicep_jobs.yml
         parameters:
-          bicepDir: ${{ parameters.bicepDir }}
+          bicepDir: ${{ variables.bicepDir }}
           bicepTemplateDir: ${{ variables.templateFolders }}
-          bicepParameter: ${{ parameters.bicepParameter }}
+          bicepParameter: ${{ variables.bicepParameter }}
   # - job:
   #   dependsOn: getFolders
   #   variables:

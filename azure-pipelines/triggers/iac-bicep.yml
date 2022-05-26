@@ -43,9 +43,14 @@ jobs:
           Write-Host "##vso[task.setvariable variable=templateFolders;isOutput=true]$folders"
         name: getTemplateFolders
         displayName: Get Template Folders
-      - script: echo $JSON
-        env:
-          JSON: ${{ convertToJson(variables.templateFolders) }}
+  - job: deployFolders
+    dependsOn: getFolders
+    variables:
+      folders: $[ dependencies.getFolders.outputs['getTemplateFolders.templateFolders']]
+    steps:
+    - script: 'echo $JSON'
+      env:
+        JSON: ${{ convertToJson(variables['folders']) }}
       # - template: ../jobs/steps/bicep_steps.yml
       #   parameters:
       #     bicepDir: ${{ variables.bicepDir }}

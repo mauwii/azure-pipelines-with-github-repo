@@ -38,7 +38,7 @@ pool:
 jobs:
   - job: getFolders
     steps:
-      - powershell: Write-Host "##vso[task.setvariable variable=templateFolders;isoutput=true]$(Get-ChildItem ${{ parameters.bicepDir }} -Name)"
+      - powershell: Write-Host "##vso[task.setvariable variable=templateFolders;isoutput=true]$(Get-ChildItem ${{ variables.bicepDir }} -Name)"
         name: passOutput
       - template: ../jobs/bicep_jobs.yml
         parameters:

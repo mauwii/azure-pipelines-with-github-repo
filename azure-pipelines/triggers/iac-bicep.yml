@@ -50,7 +50,7 @@ jobs:
     steps:
       - script: 'echo "$JSON"'
         env:
-          JSON: ${{ convertToJson(variables.templateFolders) }}
+          JSON: ${{ convertToJson(templateFolders) }}
       # - template: ../jobs/steps/bicep_steps.yml
       #   parameters:
       #     bicepDir: ${{ variables.bicepDir }}

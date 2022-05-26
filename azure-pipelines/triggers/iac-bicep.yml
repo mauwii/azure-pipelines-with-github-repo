@@ -23,7 +23,9 @@ pool:
 parameters:
   - name: deploy
     type: string
-    default: acr
+    default:
+      - acr
+      - webApp-with-insights
   - name: bicepPath
     type: string
     default: IaC/bicep

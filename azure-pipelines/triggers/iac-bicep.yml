@@ -7,12 +7,23 @@ variables:
     value: 'westeurope'
   - name: azureSubscription
     value: 'ARM-mauwii'
+  - name: isMain
+    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
+    readonly: true
+  - name: isStable
+    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
+    readonly: true
+  - name: isPullRequest
+    value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
+    readonly: true
+  - name: sourceBranchName
+    value: $[ variables['Build.SourceBranchName'] ]
+  - template: azure-pipelines/variables/default.yml
 
 trigger:
   branches:
     include:
       - feature/*
-      - main
   # paths:
   #   include:
   #     - IaC/bicep
@@ -21,16 +32,18 @@ pool:
   vmImage: ubuntu-latest
 
 parameters:
-  - name: deploy
-    type: object
-    default:
-      - acr
-      - kv
-  - name: bicepPath
+  - name: bicepDir
     type: string
     default: IaC/bicep/deploy
 
 steps:
-  - ${{ each value in parameters.deploy }}:
-    - script: 'az bicep build --file ${{ parameters.bicepPath }}/${{ value }}/main.bicep'
-    - template: ../../${{ parameters.bicepPath }}/${{ value }}/main.parameters.yml
+  - powershell: |
+      $folderNames = ( Get-ChildItem ${{ parameters.bicepDir }} ).Name
+      Write-Host "##vso[task.setvariable variable=templateFolders;]$folderNames"
+
+  - ${{ each value in variables.templateFolders }}:
+      - template: ../jobs/bicep_jobs.yml
+        parameters:
+          bicepDir: ${{ parameters.bicepDir }}
+          bicepTemplateDir: ${{ value }}
+          bicepParameter: ${{ parameters.bicepParameter }}

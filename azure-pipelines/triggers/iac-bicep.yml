@@ -48,9 +48,9 @@ jobs:
     variables:
       templateFolders: $[dependencies.getFolders.outputs['getTemplateFolders.templateFolders']]
     steps:
-      - script: 'echo "$(templateFolders)"'
-        # env:
-        #   JSON: ${{ convertToJson(variables.templateFolders) }}
+      - script: 'echo "$JSON"'
+        env:
+          JSON: ${{ convertToJson(variables.templateFolders) }}
       # - template: ../jobs/steps/bicep_steps.yml
       #   parameters:
       #     bicepDir: ${{ variables.bicepDir }}

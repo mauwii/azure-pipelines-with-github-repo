@@ -44,10 +44,10 @@ jobs:
 
   - job:
     dependsOn: getFolders
-    # variables:
-    #   templateFolders: $[dependencies.getFolders.outputs['passOutput.templateFolders']]
+    variables:
+      templateFolders: $[dependencies.getFolders.outputs['passOutput.templateFolders']]
     steps:
-      - ${{ each value in dependencies.getFolders.outputs['passOutput.templateFolders'] }}:
+      - ${{ each value in variables['templateFolders'] }}:
         - template: ../jobs/bicep_jobs.yml
           parameters:
             bicepDir: ${{ parameters.bicepDir }}

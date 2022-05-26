@@ -45,7 +45,7 @@ jobs:
   - job:
     dependsOn: getFolders
     variables:
-      templateFolders: $[ dependencies.getFolders.outputs['passOutput.templateFolders'] ]
+      templateFolders: $[dependencies.getFolders.outputs['passOutput.templateFolders']]
     steps:
       - powershell: Write-Host $(templateFolders)
       - ${{ each value in variables.templateFolders }}:

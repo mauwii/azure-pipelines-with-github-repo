@@ -20,7 +20,14 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-jobs:
-  - job: 
-    steps:
-    - script: export
+parameters:
+  - name: deploy
+    type: string
+    values:
+      - acr
+  - name: bicepPath
+    type: string
+    default: IaC/bicep
+steps:
+  - ${{ each value in parameters.deploy }}:
+    - script: 'cat ${{ parameters.bicepPath }}/$(value)/main.bicep'

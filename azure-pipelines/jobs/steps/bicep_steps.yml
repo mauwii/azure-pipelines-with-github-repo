@@ -1,0 +1,79 @@
+parameters:
+  - name: bicepDir
+    type: string
+    default: $(variables.bicepDir)
+  - name: bicepTemplateDir
+    type: string
+    default: 'webApp-with-insights'
+  - name: bicepParameter
+    type: string
+    default: dev
+  - name: resourceGroupName
+    type: string
+    default: $(resourceGroupName)
+  - name: azureSubscription
+    type: string
+    default: $(azureSubscription)
+  - name: location
+    type: string
+    default: $(location)
+
+
+steps:
+  - template: '../../../${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}/main.parameters.yml'
+
+  - script: az bicep build --file main.bicep
+    displayName: Run Bicep Linter
+    name: LintBicepCode
+    workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
+
+  - template: steps/create_resourceGroup.yml
+    parameters:
+      resourceGroupName: ${{ parameters.resourceGroupName }}
+      azureSubscription: ${{ parameters.azureSubscription }}
+      location: ${{ parameters.location }}
+
+  - task: AzureCLI@2
+    name: RunPreflightValidation
+    condition: succeeded()
+    displayName: Run preflight validation
+    inputs:
+      azureSubscription: ${{ parameters.azureSubscription }}
+      workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az deployment group validate \
+          --resource-group ${{ parameters.resourceGroupName }} \
+          --template-file main.bicep \
+          --parameters @main.parameters.${{parameters.bicepParameter}}.json
+
+  - task: AzureCLI@2
+    name: RunWhatIf
+    displayName: Run what-if
+    inputs:
+      azureSubscription: ${{ parameters.azureSubscription }}
+      workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az deployment group what-if \
+          --resource-group ${{ parameters.resourceGroupName }} \
+          --template-file main.bicep \
+          --parameters @main.parameters.${{parameters.bicepParameter}}.json
+
+  - task: AzureCLI@2
+    name: DeployBicepFile
+    condition: and(succeeded(), in('True', variables['isMain'], variables['isStable']))
+    displayName: Deploy Bicep Template
+    inputs:
+      azureSubscription: ${{ parameters.azureSubscription }}
+      scriptType: bash
+      scriptLocation: inlineScript
+      workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
+      inlineScript: |
+        az deployment group create \
+          --name $(Build.BuildNumber) \
+          --resource-group ${{ parameters.ResourceGroupName }} \
+          --template-file main.bicep \
+          --parameters @main.parameters.${{parameters.bicepParameter}}.json

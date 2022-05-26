@@ -32,4 +32,4 @@ parameters:
 
 steps:
   - ${{ each value in parameters.deploy }}:
-    - script: 'cat ${{ parameters.bicepPath }}/$(value)/main.bicep'
+    - script: 'cat ${{ parameters.bicepPath }}/${{ value }}/main.bicep'

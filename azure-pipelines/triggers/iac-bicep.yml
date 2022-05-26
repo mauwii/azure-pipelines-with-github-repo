@@ -40,7 +40,7 @@ jobs:
     steps:
       - powershell: Write-Host "##vso[task.setvariable variable=templateFolders;isoutput=true]$(Get-ChildItem ${{ variables.bicepDir }} -Name)"
         name: passOutput
-      - ${{ each value in $(templateFolders) }}:
+      - ${{ each value in templateFolders }}:
           - template: ../jobs/steps/bicep_steps.yml
             parameters:
               bicepDir: ${{ variables.bicepDir }}

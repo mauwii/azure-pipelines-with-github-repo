@@ -22,7 +22,7 @@ pool:
 
 parameters:
   - name: deploy
-    type: string
+    type: object
     default:
       - acr
       - webApp-with-insights

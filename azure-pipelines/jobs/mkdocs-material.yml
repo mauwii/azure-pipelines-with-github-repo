@@ -7,7 +7,7 @@ parameters:
     default: 'site'
   - name: mkdocsDeploy
     type: boolean
-    default: False
+    default: false
 
 jobs:
   - job: mkdocs
@@ -16,7 +16,7 @@ jobs:
       - template: steps/checkout_submodules.yml
         parameters:
           submodule: 'src/mkdocs-material'
-          checkoutSelf: True
+          checkoutSelf: true
 
       - template: steps/build_mkdocs.yml
         parameters:

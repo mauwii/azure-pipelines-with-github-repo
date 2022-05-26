@@ -39,7 +39,7 @@ parameters:
 jobs:
   - job: getFolders
     steps:
-      - powershell: Write-Host "##vso[task.setvariable variable=templateFolders;isoutput=true](Get-ChildItem ${{ parameters.bicepDir }}).Name"
+      - powershell: Write-Host "##vso[task.setvariable variable=templateFolders;isoutput=true]$(Get-ChildItem ${{ parameters.bicepDir }}).Name"
         name: passOutput
 
   - job:

@@ -23,11 +23,12 @@ pool:
 parameters:
   - name: deploy
     type: string
-    values:
+    default:
       - acr
   - name: bicepPath
     type: string
     default: IaC/bicep
+
 steps:
   - ${{ each value in parameters.deploy }}:
     - script: 'cat ${{ parameters.bicepPath }}/$(value)/main.bicep'

@@ -33,3 +33,4 @@ parameters:
 steps:
   - ${{ each value in parameters.deploy }}:
     - script: 'az bicep build --file ${{ parameters.bicepPath }}/${{ value }}/main.bicep'
+    - template: ${{ parameters.bicepPath }}/${{ value }}/main.parameters.yml

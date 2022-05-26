@@ -25,7 +25,7 @@ parameters:
     type: object
     default:
       - acr
-      - webApp-with-insights
+      - kv
   - name: bicepPath
     type: string
     default: IaC/bicep/deploy

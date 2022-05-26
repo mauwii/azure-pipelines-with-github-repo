@@ -48,7 +48,7 @@ jobs:
       templateFolders: $[dependencies.getFolders.outputs['passOutput.templateFolders']]
     steps:
       - script: 'echo "$(templateFolders)"'
-      - ${{ each value in variables['templateFolders'] }}:
+      - ${{ each value in $(templateFolders) }}:
         - template: ../jobs/bicep_jobs.yml
           parameters:
             bicepDir: ${{ parameters.bicepDir }}

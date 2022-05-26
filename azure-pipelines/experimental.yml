@@ -1,5 +1,10 @@
 name: 'experimental'
 
+trigger:
+  branches:
+    include:
+      - feature/experimental/*
+
 resources:
   repositories:
     - repository: DevOpsBuildAgent

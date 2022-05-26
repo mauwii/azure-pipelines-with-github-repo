@@ -40,15 +40,15 @@ jobs:
   - job: getFolders
     steps:
     - powershell: |
-        $folderNames = ( Get-ChildItem ${{ parameters.bicepDir }} ).Name
-        Write-Host "##vso[task.setvariable variable=templateFolders;isoutput=true]$folderNames"
+        $folderNames = Get-ChildItem ${{ parameters.bicepDir }}
+        Write-Host "##vso[task.setvariable variable=templateFolders;isoutput=true]$folderNames.Name"
 
   - job:
     dependsOn: getFolders
     variables:
       templateFolders:  $[ dependencies.getFolders.outputs['passOutput.templateFolders'] ]
     steps:
-      - ${{ each value in $(templateFolders) }}:
+      - ${{ each value in $(setOutput.templateFolders) }}:
           - template: ../jobs/bicep_jobs.yml
             parameters:
               bicepDir: ${{ parameters.bicepDir }}

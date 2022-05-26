@@ -44,7 +44,7 @@ jobs:
         name: getTemplateFolders
         displayName: Get Template Folders
   - job:
-    dependsOn: getTemplateFolders
+    dependsOn: getFolders
     variables:
       templateFolders: $[dependencies.getFolders.outputs['getTemplateFolders.templateFolders']]
     steps:

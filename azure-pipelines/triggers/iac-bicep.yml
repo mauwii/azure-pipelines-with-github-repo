@@ -39,16 +39,13 @@ parameters:
 jobs:
   - job: getFolders
     steps:
-    - powershell: |
-        $folderNames = (Get-ChildItem ${{ parameters.bicepDir }}).Name
-        Write-Output "Going to look in these folders:`n$folderNames`n"
-        Write-Host "##vso[task.setvariable variable=templateFolders;isoutput=true]$folderNames"
-      name: passOutput
+      - powershell: Write-Host "##vso[task.setvariable variable=templateFolders;isoutput=true](Get-ChildItem ${{ parameters.bicepDir }}).Name"
+        name: passOutput
 
   - job:
     dependsOn: getFolders
     variables:
-      templateFolders:  $[ dependencies.getFolders.outputs['passOutput.templateFolders'] ]
+      templateFolders: $[ dependencies.getFolders.outputs['passOutput.templateFolders'] ]
     steps:
       - powershell: Write-Host $(templateFolders)
       - ${{ each value in $(templateFolders) }}:

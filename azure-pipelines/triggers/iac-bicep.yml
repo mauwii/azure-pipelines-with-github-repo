@@ -38,11 +38,12 @@ pool:
 jobs:
   - job: getFolders
     steps:
-      - powershell: |
-          $folders = Write-Host -Object (Get-ChildItem ${{ variables.bicepDir }} -Name) -Seperator ','
+      - pwsh: |
+          $folders = (Write-Host -Object (Get-ChildItem ${{ variables.bicepDir }} -Name) -Seperator ',')
           Write-Host "##vso[task.setvariable variable=templateFolders;isOutput=true]$folders"
         name: getTemplateFolders
         displayName: Get Template Folders
+      - script: echo $(getTemplateFolders.templateFolders)
   - job: deployFolders
     dependsOn: getFolders
     variables:

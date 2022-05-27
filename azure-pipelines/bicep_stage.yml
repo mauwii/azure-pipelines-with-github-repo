@@ -48,15 +48,17 @@ stages:
               filePath: scripts/New-BicepMatrix.ps1
           - script: echo $BICEPMATRIX
             env:
-              BICEPMATRIX: $(bicepMatrix)
+              BICEPMATRIX: $(legs)
       - job: runner
         dependsOn: generator
         strategy:
           matrix: $[ dependencies.generator.outputs['mtrx.legs'] ]
         steps:
         - script: |
-            echo $(bicepDir)
-            echo $(bicepTemplateDir)
+            echo 'bicepDir: $(bicepDir)'
+            echo 'bicepTemplateDir: $(bicepTemplateDir)'
+          displayName: $(bicepTemplateDir)
+        - template: ../$(bicepDir)/$(bicepTemplateDir)/main.parameters.yml
       # - ${{ each value in parameters.bicepTemplateDir }}:
       #     - template: jobs/bicep_jobs.yml
       #       parameters:

@@ -1,0 +1,44 @@
+parameters:
+  - name: bicepDir
+    displayName: Directory containing Folders with Bicep Templates
+    type: string
+    default: 'IaC/bicep/deploy'
+  - name: bicepTemplateDir
+    displayName: Directory containing the main.bicep
+    type: object
+    default:
+      - 'acr'
+      - 'kv'
+  - name: bicepParameter
+    displayName: Used in some templates to change Resource Name or other variables
+    type: string
+    values:
+      - dev
+      - stg
+      - prod
+  - name: resourceGroupName
+    displayName: Name of the Resource Group where templates will be deployed to
+    type: string
+    default: $(resourceGroupName)
+  - name: azureSubscription
+    displayName: Name of the ARM-Service Connection
+    type: string
+    default: $(azureSubscription)
+  - name: location
+    displayName: Location where the Resources will be deployed to
+    type: string
+    default: $(location)
+
+stages:
+  - stage: bicep
+    displayName: Bicep
+    jobs:
+      - ${{ each value in parameters.bicepTemplateDir }}:
+          - template: jobs/bicep_jobs.yml
+            parameters:
+              bicepDir: ${{ parameters.bicepDir }}
+              bicepTemplateDir: ${{ value }}
+              bicepParameter: ${{ parameters.bicepParameter }}
+              resourceGroupName: ${{ parameters.resourceGroupName }}
+              azureSubscription: ${{ parameters.azureSubscription }}
+              location: ${{ parameters.location }}

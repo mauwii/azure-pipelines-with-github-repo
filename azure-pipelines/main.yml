@@ -1,29 +1,59 @@
 parameters:
-  - name: mkdocsDeploy
-    type: boolean
-    default: False
-  - name: bicepParameter
+  - name: pythonVersion
+    displayName: Python Version to use when building MkDocs-Material
     type: string
+    default: $(pythonVersion)
+  - name: mkdocsSiteDir
+    displayName: Name of the Directory where MkDocs will be built to
+    type: string
+    default: 'site'
+  - name: mkdocsDeploy
+    displayName: When disabled MkDocs will only be built
+    type: boolean
+    default: false
+  - name: bicepDir
+    displayName: Directory containing Folders with Bicep Templates
+    type: string
+    default: 'IaC/bicep/deploy'
+  - name: bicepTemplateDir
+    displayName: Directory containing the main.bicep
+    type: object
+    default:
+      - 'acr'
+      - 'kv'
+  - name: bicepParameter
+    displayName: Used in some templates to change Resource Name or other variables
+    type: string
+    values:
+      - dev
+      - stg
+      - prod
+    default: dev
+  - name: resourceGroupName
+    displayName: Name of the Resource Group where templates will be deployed to
+    type: string
+    default: $(resourceGroupName)
+  - name: azureSubscription
+    displayName: Name of the ARM-Service Connection
+    type: string
+    default: $(azureSubscription)
+  - name: location
+    displayName: Location where the Resources will be deployed to
+    type: string
+    default: $(location)
 
 stages:
-  - stage: bicep
-    displayName: Bicep
-    jobs:
-      - template: jobs/bicep_jobs.yml
-        parameters:
-          bicepDir: 'IaC/bicep'
-          bicepTemplateDir: 'webApp-with-insights'
-          bicepParameter: ${{ parameters.bicepParameter }}
-          # The following parameters default value are set like this: $(<parametername>) to reflect current value of the variable
-          # if you do/can not use a variable named like the parameter, just use the parameters as normal
-          # resourceGroupName: '<Name of the ResourceGroup>'
-          # azureSubscription: '<Name of the ARM-Service connection>'
-          # location: '<location of the ResourceGroup>'
+  - template: bicep_stage.yml
+    parameters:
+      bicepDir: ${{ parameters.bicepDir }}
+      bicepParameter: ${{ parameters.bicepParameter }}
+      bicepTemplateDir: ${{ parameters.bicepTemplateDir }}
+      resourceGroupName: ${{ parameters.resourceGroupName }}
+      azureSubscription: ${{ parameters.azureSubscription }}
+      location: ${{ parameters.location }}
 
-  - stage: mkdocs
-    jobs:
-      - template: jobs/mkdocs-material.yml
-        parameters:
-          mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
-          # pythonVersion: '<Python Version to use when building MkDocs-Material>'
-          # mkdocsSiteDir: '<folder to create the site by mkdocs>' - defaults to 'site'
+  - template: mkdocs_stage.yml
+    parameters:
+      pythonVersion: ${{ parameters.pythonVersion }}
+      mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
+      mkdocsDeploy: ${{ parameters.mkdocsDeploy }}

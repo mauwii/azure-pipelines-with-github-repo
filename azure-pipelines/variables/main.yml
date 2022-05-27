@@ -1,5 +1,3 @@
 variables:
-  - name: environment
-    value: dev
-  - name: bicepParameter
-    value: dev
+  environment: dev
+  bicepParameter: dev

@@ -1,0 +1,50 @@
+name: 'IaC-Trigger'
+
+variables:
+  isMain: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
+  isStable: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
+  isPullRequest: $[ eq(variables['Build.Reason'], 'PullRequest') ]
+  sourceBranchName: $[ variables['Build.SourceBranchName'] ]
+  bicepDir: IaC/bicep/deploy
+  bicepParameter: dev
+  pythonVersion: '3.9'
+  vmImageName: ubuntu-latest
+  resourceGroupName: azure-pipelines-with-github-repo
+  projectName: apwgr
+  location: westeurope
+  azureSubscription: azure-mauwii
+  mkdocsDeploy: ${{ False }}
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+    template: ../variables/${{ variables['Build.SourceBranchName'] }}.yml
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/stable') }}:
+    mkdocsDeploy: ${{ true }}
+    environment: prod
+    bicepParameter: prod
+
+trigger:
+  branches:
+    include:
+      - feature/*
+      - issue/*
+      - refs/heads/main
+      - refs/heads/stable
+    exclude:
+      - feature/experimental/*
+  paths:
+    include:
+      - IaC/bicep/deploy
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+extends:
+  template: ../bicep_stage.yml
+  parameters:
+    bicepDir: ${{ variables.bicepDir }}
+    bicepTemplateDir:
+      - 'acr'
+      - 'kv'
+    bicepParameter: ${{ variables.bicepParameter }}
+    azureSubscription: azure-mauwii

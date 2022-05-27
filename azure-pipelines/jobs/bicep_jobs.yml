@@ -1,27 +1,30 @@
 parameters:
   - name: bicepDir
     type: string
-    default: $(variables.bicepDir)
+    default: ''
   - name: bicepTemplateDir
     type: string
-    default: 'webApp-with-insights'
+    default: ''
   - name: bicepParameter
     type: string
-    default: dev
+    default: ''
   - name: resourceGroupName
     type: string
-    default: $(resourceGroupName)
+    default: ''
   - name: azureSubscription
     type: string
-    default: $(azureSubscription)
+    default: ''
   - name: location
     type: string
-    default: $(location)
+    default: ''
 
 jobs:
-  - job: bicep
-    displayName: validate and deploy
+  - job:
+    displayName: Template ${{ parameters.bicepTemplateDir }}
     continueOnError: false
+    variables:
+      bicepDir: ${{ parameters.bicepDir }}
+      bicepTemplateDir: ${{ parameters.bicepTemplateDir }}
     steps:
       - template: '../../${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}/main.parameters.yml'
 

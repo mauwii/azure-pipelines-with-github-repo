@@ -29,10 +29,8 @@ parameters:
           value: standard
         secretsObject:
           value:
-            - secretName: SecretName1
-              secretValue: secretValue1
-            - secretName: SecretName2
-              secretValue: secretValue2
+            SecretName1: secretValue1
+            secretName2: secretValue2
 steps:
 - script: |
     echo "${JSON}" > main.parameters.$(bicepParameter).json

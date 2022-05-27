@@ -47,7 +47,7 @@ jobs:
   - job: deployFolders
     dependsOn: getFolders
     variables:
-      folders: $[ dependencies.getFolders.outputs['getTemplateFolders.templateFolders']]
+      folders: $[ convertToJson(dependencies.getFolders.outputs['getTemplateFolders.templateFolders'])]
     steps:
     - script: 'echo $(folders)'
       # - template: ../jobs/steps/bicep_steps.yml

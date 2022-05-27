@@ -1,21 +1,22 @@
 parameters:
   - name: bicepDir
     type: string
-    default: $(bicepDir)
+    default: ''
   - name: bicepTemplateDir
     type: string
+    default: ''
   - name: bicepParameter
     type: string
-    default: dev
+    default: ''
   - name: resourceGroupName
     type: string
-    default: $(resourceGroupName)
+    default: ''
   - name: azureSubscription
     type: string
-    default: $(azureSubscription)
+    default: ''
   - name: location
     type: string
-    default: $(location)
+    default: ''
 
 jobs:
   - job:

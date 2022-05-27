@@ -53,22 +53,22 @@ stages:
           matrix: $[ dependencies.generator.outputs['mtrx.legs'] ]
         steps:
         - script: |
-            echo '##vso[task.setVariable variable=bicepDir]$BICEPDIR'
-            echo '##vso[task.setVariable variable=bicepTemplateDir]$BICEPTEMPLATEDIR'
-            echo '##vso[task.setVariable variable=bicepParameter]$BICEPPARAMETER'
-            echo '##vso[task.setVariable variable=resourceGroupName]$RESOURCEGROUPNAME'
-            echo '##vso[task.setVariable variable=azureSubscription]$AZURESUBSCRIPTION'
-            echo '##vso[task.setVariable variable=location]$LOCATION'
+            echo '##vso[task.setVariable variable=matrixbicepDir]$BICEPDIR'
+            echo '##vso[task.setVariable variable=matrixbicepTemplateDir]$BICEPTEMPLATEDIR'
+            echo '##vso[task.setVariable variable=matrixbicepParameter]$BICEPPARAMETER'
+            echo '##vso[task.setVariable variable=matrixresourceGroupName]$RESOURCEGROUPNAME'
+            echo '##vso[task.setVariable variable=matrixazureSubscription]$AZURESUBSCRIPTION'
+            echo '##vso[task.setVariable variable=matrixlocation]$LOCATION'
           displayName: $(bicepTemplateDir)
-          enabled: false
+          enabled: true
         - template: jobs/steps/bicep_steps.yml
           parameters:
-            bicepDir: $(bicepDir)
-            bicepTemplateDir: $(bicepTemplateDir)
-            bicepParameter: $(bicepParameter)
-            resourceGroupName: $(resourceGroupName)
-            azureSubscription: $(azureSubscription)
-            location: $(location)
+            bicepDir: $(matrixbicepDir)
+            bicepTemplateDir: $(matrixbicepTemplateDir)
+            bicepParameter: $(matrixbicepParameter)
+            resourceGroupName: $(matrixresourceGroupName)
+            azureSubscription: $(matrixazureSubscription)
+            location: $(matrixlocation)
         - script: export
           displayName: output export
         - script: env

@@ -19,13 +19,13 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  - template: variables/main.yml
+  - template: ../variables/main.yml
 
 steps:
-  - template: checkout_submodules.yml
+  - template: ../jobs/steps/checkout_submodules.yml
     parameters:
       submodule: 'src/mkdocs-material'
-  - template: jobs/steps/build_mkdocs.yml
+  - template: ../jobs/steps/build_mkdocs.yml
     parameters:
       PYTHON_VERSION: '$(pythonVersion)'
   - script: mkdocs gh-deploy --force

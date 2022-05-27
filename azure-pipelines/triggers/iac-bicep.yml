@@ -1,12 +1,6 @@
 name: 'IaC-Trigger'
 
 variables:
-  - name: resourceGroupName
-    value: 'azure-pipelines-with-github-repo'
-  - name: location
-    value: 'westeurope'
-  - name: azureSubscription
-    value: 'ARM-mauwii'
   - name: isMain
     value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
     readonly: true
@@ -23,13 +17,22 @@ variables:
     value: IaC/bicep/deploy
   - name: bicepParameter
     value: dev
+  - template: ../variables/default.yml
+  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
+      - template: ../variables/${{ variables['Build.SourceBranchName'] }}.yml
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/stable') }}:
+      - name: mkdocsDeploy
+        value: ${{ True }}
 
 trigger:
   branches:
     include:
       - feature/*
-      - main
-      - stable
+      - issue/*
+      - refs/heads/main
+      - refs/heads/stable
+    exclude:
+      - feature/experimental/*
   # paths:
   #   include:
   #     - IaC/bicep/deploy
@@ -38,10 +41,10 @@ pool:
   vmImage: ubuntu-latest
 
 extends:
-  template: ../main.yml
+  template: ../../azure-pipelines.yml
   parameters:
-    bicepDir: ${{ variables.bicepDir }}
     bicepTemplateDir:
       - 'acr'
       - 'kv'
     bicepParameter: ${{ variables.bicepParameter }}
+    # bicepDir: ${{ variables.bicepDir }}

@@ -19,7 +19,7 @@ parameters:
 
 jobs:
   - job:
-    displayName: validate and deploy
+    displayName: Template ${{ parameters.bicepTemplateDir }}
     continueOnError: false
     steps:
       - template: '../../${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}/main.parameters.yml'

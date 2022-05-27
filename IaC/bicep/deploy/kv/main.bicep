@@ -1,5 +1,5 @@
 @description('Specifies the name of the key vault.')
-param keyVaultName string
+param keyVaultName string = 'kv'
 
 @description('Specifies the Azure location where the key vault should be created.')
 param location string = resourceGroup().location

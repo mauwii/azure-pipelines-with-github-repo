@@ -1,10 +1,9 @@
 parameters:
   - name: bicepDir
     type: string
-    default: $(variables.bicepDir)
+    default: $(bicepDir)
   - name: bicepTemplateDir
     type: string
-    default: 'webApp-with-insights'
   - name: bicepParameter
     type: string
     default: dev
@@ -19,7 +18,7 @@ parameters:
     default: $(location)
 
 jobs:
-  - job: bicep
+  - job:
     displayName: validate and deploy
     continueOnError: false
     steps:

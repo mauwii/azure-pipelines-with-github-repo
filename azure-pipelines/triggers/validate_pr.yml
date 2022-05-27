@@ -21,14 +21,14 @@ variables:
     readonly: true
   - name: sourceBranchName
     value: $[ variables['Build.SourceBranchName'] ]
-  - template: variables/default.yml
+  - template: ../variables/default.yml
 
 
 pool:
   vmImage: $(vmImageName)
 
 extends:
-  template: main.yml
+  template: ../main.yml
   parameters:
-    mkdocsDeploy: False
+    mkdocsDeploy: false
     bicepParameter: ${{ variables['bicepParameter'] }}

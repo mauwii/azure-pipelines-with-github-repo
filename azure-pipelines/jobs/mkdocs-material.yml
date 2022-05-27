@@ -1,13 +1,13 @@
 parameters:
   - name: pythonVersion
+    displayName: Python Version to use when building MkDocs-Material
     type: string
-    default: $(pythonVersion)
   - name: mkdocsSiteDir
+    displayName: Name of the Directory where MkDocs will be built to
     type: string
-    default: 'site'
   - name: mkdocsDeploy
+    displayName: When disabled MkDocs will only be built
     type: boolean
-    default: false
 
 jobs:
   - job: mkdocs

@@ -41,10 +41,10 @@ pool:
   vmImage: ubuntu-latest
 
 extends:
-  template: ../../azure-pipelines.yml
+  template: ../bicep.yml
   parameters:
+    bicepDir: ${{ variables.bicepDir }}
     bicepTemplateDir:
       - 'acr'
       - 'kv'
     bicepParameter: ${{ variables.bicepParameter }}
-    # bicepDir: ${{ variables.bicepDir }}

@@ -1,17 +1,24 @@
-pool:
-  vmImage: ubuntu-latest
-
-variables:
-  - name: resourceGroupName
-    value: 'azure-pipelines-with-github-repo'
-  - name: location
-    value: 'westeurope'
-  - name: azureSubscription
-    value: 'ARM-mauwii'
+parameters:
+  - name: bicepParameter
+    type: string
+  - name: bicepDir
+    type: string
+    default: 'IaC/bicep/deploy'
+  - name: bicepTemplateDir
+    type: object
 
 stages:
-  - stage:
+  - stage: bicep
+    displayName: Bicep
     jobs:
-      - template: jobs/bicep_jobs.yml
-        parameters:
-          workingDirectory: IaC/bicep
+      - ${{ each value in parameters.bicepTemplateDir }}:
+          - template: jobs/bicep_jobs.yml
+            parameters:
+              bicepDir: ${{ parameters.bicepDir }}
+              bicepTemplateDir: ${{ value }}
+              bicepParameter: ${{ parameters.bicepParameter }}
+              # The following parameters default value are set like this: $(<parametername>) to reflect current value of the variable
+              # if you do/can not use a variable named like the parameter, just use the parameters as normal
+              # resourceGroupName: '<Name of the ResourceGroup>'
+              # azureSubscription: '<Name of the ARM-Service connection>'
+              # location: '<location of the ResourceGroup>'

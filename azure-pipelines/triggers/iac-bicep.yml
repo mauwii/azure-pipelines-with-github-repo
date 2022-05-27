@@ -35,10 +35,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-parameters:
-  - name: deployFolders
-    type: object
-
 jobs:
   - template: jobs/bicep_jobs.yml
     parameters:

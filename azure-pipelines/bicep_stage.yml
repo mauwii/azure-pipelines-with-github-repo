@@ -53,9 +53,12 @@ stages:
           matrix: $[ dependencies.generator.outputs['mtrx.legs'] ]
         steps:
         - script: |
-            echo 'bicepDir: $(bicepDir)'
-            echo 'bicepTemplateDir: $(bicepTemplateDir)'
-            echo '##vso[task.setVariable variable=templatePath]$(bicepDir)/$(bicepTemplateDir)'
+            echo '##vso[task.setVariable variable=bicepDir]$BICEPDIR'
+            echo '##vso[task.setVariable variable=bicepTemplateDir]$BICEPTEMPLATEDIR'
+            echo '##vso[task.setVariable variable=bicepParameter]$BICEPPARAMETER'
+            echo '##vso[task.setVariable variable=resourceGroupName]$RESOURCEGROUPNAME'
+            echo '##vso[task.setVariable variable=azureSubscription]$AZURESUBSCRIPTION'
+            echo '##vso[task.setVariable variable=location]$LOCATION'
           displayName: $(bicepTemplateDir)
         - template: jobs/steps/bicep_steps.yml
           parameters:

@@ -1,25 +1,17 @@
 name: 'IaC-Trigger'
 
 variables:
-  - name: isMain
-    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
-  - name: isStable
-    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
-  - name: isPullRequest
-    value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
-  - name: sourceBranchName
-    value: $[ variables['Build.SourceBranchName'] ]
-  - template: ../variables/default.yml
-  - name: bicepDir
-    value: IaC/bicep/deploy
-  - name: bicepParameter
-    value: dev
-  - template: ../variables/default.yml
-  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
-      - template: ../variables/${{ variables['Build.SourceBranchName'] }}.yml
-  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/stable') }}:
-      - name: mkdocsDeploy
-        value: ${{ True }}
+  isMain: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
+  isStable: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
+  isPullRequest: $[ eq(variables['Build.Reason'], 'PullRequest') ]
+  sourceBranchName: $[ variables['Build.SourceBranchName'] ]
+  bicepDir: IaC/bicep/deploy
+  bicepParameter: dev
+  template: ../variables/default.yml
+  ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
+    template: ../variables/${{ variables['Build.SourceBranchName'] }}.yml
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/stable') }}:
+    mkdocsDeploy: ${{ true }}
 
 trigger:
   branches:

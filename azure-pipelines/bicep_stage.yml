@@ -60,6 +60,7 @@ stages:
             echo '##vso[task.setVariable variable=azureSubscription]$AZURESUBSCRIPTION'
             echo '##vso[task.setVariable variable=location]$LOCATION'
           displayName: $(bicepTemplateDir)
+          enabled: false
         - template: jobs/steps/bicep_steps.yml
           parameters:
             bicepDir: $(bicepDir)

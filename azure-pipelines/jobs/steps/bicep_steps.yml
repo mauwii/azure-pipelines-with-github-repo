@@ -1,49 +1,49 @@
 parameters:
   - name: bicepDir
     type: string
-    default: ''
+    default: $[ variables['bicepDir'] ]
   - name: bicepTemplateDir
     type: string
-    default: ''
+    default: $[ variables['bicepTemplateDir'] ]
   - name: bicepParameter
     type: string
-    default: ''
+    default: $[ variables['bicepParameter'] ]
   - name: resourceGroupName
     type: string
-    default: ''
+    default: $[ variables['resourceGroupName'] ]
   - name: azureSubscription
     type: string
-    default: ''
+    default: $[ variables['azureSubscription'] ]
   - name: location
     type: string
-    default: ''
+    default: $[ variables['location'] ]
 
 steps:
-  - template: '../../../$[variables['bicepDir']]/$[variables['bicepTemplateDir']]/main.parameters.yml'
+  - template: '../../../${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}/main.parameters.yml'
 
   - script: az bicep build --file main.bicep
     displayName: Run Bicep Linter
     name: LintBicepCode
-    workingDirectory: $[variables['bicepDir']]/$[variables['bicepTemplateDir']]
+    workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
 
   - template: create_resourceGroup.yml
     parameters:
-      resourceGroupName: $[variables['resourceGroupName']]
-      azureSubscription: $[variables['azureSubscription']]
-      location: $[variables['location']]
+      resourceGroupName: ${{ parameters.resourceGroupName }}
+      azureSubscription: ${{ parameters.azureSubscription }}
+      location: ${{ parameters.location }}
 
   - task: AzureCLI@2
     name: RunPreflightValidation
     condition: succeeded()
     displayName: Run preflight validation
     inputs:
-      azureSubscription: $[variables['azureSubscription']]
-      workingDirectory: $[variables['bicepDir']]/$[variables['bicepTemplateDir']]
+      azureSubscription: ${{ parameters.azureSubscription }}
+      workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
         az deployment group validate \
-          --resource-group $[variables['resourceGroupName']] \
+          --resource-group ${{ parameters.resourceGroupName }} \
           --template-file main.bicep \
           --parameters @main.parameters.${{parameters.bicepParameter}}.json
 
@@ -51,13 +51,13 @@ steps:
     name: RunWhatIf
     displayName: Run what-if
     inputs:
-      azureSubscription: $[variables['azureSubscription']]
-      workingDirectory: $[variables['bicepDir']]/$[variables['bicepTemplateDir']]
+      azureSubscription: ${{ parameters.azureSubscription }}
+      workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
         az deployment group what-if \
-          --resource-group $[variables['resourceGroupName']] \
+          --resource-group ${{ parameters.resourceGroupName }} \
           --template-file main.bicep \
           --parameters @main.parameters.${{parameters.bicepParameter}}.json
 
@@ -66,13 +66,13 @@ steps:
     condition: and(succeeded(), in('True', variables['isMain'], variables['isStable']))
     displayName: Deploy Bicep Template
     inputs:
-      azureSubscription: $[variables['azureSubscription']]
+      azureSubscription: ${{ parameters.azureSubscription }}
       scriptType: bash
       scriptLocation: inlineScript
-      workingDirectory: $[variables['bicepDir']]/$[variables['bicepTemplateDir']]
+      workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
       inlineScript: |
         az deployment group create \
           --name $(Build.BuildNumber) \
-          --resource-group $[variables['resourceGroupName']] \
+          --resource-group ${{ parameters.ResourceGroupName }} \
           --template-file main.bicep \
           --parameters @main.parameters.${{parameters.bicepParameter}}.json

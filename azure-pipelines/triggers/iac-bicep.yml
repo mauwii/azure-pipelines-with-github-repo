@@ -35,35 +35,13 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+parameters:
+  - name: deployFolders
+    type: object
+
 jobs:
-  - job: getFolders
-    steps:
-      - pwsh: |
-          $folders = (Get-ChildItem ${{ variables.bicepDir }} -Name)
-          Write-Host -Sepa "##vso[task.setvariable variable=templateFolders;isOutput=true;]$folders"
-        name: getTemplateFolders
-        displayName: Get Template Folders
-      - script: echo $(getTemplateFolders.templateFolders)
-  - job: deployFolders
-    dependsOn: getFolders
-    variables:
-      folders: $[ convertToJson(dependencies.getFolders.outputs['getTemplateFolders.templateFolders'])]
-    steps:
-    - script: 'echo $(folders)'
-      # - template: ../jobs/steps/bicep_steps.yml
-      #   parameters:
-      #     bicepDir: ${{ variables.bicepDir }}
-      #     bicepTemplateDir: ${{ convertToJson(variables.templateFolders) }}
-      #     bicepParameter: ${{ variables.bicepParameter }}
-  # - job:
-  #   dependsOn: getFolders
-  #   variables:
-  #     templateFolders: $[dependencies.getFolders.outputs['passOutput.templateFolders']]
-  #   steps:
-  #     - script: 'echo "$(templateFolders)"'
-  #     - ${{ each value in $(templateFolders) }}:
-  #       - template: ../jobs/bicep_jobs.yml
-  #         parameters:
-  #           bicepDir: ${{ parameters.bicepDir }}
-  #           bicepTemplateDir: $(templateFolders)
-  #           bicepParameter: ${{ parameters.bicepParameter }}
+  - template: jobs/bicep_jobs.yml
+    parameters:
+      bicepDir: ${{ variables.bicepDir }}
+      bicepTemplateDir: 'acr'
+      bicepParameter: ${{ variables.bicepParameter }}

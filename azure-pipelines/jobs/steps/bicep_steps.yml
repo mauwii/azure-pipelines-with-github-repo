@@ -19,12 +19,12 @@ parameters:
     default: $[ variables['location'] ]
 
 steps:
-  - template: '../../../${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}/main.parameters.yml'
+  - template: '../../../$(bicepDir)/$(bicepTemplateDir)/main.parameters.yml'
 
   - script: az bicep build --file main.bicep
     displayName: Run Bicep Linter
     name: LintBicepCode
-    workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
+    workingDirectory: $(bicepDir)/$(bicepTemplateDir)
 
   - template: create_resourceGroup.yml
     parameters:
@@ -38,7 +38,7 @@ steps:
     displayName: Run preflight validation
     inputs:
       azureSubscription: ${{ parameters.azureSubscription }}
-      workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
+      workingDirectory: $(bicepDir)/$(bicepTemplateDir)
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
@@ -52,7 +52,7 @@ steps:
     displayName: Run what-if
     inputs:
       azureSubscription: ${{ parameters.azureSubscription }}
-      workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
+      workingDirectory: $(bicepDir)/$(bicepTemplateDir)
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
@@ -69,7 +69,7 @@ steps:
       azureSubscription: ${{ parameters.azureSubscription }}
       scriptType: bash
       scriptLocation: inlineScript
-      workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
+      workingDirectory: $(bicepDir)/$(bicepTemplateDir)
       inlineScript: |
         az deployment group create \
           --name $(Build.BuildNumber) \

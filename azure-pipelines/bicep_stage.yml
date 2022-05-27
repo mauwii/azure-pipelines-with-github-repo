@@ -57,8 +57,9 @@ stages:
         - script: |
             echo 'bicepDir: $(bicepDir)'
             echo 'bicepTemplateDir: $(bicepTemplateDir)'
+            echo '##vso[task.setVariable variable=templatePath]$(bicepDir)/$(bicepTemplateDir)'
           displayName: $(bicepTemplateDir)
-        - template: ../$(bicepDir)/$(bicepTemplateDir)/main.parameters.yml
+        - template: '../$(templatePath)/main.parameters.yml'
       # - ${{ each value in parameters.bicepTemplateDir }}:
       #     - template: jobs/bicep_jobs.yml
       #       parameters:

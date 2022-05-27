@@ -21,7 +21,7 @@ param enableDeleteLock bool = false
 var lockName = '${acrResource.name}-lck'
 
 resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = {
-  name: '${acrName}-${uniqueString(resourceGroup().id)}'
+  name: '${acrName}${uniqueString(resourceGroup().id)}'
   location: location
   sku: {
     name: acrSku

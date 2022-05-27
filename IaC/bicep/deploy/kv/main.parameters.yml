@@ -6,7 +6,7 @@ parameters:
       contentVersion: '1.0.0.0'
       parameters:
         keyVaultName:
-          value: mainkeyvaulteu
+          value: mainkveu
         location:
           value: westeurope
         enabledForDeployment:

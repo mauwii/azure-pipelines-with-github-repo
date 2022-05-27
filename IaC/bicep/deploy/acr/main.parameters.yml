@@ -6,7 +6,7 @@ parameters:
       contentVersion: '1.0.0.0'
       parameters:
         acrName:
-          value: 'bicep'
+          value: 'bicepacr'
         location:
           value: 'westeurope'
         acrSku:

@@ -12,7 +12,7 @@ parameters:
         acrSku:
           value: Basic
         enableDeleteLock:
-          value: true
+          value: false
 
 steps:
   - script: |

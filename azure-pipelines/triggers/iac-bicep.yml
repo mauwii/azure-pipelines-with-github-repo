@@ -30,9 +30,9 @@ trigger:
       - feature/*
       - main
       - stable
-  paths:
-    include:
-      - IaC/bicep/deploy
+  # paths:
+  #   include:
+  #     - IaC/bicep/deploy
 
 pool:
   vmImage: ubuntu-latest

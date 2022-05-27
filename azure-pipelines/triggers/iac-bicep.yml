@@ -36,7 +36,7 @@ pool:
   vmImage: ubuntu-latest
 
 jobs:
-  - template: jobs/bicep_jobs.yml
+  - template: ../jobs/bicep_jobs.yml
     parameters:
       bicepDir: ${{ variables.bicepDir }}
       bicepTemplateDir: 'acr'

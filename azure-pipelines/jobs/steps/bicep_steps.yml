@@ -19,7 +19,8 @@ parameters:
     default: $[ variables['location'] ]
 
 steps:
-  - template: '../../../$(bicepDir)/$(bicepTemplateDir)/main.parameters.yml'
+  # - template: '../../../$(bicepDir)/$(bicepTemplateDir)/main.parameters.yml'
+  - script: ls -la
 
   - script: az bicep build --file main.bicep
     displayName: Run Bicep Linter

@@ -30,9 +30,11 @@ trigger:
       - refs/heads/stable
     exclude:
       - feature/experimental/*
-  # paths:
-  #   include:
-  #     - IaC/bicep/deploy
+  paths:
+    include:
+      - IaC/bicep/deploy
+
+pr: none
 
 pool:
   vmImage: ubuntu-latest

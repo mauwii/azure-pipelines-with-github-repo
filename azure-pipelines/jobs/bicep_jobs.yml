@@ -21,6 +21,9 @@ jobs:
   - job:
     displayName: Template ${{ parameters.bicepTemplateDir }}
     continueOnError: false
+    variables:
+      bicepDir: ${{ parameters.bicepDir }}
+      bicepTemplateDir: ${{ parameters.bicepTemplateDir }}
     steps:
       - template: '../../${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}/main.parameters.yml'
 

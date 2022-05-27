@@ -20,9 +20,11 @@ parameters:
         objectId:
           value: bb36fc31-5a0b-42db-8800-1a945c93eece
         keysPermissions:
-          value: list
+          value: 
+            - list
         secretsPermissions:
-          value: list
+          value: 
+            - list
         skuName:
           value: standard
         secretsObject:

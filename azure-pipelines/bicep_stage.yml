@@ -59,12 +59,12 @@ stages:
           displayName: $(bicepTemplateDir)
         - template: jobs/steps/bicep_steps.yml
           parameters:
-            bicepDir: $[ variables['bicepDir'] ]
-            bicepTemplateDir: $[ variables['bicepTemplateDir'] ]
-            bicepParameter: $[ variables['bicepParameter'] ]
-            resourceGroupName: $[ variables['resourceGroupName'] ]
-            azureSubscription: $[ variables['azureSubscription'] ]
-            location: $[ variables['location'] ]
+            bicepDir: $(bicepDir)
+            bicepTemplateDir: $(bicepTemplateDir)
+            bicepParameter: $(bicepParameter)
+            resourceGroupName: $(resourceGroupName)
+            azureSubscription: $(azureSubscription)
+            location: $(location)
         - script: export
           displayName: output export
         - script: env

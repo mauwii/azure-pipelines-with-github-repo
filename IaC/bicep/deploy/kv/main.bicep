@@ -41,7 +41,7 @@ param skuName string = 'standard'
 param secretsObject object
 
 resource kv 'Microsoft.KeyVault/vaults@2021-04-01-preview' = {
-  name: keyVaultName
+  name: '${keyVaultName}-${uniqueString(resourceGroup().id)}'
   location: location
   properties: {
     enabledForDeployment: enabledForDeployment

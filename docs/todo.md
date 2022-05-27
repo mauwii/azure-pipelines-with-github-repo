@@ -41,3 +41,4 @@ Since the Human Brain not always works as well as cloud-storage, I will write do
     - [ ] trigger a build when defined branch has changes
     - [ ] if build is successful, trigger a pipeline to update tested submodule
     - [ ] this could then trigger the build of the submodule to staging
+- [ ] move pipeline templates so separate Repository as described [here](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#use-other-repositories)

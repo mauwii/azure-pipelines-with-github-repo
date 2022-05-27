@@ -41,7 +41,7 @@ pool:
   vmImage: ubuntu-latest
 
 extends:
-  template: ../bicep.yml
+  template: ../bicep_stage.yml
   parameters:
     bicepDir: ${{ variables.bicepDir }}
     bicepTemplateDir:

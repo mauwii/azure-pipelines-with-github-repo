@@ -1,22 +1,22 @@
 parameters:
   - name: bicepDir
     type: string
-    default: $[ variables['bicepDir'] ]
+    default: $(bicepDir)
   - name: bicepTemplateDir
     type: string
-    default: $[ variables['bicepTemplateDir'] ]
+    default: $(bicepTemplateDir)
   - name: bicepParameter
     type: string
-    default: $[ variables['bicepParameter'] ]
+    default: $(bicepParameter)
   - name: resourceGroupName
     type: string
-    default: $[ variables['resourceGroupName'] ]
+    default: $(resourceGroupName)
   - name: azureSubscription
     type: string
-    default: $[ variables['azureSubscription'] ]
+    default: $(azureSubscription)
   - name: location
     type: string
-    default: $[ variables['location'] ]
+    default: $(location)
 
 steps:
   # - template: '../../../$(bicepDir)/$(bicepTemplateDir)/main.parameters.yml'

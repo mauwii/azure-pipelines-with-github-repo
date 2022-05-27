@@ -28,16 +28,20 @@ trigger:
   branches:
     include:
       - feature/*
-  # paths:
-  #   include:
-  #     - IaC/bicep
+      - main
+      - stable
+  paths:
+    include:
+      - IaC/bicep/deploy
 
 pool:
   vmImage: ubuntu-latest
 
-jobs:
-  - template: ../jobs/bicep_jobs.yml
-    parameters:
-      bicepDir: ${{ variables.bicepDir }}
-      bicepTemplateDir: 'acr'
-      bicepParameter: ${{ variables.bicepParameter }}
+extends:
+  template: ../main.yml
+  parameters:
+    bicepDir: ${{ variables.bicepDir }}
+    bicepTemplateDir:
+      - 'acr'
+      - 'kv'
+    bicepParameter: ${{ variables.bicepParameter }}

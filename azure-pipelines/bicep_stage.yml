@@ -33,12 +33,36 @@ stages:
   - stage: bicep
     displayName: Bicep
     jobs:
-      - ${{ each value in parameters.bicepTemplateDir }}:
-          - template: jobs/bicep_jobs.yml
-            parameters:
+      - job: generator
+        steps:
+          - task: PowerShell@2
+            name: mtrx
+            env:
               bicepDir: ${{ parameters.bicepDir }}
-              bicepTemplateDir: ${{ value }}
               bicepParameter: ${{ parameters.bicepParameter }}
               resourceGroupName: ${{ parameters.resourceGroupName }}
               azureSubscription: ${{ parameters.azureSubscription }}
               location: ${{ parameters.location }}
+            inputs:
+              targetType: filePath
+              filePath: scripts/New-BicepMatrix.ps1
+          - script: echo $BICEPMATRIX
+            env:
+              BICEPMATRIX: $(bicepMatrix)
+      - job: runner
+        dependsOn: generator
+        strategy:
+          matrix: $[ dependencies.generator.outputs['mtrx.legs'] ]
+        steps:
+        - script: |
+            echo $(bicepDir)
+            echo $(bicepTemplateDir)
+      # - ${{ each value in parameters.bicepTemplateDir }}:
+      #     - template: jobs/bicep_jobs.yml
+      #       parameters:
+      #         bicepDir: ${{ parameters.bicepDir }}
+      #         bicepTemplateDir: ${{ value }}
+      #         bicepParameter: ${{ parameters.bicepParameter }}
+      #         resourceGroupName: ${{ parameters.resourceGroupName }}
+      #         azureSubscription: ${{ parameters.azureSubscription }}
+      #         location: ${{ parameters.location }}

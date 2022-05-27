@@ -28,9 +28,9 @@ trigger:
       - issue/*
     exclude:
       - feature/experimental/*
-  paths:
-    include:
-      - IaC/bicep/deploy
+  # paths:
+  #   include:
+  #     - IaC/bicep/deploy
 
 pr: none
 

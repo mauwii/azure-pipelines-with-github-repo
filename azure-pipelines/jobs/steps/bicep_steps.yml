@@ -18,10 +18,6 @@ parameters:
     type: string
     default: ''
 
-variables:
-  bicepDir: ${{ parameters.bicepDir }}
-  bicepTemplateDir: ${{ parameters.bicepTemplateDir }}
-
 steps:
   - template: '../../../${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}/main.parameters.yml'
 

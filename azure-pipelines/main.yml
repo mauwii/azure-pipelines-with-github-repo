@@ -11,6 +11,36 @@ parameters:
     displayName: When disabled MkDocs will only be built
     type: boolean
     default: false
+  - name: bicepDir
+    displayName: Directory containing Folders with Bicep Templates
+    type: string
+    default: 'IaC/bicep/deploy'
+  - name: bicepTemplateDir
+    displayName: Directory containing the main.bicep
+    type: object
+    default:
+      - 'acr'
+      - 'kv'
+  - name: bicepParameter
+    displayName: Used in some templates to change Resource Name or other variables
+    type: string
+    values:
+      - dev
+      - stg
+      - prod
+    default: dev
+  - name: resourceGroupName
+    displayName: Name of the Resource Group where templates will be deployed to
+    type: string
+    default: $(resourceGroupName)
+  - name: azureSubscription
+    displayName: Name of the ARM-Service Connection
+    type: string
+    default: $(azureSubscription)
+  - name: location
+    displayName: Location where the Resources will be deployed to
+    type: string
+    default: $(location)
 
 stages:
   - template: bicep_stage.yml
@@ -18,7 +48,12 @@ stages:
       bicepDir: ${{ parameters.bicepDir }}
       bicepParameter: ${{ parameters.bicepParameter }}
       bicepTemplateDir: ${{ parameters.bicepTemplateDir }}
+      resourceGroupName: ${{ parameters.resourceGroupName }}
+      azureSubscription: ${{ parameters.azureSubscription }}
+      location: ${{ parameters.location }}
 
   - template: mkdocs_stage.yml
     parameters:
+      pythonVersion: ${{ parameters.pythonVersion }}
+      mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
       mkdocsDeploy: ${{ parameters.mkdocsDeploy }}

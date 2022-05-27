@@ -19,7 +19,7 @@ parameters:
     default: $(location)
 
 steps:
-  - template: '../../../IaC/bicep/deploy/$(bicepTemplateDir)/main.parameters.yml'
+  - template: '../../../IaC/bicep/deploy/$[bicepTemplateDir]/main.parameters.yml'
   - script: ls -la
 
   - script: az bicep build --file main.bicep

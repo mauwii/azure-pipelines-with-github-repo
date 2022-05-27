@@ -61,7 +61,7 @@ stages:
             echo '##vso[task.setVariable variable=matrixlocation]$LOCATION'
           displayName: $(bicepTemplateDir)
           enabled: true
-        - template: '../IaC/bicep/deploy/${{ variables.matrixbicepTemplateDir }}/main.parameters.yml'
+        - template: '../IaC/bicep/deploy/$[variables.matrixbicepTemplateDir]/main.parameters.yml'
         - template: jobs/steps/bicep_steps.yml
           parameters:
             bicepDir: '$(matrixbicepDir)'

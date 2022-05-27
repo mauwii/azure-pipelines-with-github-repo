@@ -19,7 +19,9 @@ parameters:
     default: $(location)
 
 steps:
-  - template: IaC/bicep/deploy/$(parameters.bicepTemplateDir)/main.parameters.yml
+  - powershell: 'Get-ChildItem -Path env:'
+  - powershell: Write-Host "##vso[task.setVariable variable=matrixbicepTemplateDir]$env:BICEPTEMPLATEDIR"
+  - template: IaC/bicep/deploy/$(matrixbicepTemplateDir)/main.parameters.yml
   - script: ls -la
 
   - script: az bicep build --file main.bicep

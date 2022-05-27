@@ -26,8 +26,6 @@ trigger:
     include:
       - feature/*
       - issue/*
-      - refs/heads/main
-      - refs/heads/stable
     exclude:
       - feature/experimental/*
   paths:

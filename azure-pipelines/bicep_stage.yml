@@ -6,6 +6,9 @@ parameters:
   - name: bicepTemplateDir
     displayName: Directory containing the main.bicep
     type: object
+    default:
+      - 'acr'
+      - 'kv'
   - name: bicepParameter
     displayName: Used in some templates to change Resource Name or other variables
     type: string

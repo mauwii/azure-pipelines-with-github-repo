@@ -13,12 +13,11 @@ parameters:
     default: false
 
 stages:
-  - template: bicep_stage.yml
-    parameters:
-      bicepDir: ${{ parameters.bicepDir }}
-      bicepParameter: ${{ parameters.bicepParameter }}
-      bicepTemplateDir: ${{ parameters.bicepTemplateDir }}
-
-  - template: mkdocs_stage.yml
-    parameters:
-      mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
+  - stage: mkdocs
+    displayName: MkDocs
+    jobs:
+      - template: jobs/mkdocs-material.yml
+        parameters:
+          mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
+          # pythonVersion: '<Python Version to use when building MkDocs-Material>'
+          # mkdocsSiteDir: '<folder to create the site by mkdocs>' - defaults to 'site'

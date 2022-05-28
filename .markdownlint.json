@@ -9,7 +9,5 @@
       "figcaption"
     ]
   },
-  "MD046": {
-    "style": "consistent"
-  }
+  "MD046": false
 }

@@ -19,9 +19,14 @@ parameters:
     default: $(location)
 
 steps:
-  - powershell: 'Get-ChildItem -Path env:'
-  - powershell: Copy-Item -Path $env:BICEPDIR/$env:BICEPTEMPLATEDIR/main.parameters.yml -Destination azure-pipelines/jobs/steps/main.parameters.yml
-  - template: main.parameters.yml
+  - script: |
+      echo "${JSON}" > main.parameters.$(bicepParameter).json
+      ls -la
+      cat main.parameters.$(bicepParameter).json
+    workingDirectory: $(bicepDir)/$(bicepTemplateDir)
+    displayName: Create Bicep Parameters
+    env:
+      JSON: ${{ convertToJson(parameters.bicep_parameters_template) }}
 
   - script: az bicep build --file main.bicep
     displayName: Run Bicep Linter

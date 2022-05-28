@@ -6,9 +6,6 @@ parameters:
   - name: bicepTemplateDir
     displayName: Directory containing the main.bicep
     type: object
-    default:
-      - 'acr'
-      - 'kv'
   - name: bicepParameter
     displayName: Used in some templates to change Resource Name or other variables
     type: string
@@ -33,12 +30,32 @@ stages:
   - stage: bicep
     displayName: Bicep
     jobs:
-      - ${{ each value in parameters.bicepTemplateDir }}:
-          - template: jobs/bicep_jobs.yml
-            parameters:
+      - job: getTemplateFolders
+        displayName: Get Template Folders
+        steps:
+          - task: PowerShell@2
+            name: mtrx
+            env:
               bicepDir: ${{ parameters.bicepDir }}
-              bicepTemplateDir: ${{ value }}
               bicepParameter: ${{ parameters.bicepParameter }}
               resourceGroupName: ${{ parameters.resourceGroupName }}
               azureSubscription: ${{ parameters.azureSubscription }}
               location: ${{ parameters.location }}
+            inputs:
+              targetType: filePath
+              filePath: scripts/New-BicepMatrix.ps1
+
+      - job: runner
+        displayName: Test and Deploy
+        dependsOn: getTemplateFolders
+        strategy:
+          matrix: $[ dependencies.getTemplateFolders.outputs['mtrx.legs'] ]
+        steps:
+          - template: jobs/steps/bicep_steps.yml
+            parameters:
+              bicepDir: $(bicepDir)
+              bicepTemplateDir: $(bicepTemplateDir)
+              bicepParameter: $(bicepParameter)
+              resourceGroupName: $(resourceGroupName)
+              azureSubscription: $(azureSubscription)
+              location: $(location)

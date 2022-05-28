@@ -2,14 +2,6 @@
 	path = src/mkdocs-material
 	url = https://github.com/squidfunk/mkdocs-material
 	branch = master
-[submodule "src/serverless-web-application"]
-    path = src/serverless-web-application
-    url = https://github.com/Azure-Samples/serverless-web-application.git
-	branch = main
-[submodule "src/azure-quickstart-templates"]
-    path = src/azure-quickstart-templates
-    url = https://github.com/Azure/azure-quickstart-templates.git
-	branch = master
 [submodule "src/opencensus-with-fastapi-and-azure-monitor"]
 	path = src/opencensus-with-fastapi-and-azure-monitor
 	url = https://github.com/Mauwii/opencensus-with-fastapi-and-azure-monitor.git

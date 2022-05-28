@@ -1,5 +1,3 @@
-name: 'IaC-Trigger'
-
 variables:
   isMain: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
   isStable: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
@@ -28,9 +26,9 @@ trigger:
       - issue/*
     exclude:
       - feature/experimental/*
-  paths:
-    include:
-      - IaC/bicep/deploy
+  # paths:
+  #   include:
+  #     - IaC/bicep/deploy
 
 pr: none
 

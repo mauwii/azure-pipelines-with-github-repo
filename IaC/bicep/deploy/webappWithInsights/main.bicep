@@ -1,5 +1,5 @@
 @description('This will be the first Part of the resource name and added as a resource tag')
-param project string
+param project string = 'apwghr'
 
 @description('Which Pricing tier our App Service Plan to')
 param skuName string = 'F1'
@@ -18,9 +18,9 @@ param skuCapacity int = 1
   'Standalone'
   'Standard'
 ])
-param skuNameLogAnalyticsWorkspace string
+param skuNameLogAnalyticsWorkspace string = 'PerGB2018'
 
-@description('The environment where you want to use this webapp')
+@description('The environment you deploy to')
 @allowed([
   'dev'
   'stg'
@@ -33,17 +33,18 @@ param location string = resourceGroup().location
 
 @description('The Runtime you want to use in your WebApp')
 @allowed([
+  '3.8'
   '3.9'
 ])
-param pythonVersion string
+param pythonVersion string = '3.9'
+
 
 @description('Name that will be used to build associated artifacts')
-param appName string = uniqueString(resourceGroup().id)
-
-var appServicePlanName = toLower('${project}-asp-${appName}')
-var webSiteName = toLower('${project}-wapp-${env}-${appName}')
-var appInsightName = toLower('${project}-appi-${appName}')
-var logAnalyticsName = toLower('${project}-la-${appName}')
+var groupid = uniqueString(resourceGroup().id)
+var appServicePlanName = toLower('${project}-asp-${groupid}')
+var webSiteName = toLower('${project}-wapp-${env}-${groupid}')
+var appInsightName = toLower('${project}-appi-${groupid}')
+var logAnalyticsName = toLower('${project}-la-${groupid}')
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   name: appServicePlanName
@@ -54,7 +55,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   }
   tags: {
     displayName: 'HostingPlan'
-    ProjectName: appName
+    ProjectName: project
   }
 }
 
@@ -67,6 +68,7 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
   tags: {
     displayName: 'Website'
     ProjectName: project
+    environment: env
   }
   dependsOn: [
     logAnalyticsWorkspace

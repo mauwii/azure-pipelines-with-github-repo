@@ -12,11 +12,11 @@
     "**/node_modules": true,
     "**/package-lock.json": true
   },
-  "typescript.tsdk": "src/mkdocs-material/node_modules/typescript/lib",
   // Settings related to Azure Pipelines
   "azure-pipelines.configure": true,
   "azure-pipelines.customSchemaFile": ".vscode/my-schema.json",
   "[azure-pipelines]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "gitlens.codeLens.scopes": [
       "document"
     ],

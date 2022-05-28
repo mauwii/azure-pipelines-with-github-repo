@@ -18,16 +18,27 @@ param acrSku string = 'Basic'
 @description('Enable delete lock')
 param enableDeleteLock bool = false
 
+@description('The environment you deploy to')
+@allowed([
+  'dev'
+  'stg'
+  'prod'
+])
+param env string
+
 var lockName = '${acrResource.name}-lck'
 
 resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = {
-  name: '${acrName}${uniqueString(resourceGroup().id)}'
+  name: '${acrName}${env}${uniqueString(resourceGroup().id)}'
   location: location
   sku: {
     name: acrSku
   }
   properties: {
     adminUserEnabled: false
+  }
+  tags: {
+    environment: env
   }
 }
 

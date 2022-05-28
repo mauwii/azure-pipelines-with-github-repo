@@ -20,7 +20,7 @@ param skuCapacity int = 1
 ])
 param skuNameLogAnalyticsWorkspace string = 'PerGB2018'
 
-@description('The environment where you want to use this webapp')
+@description('The environment you deploy to')
 @allowed([
   'dev'
   'stg'
@@ -68,6 +68,7 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
   tags: {
     displayName: 'Website'
     ProjectName: project
+    environment: env
   }
   dependsOn: [
     logAnalyticsWorkspace

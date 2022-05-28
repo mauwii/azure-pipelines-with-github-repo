@@ -1,6 +1,15 @@
 @description('Specifies the name of the key vault.')
 param keyVaultName string = 'kv'
 
+
+@description('The environment you deploy to')
+@allowed([
+  'dev'
+  'stg'
+  'prod'
+])
+param env string
+
 @description('Specifies the Azure location where the key vault should be created.')
 param location string = resourceGroup().location
 
@@ -70,8 +79,11 @@ param skuName string = 'standard'
 param secretsObject object
 
 resource kv 'Microsoft.KeyVault/vaults@2021-04-01-preview' = {
-  name: '${keyVaultName}${uniqueString(resourceGroup().id)}'
+  name: '${keyVaultName}${env}${uniqueString(resourceGroup().id)}'
   location: location
+  tags: {
+    environment: env
+  }
   properties: {
     enabledForDeployment: enabledForDeployment
     enabledForTemplateDeployment: enabledForTemplateDeployment

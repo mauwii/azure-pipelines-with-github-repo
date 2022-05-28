@@ -74,9 +74,9 @@ param secretsPermissions array = [
 ])
 param skuName string = 'standard'
 
-@description('Specifies all secrets {"secretName":"","secretValue":""} wrapped in a secure object.')
-@secure()
-param secretsObject object
+// @description('Specifies all secrets {"secretName":"","secretValue":""} wrapped in a secure object.')
+// @secure()
+// param secretsObject object
 
 resource kv 'Microsoft.KeyVault/vaults@2021-04-01-preview' = {
   name: '${keyVaultName}${env}${uniqueString(resourceGroup().id)}'
@@ -110,10 +110,10 @@ resource kv 'Microsoft.KeyVault/vaults@2021-04-01-preview' = {
   }
 }
 
-resource secrets 'Microsoft.KeyVault/vaults/secrets@2021-04-01-preview' = [for secret in secretsObject.secrets: {
-  name: secret.secretName
-  parent: kv
-  properties: {
-    value: secret.secretValue
-  }
-}]
+// resource secrets 'Microsoft.KeyVault/vaults/secrets@2021-04-01-preview' = [for secret in secretsObject.secrets: {
+//   name: secret.secretName
+//   parent: kv
+//   properties: {
+//     value: secret.secretValue
+//   }
+// }]

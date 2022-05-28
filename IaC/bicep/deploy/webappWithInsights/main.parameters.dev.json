@@ -15,7 +15,7 @@
       "value": "PerGB2018"
     },
     "env": {
-      "value": "" // TODO: Fill in parameter value
+      "value": "dev"
     },
     // "location": {
     //     "value": "" // defaults to resourcegroup location

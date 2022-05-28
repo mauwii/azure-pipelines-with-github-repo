@@ -21,7 +21,7 @@ parameters:
 steps:
   - powershell: 'Get-ChildItem -Path env:'
   - powershell: Write-Host "##vso[task.setVariable variable=matrixbicepTemplateDir]$env:BICEPTEMPLATEDIR"
-  - template: IaC/bicep/deploy/$(matrixbicepTemplateDir)/main.parameters.yml
+  # - template: main.parameters.yml
   - script: ls -la
 
   - script: az bicep build --file main.bicep

@@ -1,33 +1,25 @@
-# only publishing Docs of stable release for now - maybe I integrate 'mike' later
 trigger:
   batch: true
   branches:
     include:
       - feature/*
       - issue/*
-    exclude:
-      - feature/experimental/*
   paths:
     include:
       - docs
       - mkdocs.yml
       - src/requirements-mkdocs-material.txt
-    exclude:
-      - docs/.editorconfig
+      - azure-pipelines/mkdocs_stage.yml
 
 pool:
   vmImage: ubuntu-latest
 
 variables:
-  - template: ../variables/main.yml
+  - template: ../variables/default.yml
 
-steps:
-  - template: ../jobs/steps/checkout_submodules.yml
-    parameters:
-      submodule: 'src/mkdocs-material'
-  - template: ../jobs/steps/build_mkdocs.yml
-    parameters:
-      PYTHON_VERSION: '$(pythonVersion)'
-  - script: mkdocs gh-deploy --force
-    displayName: Deploy to GitHub-Pages
-    condition: and(eq(variables.isProduction, 'True'), succeeded())
+extends:
+  template: ../mkdocs_stage.yml
+  parameters:
+    pythonVersion: ${{ variables.pythonVersion }}
+    mkdocsSiteDir: ${{ variables.mkdocsSiteDir }}
+    mkdocsDeploy: ${{ variables.mkdocsDeploy }}

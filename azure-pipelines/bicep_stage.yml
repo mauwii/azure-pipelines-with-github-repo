@@ -30,7 +30,8 @@ stages:
   - stage: bicep
     displayName: Bicep
     jobs:
-      - job: generator
+      - job: getTemplateFolders
+        displayName: Get Template Folders
         steps:
           - task: PowerShell@2
             name: mtrx
@@ -45,9 +46,10 @@ stages:
               filePath: scripts/New-BicepMatrix.ps1
 
       - job: runner
-        dependsOn: generator
+        displayName: Test and Deploy
+        dependsOn: getTemplateFolders
         strategy:
-          matrix: $[ dependencies.generator.outputs['mtrx.legs'] ]
+          matrix: $[ dependencies.getTemplateFolders.outputs['mtrx.legs'] ]
         steps:
           - template: jobs/steps/bicep_steps.yml
             parameters:

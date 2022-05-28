@@ -8,5 +8,8 @@
       "figure",
       "figcaption"
     ]
+  },
+  "MD046": {
+    "style": "consistent"
   }
 }

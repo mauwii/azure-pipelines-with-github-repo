@@ -3,9 +3,6 @@ parameters:
     displayName: Directory containing Folders with Bicep Templates
     type: string
     default: 'IaC/bicep/deploy'
-  - name: bicepTemplateDir
-    displayName: Directory containing the main.bicep
-    type: object
   - name: bicepParameter
     displayName: Used in some templates to change Resource Name or other variables
     type: string
@@ -13,6 +10,7 @@ parameters:
       - dev
       - stg
       - prod
+    default: $(bicepParameter)
   - name: resourceGroupName
     displayName: Name of the Resource Group where templates will be deployed to
     type: string

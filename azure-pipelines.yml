@@ -8,23 +8,9 @@ trigger:
 pr: none
 
 variables:
-  - name: isMain
-    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
-    readonly: true
-  - name: isStable
-    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
-    readonly: true
-  - name: isPullRequest
-    value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
-    readonly: true
-  - name: sourceBranchName
-    value: $[ variables['Build.SourceBranchName'] ]
   - template: azure-pipelines/variables/default.yml
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
       - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
-  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/stable') }}:
-      - name: mkdocsDeploy
-        value: ${{ True }}
 
 pool:
   vmImage: $(vmImageName)

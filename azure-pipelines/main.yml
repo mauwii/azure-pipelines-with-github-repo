@@ -41,7 +41,6 @@ stages:
     parameters:
       bicepDir: ${{ parameters.bicepDir }}
       bicepParameter: ${{ parameters.bicepParameter }}
-      bicepTemplateDir: ${{ parameters.bicepTemplateDir }}
       resourceGroupName: ${{ parameters.resourceGroupName }}
       azureSubscription: ${{ parameters.azureSubscription }}
       location: ${{ parameters.location }}

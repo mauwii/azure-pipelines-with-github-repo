@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://mauwii.github.io/azure-pipelines-with-github-repo/workflow/2-azure-pipelines/">
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.15">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.16">
     
     
       
@@ -23,7 +23,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.c382b1dc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.1c3799f8.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.cc9b2e1e.min.css">
@@ -509,23 +509,30 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#validate-bicep" class="md-nav__link">
-    validate Bicep
-  </a>
-  
-    <nav class="md-nav" aria-label="validate Bicep">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#create-resourcegroup" class="md-nav__link">
-    create ResourceGroup
+  <a href="#mainyml" class="md-nav__link">
+    main.yml
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#deploy-bicep" class="md-nav__link">
-    Deploy Bicep
+  <a href="#bicep_stageyml" class="md-nav__link">
+    bicep_stage.yml
+  </a>
+  
+    <nav class="md-nav" aria-label="bicep_stage.yml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bicep_stepsyml" class="md-nav__link">
+    bicep_steps.yml
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create_resourcegroupyml" class="md-nav__link">
+    create_resourceGroup.yml
   </a>
   
 </li>
@@ -583,8 +590,10 @@
   <h1>Azure-Pipelines</h1>
 
 <h3 id="azure-pipelinesyml">azure-pipelines.yml<a class="headerlink" href="#azure-pipelinesyml" title="Permanent link">&para;</a></h3>
-<p>This is the YAML File which defined the main Pipeline while Docs have been deployed. Most Parts of it are referencing Templates which are located bellow the subfolder <code>/azure-pipelines</code></p>
-<p>It is reflecting the chosen Branching-Strategy you'll find in the previous Section.</p>
+<p>This is the YAML File which defined the main Pipeline while this Docs your are reading have been deployed. Most Parts of it are referencing Templates which are located bellow the subfolder <code>/azure-pipelines</code>.</p>
+<p>I had the Idea to use this folder for pipeline Stage-Templates, then use the <code>azure-pipelines/jobs</code> subfolder for job-templates and finally a subfolder <code>azure-pipelines/jobs/steps</code> for, you guessed it, step-templates. But at the moment I am thinking to have another subfolder-stage <code>azure-pipelines/stages/jobs/steps</code>, and store pipelines directly in <code>azure-pipelines</code>, which atm are stored in <code>azure-pipelines/triggers</code> which feels kind of wrong.</p>
+<details class="quote">
+<summary>YAML</summary>
 <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">azure-pipelines.yml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
@@ -606,72 +615,35 @@
 <span class="normal"><a href="#__codelineno-0-19">19</a></span>
 <span class="normal"><a href="#__codelineno-0-20">20</a></span>
 <span class="normal"><a href="#__codelineno-0-21">21</a></span>
-<span class="normal"><a href="#__codelineno-0-22">22</a></span>
-<span class="normal"><a href="#__codelineno-0-23">23</a></span>
-<span class="normal"><a href="#__codelineno-0-24">24</a></span>
-<span class="normal"><a href="#__codelineno-0-25">25</a></span>
-<span class="normal"><a href="#__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#__codelineno-0-27">27</a></span>
-<span class="normal"><a href="#__codelineno-0-28">28</a></span>
-<span class="normal"><a href="#__codelineno-0-29">29</a></span>
-<span class="normal"><a href="#__codelineno-0-30">30</a></span>
-<span class="normal"><a href="#__codelineno-0-31">31</a></span>
-<span class="normal"><a href="#__codelineno-0-32">32</a></span>
-<span class="normal"><a href="#__codelineno-0-33">33</a></span>
-<span class="normal"><a href="#__codelineno-0-34">34</a></span>
-<span class="normal"><a href="#__codelineno-0-35">35</a></span>
-<span class="normal"><a href="#__codelineno-0-36">36</a></span>
-<span class="normal"><a href="#__codelineno-0-37">37</a></span>
-<span class="normal"><a href="#__codelineno-0-38">38</a></span>
-<span class="normal"><a href="#__codelineno-0-39">39</a></span>
-<span class="normal"><a href="#__codelineno-0-40">40</a></span>
-<span class="normal"><a href="#__codelineno-0-41">41</a></span>
-<span class="normal"><a href="#__codelineno-0-42">42</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;azure-pipelines.yml&#39;</span><span class="w"></span>
-<a id="__codelineno-0-2" name="__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="nt">trigger</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="w">  </span><span class="nt">batch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="w">  </span><span class="nt">branches</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="w">    </span><span class="nt">include</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">refs/heads/main</span><span class="w"></span>
-<a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">refs/heads/stable</span><span class="w"></span>
-<a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feature/*</span><span class="w"></span>
-<a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">issue/*</span><span class="w"></span>
-<a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="w">    </span><span class="nt">exclude</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feature/experimental/*</span><span class="w"></span>
-<a id="__codelineno-0-13" name="__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="nt">pr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span><span class="w"></span>
-<a id="__codelineno-0-15" name="__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="nt">variables</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isMain</span><span class="w"></span>
-<a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$[ eq(variables[&#39;Build.SourceBranch&#39;], &#39;refs/heads/main&#39;) ]</span><span class="w"></span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="nt">readonly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isStable</span><span class="w"></span>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$[ eq(variables[&#39;Build.SourceBranch&#39;], &#39;refs/heads/stable&#39;) ]</span><span class="w"></span>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="w">    </span><span class="nt">readonly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isPullRequest</span><span class="w"></span>
-<a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$[ eq(variables[&#39;Build.Reason&#39;], &#39;PullRequest&#39;) ]</span><span class="w"></span>
-<a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="w">    </span><span class="nt">readonly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sourceBranchName</span><span class="w"></span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$[ variables[&#39;Build.SourceBranchName&#39;] ]</span><span class="w"></span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure-pipelines/variables/default.yml</span><span class="w"></span>
-<a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ if in(variables[&#39;Build.SourceBranch&#39;], &#39;refs/heads/main&#39;, &#39;refs/heads/stable&#39;) }}</span><span class="p p-Indicator">:</span><span class="w"></span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure-pipelines/variables/${{ variables[&#39;Build.SourceBranchName&#39;] }}.yml</span><span class="w"></span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ if eq(variables[&#39;Build.SourceBranch&#39;], &#39;refs/heads/stable&#39;) }}</span><span class="p p-Indicator">:</span><span class="w"></span>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocsDeploy</span><span class="w"></span>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ True }}</span><span class="w"></span>
-<a id="__codelineno-0-34" name="__codelineno-0-34"></a>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="nt">pool</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="w">  </span><span class="nt">vmImage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(vmImageName)</span><span class="w"></span>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="nt">extends</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure-pipelines/main.yml</span><span class="w"></span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="w">  </span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="w">    </span><span class="nt">mkdocsDeploy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ variables[&#39;mkdocsDeploy&#39;] }}</span><span class="w"></span>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="w">    </span><span class="nt">bicepParameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ variables[&#39;bicepParameter&#39;] }}</span><span class="w"></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nt">trigger</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="w">  </span><span class="nt">batch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="w">  </span><span class="nt">branches</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="w">    </span><span class="nt">include</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">refs/heads/main</span><span class="w"></span>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">refs/heads/stable</span><span class="w"></span>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="nt">pr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span><span class="w"></span>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="nt">variables</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure-pipelines/variables/default.yml</span><span class="w"></span>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ if in(variables[&#39;Build.SourceBranch&#39;], &#39;refs/heads/main&#39;, &#39;refs/heads/stable&#39;) }}</span><span class="p p-Indicator">:</span><span class="w"></span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure-pipelines/variables/${{ variables[&#39;Build.SourceBranchName&#39;] }}.yml</span><span class="w"></span>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="nt">pool</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="w">  </span><span class="nt">vmImage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(vmImageName)</span><span class="w"></span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="nt">extends</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure-pipelines/main.yml</span><span class="w"></span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="w">  </span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="w">    </span><span class="nt">mkdocsDeploy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ variables[&#39;mkdocsDeploy&#39;] }}</span><span class="w"></span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="w">    </span><span class="nt">bicepParameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ variables[&#39;bicepParameter&#39;] }}</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
-<h4 id="validate-bicep">validate Bicep<a class="headerlink" href="#validate-bicep" title="Permanent link">&para;</a></h4>
-<p>This is the Template which is validating the bicep files. It is also calling a template which is creating a resource group for the resources and If conditions are met, it is calling another template to finally deploy the resources to Azure Resource Manager:</p>
-<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">azure-pipelines/jobs/bicep_jobs.yml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
+</details>
+<h4 id="mainyml">main.yml<a class="headerlink" href="#mainyml" title="Permanent link">&para;</a></h4>
+<p>This stage-template contains is defining the complete pipeline. I had it separated from <code>azure-pipelines.yml</code> to be able to run <code>validate_pr.yml</code> (pull request validation) with the same stages than <code>azure-pipelines.yml</code>, but while Writing this, I already get thoughts about a restructure, but would first need to test it out before I start writing documentation for it. In the end it could not work out and everything stays as it is <img alt="🙉" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f649.svg" title=":hear_no_evil:" /></p>
+<details class="quote">
+<summary>YAML</summary>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">azure-pipelines/main.yml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
 <span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
@@ -722,121 +694,65 @@
 <span class="normal"><a href="#__codelineno-1-49">49</a></span>
 <span class="normal"><a href="#__codelineno-1-50">50</a></span>
 <span class="normal"><a href="#__codelineno-1-51">51</a></span>
-<span class="normal"><a href="#__codelineno-1-52">52</a></span>
-<span class="normal"><a href="#__codelineno-1-53">53</a></span>
-<span class="normal"><a href="#__codelineno-1-54">54</a></span>
-<span class="normal"><a href="#__codelineno-1-55">55</a></span>
-<span class="normal"><a href="#__codelineno-1-56">56</a></span>
-<span class="normal"><a href="#__codelineno-1-57">57</a></span>
-<span class="normal"><a href="#__codelineno-1-58">58</a></span>
-<span class="normal"><a href="#__codelineno-1-59">59</a></span>
-<span class="normal"><a href="#__codelineno-1-60">60</a></span>
-<span class="normal"><a href="#__codelineno-1-61">61</a></span>
-<span class="normal"><a href="#__codelineno-1-62">62</a></span>
-<span class="normal"><a href="#__codelineno-1-63">63</a></span>
-<span class="normal"><a href="#__codelineno-1-64">64</a></span>
-<span class="normal"><a href="#__codelineno-1-65">65</a></span>
-<span class="normal"><a href="#__codelineno-1-66">66</a></span>
-<span class="normal"><a href="#__codelineno-1-67">67</a></span>
-<span class="normal"><a href="#__codelineno-1-68">68</a></span>
-<span class="normal"><a href="#__codelineno-1-69">69</a></span>
-<span class="normal"><a href="#__codelineno-1-70">70</a></span>
-<span class="normal"><a href="#__codelineno-1-71">71</a></span>
-<span class="normal"><a href="#__codelineno-1-72">72</a></span>
-<span class="normal"><a href="#__codelineno-1-73">73</a></span>
-<span class="normal"><a href="#__codelineno-1-74">74</a></span>
-<span class="normal"><a href="#__codelineno-1-75">75</a></span>
-<span class="normal"><a href="#__codelineno-1-76">76</a></span>
-<span class="normal"><a href="#__codelineno-1-77">77</a></span>
-<span class="normal"><a href="#__codelineno-1-78">78</a></span>
-<span class="normal"><a href="#__codelineno-1-79">79</a></span>
-<span class="normal"><a href="#__codelineno-1-80">80</a></span>
-<span class="normal"><a href="#__codelineno-1-81">81</a></span>
-<span class="normal"><a href="#__codelineno-1-82">82</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicepDir</span><span class="w"></span>
-<a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(variables.bicepDir)</span><span class="w"></span>
-<a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicepTemplateDir</span><span class="w"></span>
-<a id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;webApp-with-insights&#39;</span><span class="w"></span>
-<a id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicepParameter</span><span class="w"></span>
-<a id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dev</span><span class="w"></span>
-<a id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resourceGroupName</span><span class="w"></span>
-<a id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-1-13" name="__codelineno-1-13"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(resourceGroupName)</span><span class="w"></span>
-<a id="__codelineno-1-14" name="__codelineno-1-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azureSubscription</span><span class="w"></span>
-<a id="__codelineno-1-15" name="__codelineno-1-15"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-1-16" name="__codelineno-1-16"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(azureSubscription)</span><span class="w"></span>
-<a id="__codelineno-1-17" name="__codelineno-1-17"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">location</span><span class="w"></span>
-<a id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-1-19" name="__codelineno-1-19"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(location)</span><span class="w"></span>
-<a id="__codelineno-1-20" name="__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21"></a><span class="nt">jobs</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-22" name="__codelineno-1-22"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicep</span><span class="w"></span>
-<a id="__codelineno-1-23" name="__codelineno-1-23"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate and deploy</span><span class="w"></span>
-<a id="__codelineno-1-24" name="__codelineno-1-24"></a><span class="w">    </span><span class="nt">continueOnError</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<a id="__codelineno-1-25" name="__codelineno-1-25"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-26" name="__codelineno-1-26"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;../../${{</span><span class="nv"> </span><span class="s">parameters.bicepDir</span><span class="nv"> </span><span class="s">}}/${{</span><span class="nv"> </span><span class="s">parameters.bicepTemplateDir</span><span class="nv"> </span><span class="s">}}/main.parameters.yml&#39;</span><span class="w"></span>
-<a id="__codelineno-1-27" name="__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">az bicep build --file main.bicep</span><span class="w"></span>
-<a id="__codelineno-1-29" name="__codelineno-1-29"></a><span class="w">        </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Bicep Linter</span><span class="w"></span>
-<a id="__codelineno-1-30" name="__codelineno-1-30"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LintBicepCode</span><span class="w"></span>
-<a id="__codelineno-1-31" name="__codelineno-1-31"></a><span class="w">        </span><span class="nt">workingDirectory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}</span><span class="w"></span>
-<a id="__codelineno-1-32" name="__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">steps/create_resourceGroup.yml</span><span class="w"></span>
-<a id="__codelineno-1-34" name="__codelineno-1-34"></a><span class="w">        </span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-35" name="__codelineno-1-35"></a><span class="w">          </span><span class="nt">resourceGroupName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.resourceGroupName }}</span><span class="w"></span>
-<a id="__codelineno-1-36" name="__codelineno-1-36"></a><span class="w">          </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
-<a id="__codelineno-1-37" name="__codelineno-1-37"></a><span class="w">          </span><span class="nt">location</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.location }}</span><span class="w"></span>
+<span class="normal"><a href="#__codelineno-1-52">52</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pythonVersion</span><span class="w"></span>
+<a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Python Version to use when building MkDocs-Material</span><span class="w"></span>
+<a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(pythonVersion)</span><span class="w"></span>
+<a id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocsSiteDir</span><span class="w"></span>
+<a id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name of the Directory where MkDocs will be built to</span><span class="w"></span>
+<a id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;site&#39;</span><span class="w"></span>
+<a id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocsDeploy</span><span class="w"></span>
+<a id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">When disabled MkDocs will only be built</span><span class="w"></span>
+<a id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span><span class="w"></span>
+<a id="__codelineno-1-13" name="__codelineno-1-13"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<a id="__codelineno-1-14" name="__codelineno-1-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicepDir</span><span class="w"></span>
+<a id="__codelineno-1-15" name="__codelineno-1-15"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Directory containing Folders with Bicep Templates</span><span class="w"></span>
+<a id="__codelineno-1-16" name="__codelineno-1-16"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-1-17" name="__codelineno-1-17"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(bicepDir)</span><span class="w"></span>
+<a id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicepParameter</span><span class="w"></span>
+<a id="__codelineno-1-19" name="__codelineno-1-19"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Used in some templates to change Resource Name or other variables</span><span class="w"></span>
+<a id="__codelineno-1-20" name="__codelineno-1-20"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-1-21" name="__codelineno-1-21"></a><span class="w">    </span><span class="nt">values</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-1-22" name="__codelineno-1-22"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dev</span><span class="w"></span>
+<a id="__codelineno-1-23" name="__codelineno-1-23"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stg</span><span class="w"></span>
+<a id="__codelineno-1-24" name="__codelineno-1-24"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod</span><span class="w"></span>
+<a id="__codelineno-1-25" name="__codelineno-1-25"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dev</span><span class="w"></span>
+<a id="__codelineno-1-26" name="__codelineno-1-26"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resourceGroupName</span><span class="w"></span>
+<a id="__codelineno-1-27" name="__codelineno-1-27"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name of the Resource Group where templates will be deployed to</span><span class="w"></span>
+<a id="__codelineno-1-28" name="__codelineno-1-28"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-1-29" name="__codelineno-1-29"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(resourceGroupName)</span><span class="w"></span>
+<a id="__codelineno-1-30" name="__codelineno-1-30"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azureSubscription</span><span class="w"></span>
+<a id="__codelineno-1-31" name="__codelineno-1-31"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name of the ARM-Service Connection</span><span class="w"></span>
+<a id="__codelineno-1-32" name="__codelineno-1-32"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-1-33" name="__codelineno-1-33"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(azureSubscription)</span><span class="w"></span>
+<a id="__codelineno-1-34" name="__codelineno-1-34"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">location</span><span class="w"></span>
+<a id="__codelineno-1-35" name="__codelineno-1-35"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Location where the Resources will be deployed to</span><span class="w"></span>
+<a id="__codelineno-1-36" name="__codelineno-1-36"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-1-37" name="__codelineno-1-37"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(location)</span><span class="w"></span>
 <a id="__codelineno-1-38" name="__codelineno-1-38"></a>
-<a id="__codelineno-1-39" name="__codelineno-1-39"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AzureCLI@2</span><span class="w"></span>
-<a id="__codelineno-1-40" name="__codelineno-1-40"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RunPreflightValidation</span><span class="w"></span>
-<a id="__codelineno-1-41" name="__codelineno-1-41"></a><span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">succeeded()</span><span class="w"></span>
-<a id="__codelineno-1-42" name="__codelineno-1-42"></a><span class="w">        </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run preflight validation</span><span class="w"></span>
-<a id="__codelineno-1-43" name="__codelineno-1-43"></a><span class="w">        </span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-44" name="__codelineno-1-44"></a><span class="w">          </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
-<a id="__codelineno-1-45" name="__codelineno-1-45"></a><span class="w">          </span><span class="nt">workingDirectory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}</span><span class="w"></span>
-<a id="__codelineno-1-46" name="__codelineno-1-46"></a><span class="w">          </span><span class="nt">scriptType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash</span><span class="w"></span>
-<a id="__codelineno-1-47" name="__codelineno-1-47"></a><span class="w">          </span><span class="nt">scriptLocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inlineScript</span><span class="w"></span>
-<a id="__codelineno-1-48" name="__codelineno-1-48"></a><span class="w">          </span><span class="nt">inlineScript</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
-<a id="__codelineno-1-49" name="__codelineno-1-49"></a><span class="w">            </span><span class="no">az deployment group validate \</span><span class="w"></span>
-<a id="__codelineno-1-50" name="__codelineno-1-50"></a><span class="w">              </span><span class="no">--resource-group ${{ parameters.resourceGroupName }} \</span><span class="w"></span>
-<a id="__codelineno-1-51" name="__codelineno-1-51"></a><span class="w">              </span><span class="no">--template-file main.bicep \</span><span class="w"></span>
-<a id="__codelineno-1-52" name="__codelineno-1-52"></a><span class="w">              </span><span class="no">--parameters @main.parameters.${{parameters.bicepParameter}}.json</span><span class="w"></span>
-<a id="__codelineno-1-53" name="__codelineno-1-53"></a>
-<a id="__codelineno-1-54" name="__codelineno-1-54"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AzureCLI@2</span><span class="w"></span>
-<a id="__codelineno-1-55" name="__codelineno-1-55"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RunWhatIf</span><span class="w"></span>
-<a id="__codelineno-1-56" name="__codelineno-1-56"></a><span class="w">        </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run what-if</span><span class="w"></span>
-<a id="__codelineno-1-57" name="__codelineno-1-57"></a><span class="w">        </span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-58" name="__codelineno-1-58"></a><span class="w">          </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
-<a id="__codelineno-1-59" name="__codelineno-1-59"></a><span class="w">          </span><span class="nt">workingDirectory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}</span><span class="w"></span>
-<a id="__codelineno-1-60" name="__codelineno-1-60"></a><span class="w">          </span><span class="nt">scriptType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash</span><span class="w"></span>
-<a id="__codelineno-1-61" name="__codelineno-1-61"></a><span class="w">          </span><span class="nt">scriptLocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inlineScript</span><span class="w"></span>
-<a id="__codelineno-1-62" name="__codelineno-1-62"></a><span class="w">          </span><span class="nt">inlineScript</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
-<a id="__codelineno-1-63" name="__codelineno-1-63"></a><span class="w">            </span><span class="no">az deployment group what-if \</span><span class="w"></span>
-<a id="__codelineno-1-64" name="__codelineno-1-64"></a><span class="w">              </span><span class="no">--resource-group ${{ parameters.resourceGroupName }} \</span><span class="w"></span>
-<a id="__codelineno-1-65" name="__codelineno-1-65"></a><span class="w">              </span><span class="no">--template-file main.bicep \</span><span class="w"></span>
-<a id="__codelineno-1-66" name="__codelineno-1-66"></a><span class="w">              </span><span class="no">--parameters @main.parameters.${{parameters.bicepParameter}}.json</span><span class="w"></span>
-<a id="__codelineno-1-67" name="__codelineno-1-67"></a>
-<a id="__codelineno-1-68" name="__codelineno-1-68"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AzureCLI@2</span><span class="w"></span>
-<a id="__codelineno-1-69" name="__codelineno-1-69"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DeployBicepFile</span><span class="w"></span>
-<a id="__codelineno-1-70" name="__codelineno-1-70"></a><span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">and(succeeded(), in(&#39;True&#39;, variables[&#39;isMain&#39;], variables[&#39;isStable&#39;]))</span><span class="w"></span>
-<a id="__codelineno-1-71" name="__codelineno-1-71"></a><span class="w">        </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy Bicep Template</span><span class="w"></span>
-<a id="__codelineno-1-72" name="__codelineno-1-72"></a><span class="w">        </span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-73" name="__codelineno-1-73"></a><span class="w">          </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
-<a id="__codelineno-1-74" name="__codelineno-1-74"></a><span class="w">          </span><span class="nt">scriptType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash</span><span class="w"></span>
-<a id="__codelineno-1-75" name="__codelineno-1-75"></a><span class="w">          </span><span class="nt">scriptLocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inlineScript</span><span class="w"></span>
-<a id="__codelineno-1-76" name="__codelineno-1-76"></a><span class="w">          </span><span class="nt">workingDirectory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}</span><span class="w"></span>
-<a id="__codelineno-1-77" name="__codelineno-1-77"></a><span class="w">          </span><span class="nt">inlineScript</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
-<a id="__codelineno-1-78" name="__codelineno-1-78"></a><span class="w">            </span><span class="no">az deployment group create \</span><span class="w"></span>
-<a id="__codelineno-1-79" name="__codelineno-1-79"></a><span class="w">              </span><span class="no">--name $(Build.BuildNumber) \</span><span class="w"></span>
-<a id="__codelineno-1-80" name="__codelineno-1-80"></a><span class="w">              </span><span class="no">--resource-group ${{ parameters.ResourceGroupName }} \</span><span class="w"></span>
-<a id="__codelineno-1-81" name="__codelineno-1-81"></a><span class="w">              </span><span class="no">--template-file main.bicep \</span><span class="w"></span>
-<a id="__codelineno-1-82" name="__codelineno-1-82"></a><span class="w">              </span><span class="no">--parameters @main.parameters.${{parameters.bicepParameter}}.json</span><span class="w"></span>
+<a id="__codelineno-1-39" name="__codelineno-1-39"></a><span class="nt">stages</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-1-40" name="__codelineno-1-40"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicep_stage.yml</span><span class="w"></span>
+<a id="__codelineno-1-41" name="__codelineno-1-41"></a><span class="w">    </span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-1-42" name="__codelineno-1-42"></a><span class="w">      </span><span class="nt">bicepDir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.bicepDir }}</span><span class="w"></span>
+<a id="__codelineno-1-43" name="__codelineno-1-43"></a><span class="w">      </span><span class="nt">bicepParameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.bicepParameter }}</span><span class="w"></span>
+<a id="__codelineno-1-44" name="__codelineno-1-44"></a><span class="w">      </span><span class="nt">resourceGroupName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.resourceGroupName }}</span><span class="w"></span>
+<a id="__codelineno-1-45" name="__codelineno-1-45"></a><span class="w">      </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
+<a id="__codelineno-1-46" name="__codelineno-1-46"></a><span class="w">      </span><span class="nt">location</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.location }}</span><span class="w"></span>
+<a id="__codelineno-1-47" name="__codelineno-1-47"></a>
+<a id="__codelineno-1-48" name="__codelineno-1-48"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocs_stage.yml</span><span class="w"></span>
+<a id="__codelineno-1-49" name="__codelineno-1-49"></a><span class="w">    </span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-1-50" name="__codelineno-1-50"></a><span class="w">      </span><span class="nt">pythonVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.pythonVersion }}</span><span class="w"></span>
+<a id="__codelineno-1-51" name="__codelineno-1-51"></a><span class="w">      </span><span class="nt">mkdocsSiteDir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.mkdocsSiteDir }}</span><span class="w"></span>
+<a id="__codelineno-1-52" name="__codelineno-1-52"></a><span class="w">      </span><span class="nt">mkdocsDeploy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.mkdocsDeploy }}</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
-<h5 id="create-resourcegroup">create ResourceGroup<a class="headerlink" href="#create-resourcegroup" title="Permanent link">&para;</a></h5>
-<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">azure-pipelines/jobs/steps/create_resourceGroup.yml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+</details>
+<h4 id="bicep_stageyml">bicep_stage.yml<a class="headerlink" href="#bicep_stageyml" title="Permanent link">&para;</a></h4>
+<p>This stage is seperated in two jobs. where the first job is enumerating how often the second job needs to be run. Well, ok, this sounds a bit weird, but the secret is that it is not re-running the second job for x-times, but for every folder found in <code>IaC/bicep/deploy</code>. The steps which will then be done are found in the next section</p>
+<details class="quote">
+<summary>YAML</summary>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">azure-pipelines/bicep_stage.yml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
 <span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
@@ -856,30 +772,118 @@
 <span class="normal"><a href="#__codelineno-2-18">18</a></span>
 <span class="normal"><a href="#__codelineno-2-19">19</a></span>
 <span class="normal"><a href="#__codelineno-2-20">20</a></span>
-<span class="normal"><a href="#__codelineno-2-21">21</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resourceGroupName</span><span class="w"></span>
-<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azureSubscription</span><span class="w"></span>
-<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">location</span><span class="w"></span>
-<a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-2-8" name="__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AzureCLI@2</span><span class="w"></span>
-<a id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="w">    </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">succeeded()</span><span class="w"></span>
-<a id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create RG ${{ parameters.resourceGroupName }}</span><span class="w"></span>
-<a id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="w">    </span><span class="nt">continueOnError</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<a id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-15" name="__codelineno-2-15"></a><span class="w">      </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
-<a id="__codelineno-2-16" name="__codelineno-2-16"></a><span class="w">      </span><span class="nt">scriptType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash</span><span class="w"></span>
-<a id="__codelineno-2-17" name="__codelineno-2-17"></a><span class="w">      </span><span class="nt">scriptLocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inlineScript</span><span class="w"></span>
-<a id="__codelineno-2-18" name="__codelineno-2-18"></a><span class="w">      </span><span class="nt">inlineScript</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
-<a id="__codelineno-2-19" name="__codelineno-2-19"></a><span class="w">        </span><span class="no">az group create \</span><span class="w"></span>
-<a id="__codelineno-2-20" name="__codelineno-2-20"></a><span class="w">          </span><span class="no">--name ${{ parameters.resourceGroupName }} \</span><span class="w"></span>
-<a id="__codelineno-2-21" name="__codelineno-2-21"></a><span class="w">          </span><span class="no">--location ${{ parameters.location }}</span><span class="w"></span>
+<span class="normal"><a href="#__codelineno-2-21">21</a></span>
+<span class="normal"><a href="#__codelineno-2-22">22</a></span>
+<span class="normal"><a href="#__codelineno-2-23">23</a></span>
+<span class="normal"><a href="#__codelineno-2-24">24</a></span>
+<span class="normal"><a href="#__codelineno-2-25">25</a></span>
+<span class="normal"><a href="#__codelineno-2-26">26</a></span>
+<span class="normal"><a href="#__codelineno-2-27">27</a></span>
+<span class="normal"><a href="#__codelineno-2-28">28</a></span>
+<span class="normal"><a href="#__codelineno-2-29">29</a></span>
+<span class="normal"><a href="#__codelineno-2-30">30</a></span>
+<span class="normal"><a href="#__codelineno-2-31">31</a></span>
+<span class="normal"><a href="#__codelineno-2-32">32</a></span>
+<span class="normal"><a href="#__codelineno-2-33">33</a></span>
+<span class="normal"><a href="#__codelineno-2-34">34</a></span>
+<span class="normal"><a href="#__codelineno-2-35">35</a></span>
+<span class="normal"><a href="#__codelineno-2-36">36</a></span>
+<span class="normal"><a href="#__codelineno-2-37">37</a></span>
+<span class="normal"><a href="#__codelineno-2-38">38</a></span>
+<span class="normal"><a href="#__codelineno-2-39">39</a></span>
+<span class="normal"><a href="#__codelineno-2-40">40</a></span>
+<span class="normal"><a href="#__codelineno-2-41">41</a></span>
+<span class="normal"><a href="#__codelineno-2-42">42</a></span>
+<span class="normal"><a href="#__codelineno-2-43">43</a></span>
+<span class="normal"><a href="#__codelineno-2-44">44</a></span>
+<span class="normal"><a href="#__codelineno-2-45">45</a></span>
+<span class="normal"><a href="#__codelineno-2-46">46</a></span>
+<span class="normal"><a href="#__codelineno-2-47">47</a></span>
+<span class="normal"><a href="#__codelineno-2-48">48</a></span>
+<span class="normal"><a href="#__codelineno-2-49">49</a></span>
+<span class="normal"><a href="#__codelineno-2-50">50</a></span>
+<span class="normal"><a href="#__codelineno-2-51">51</a></span>
+<span class="normal"><a href="#__codelineno-2-52">52</a></span>
+<span class="normal"><a href="#__codelineno-2-53">53</a></span>
+<span class="normal"><a href="#__codelineno-2-54">54</a></span>
+<span class="normal"><a href="#__codelineno-2-55">55</a></span>
+<span class="normal"><a href="#__codelineno-2-56">56</a></span>
+<span class="normal"><a href="#__codelineno-2-57">57</a></span>
+<span class="normal"><a href="#__codelineno-2-58">58</a></span>
+<span class="normal"><a href="#__codelineno-2-59">59</a></span>
+<span class="normal"><a href="#__codelineno-2-60">60</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicepDir</span><span class="w"></span>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Directory containing Folders with Bicep Templates</span><span class="w"></span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;IaC/bicep/deploy&#39;</span><span class="w"></span>
+<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicepParameter</span><span class="w"></span>
+<a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Used in some templates to change Resource Name or other variables</span><span class="w"></span>
+<a id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="w">    </span><span class="nt">values</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dev</span><span class="w"></span>
+<a id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stg</span><span class="w"></span>
+<a id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod</span><span class="w"></span>
+<a id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(bicepParameter)</span><span class="w"></span>
+<a id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resourceGroupName</span><span class="w"></span>
+<a id="__codelineno-2-15" name="__codelineno-2-15"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name of the Resource Group where templates will be deployed to</span><span class="w"></span>
+<a id="__codelineno-2-16" name="__codelineno-2-16"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-2-17" name="__codelineno-2-17"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(resourceGroupName)</span><span class="w"></span>
+<a id="__codelineno-2-18" name="__codelineno-2-18"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azureSubscription</span><span class="w"></span>
+<a id="__codelineno-2-19" name="__codelineno-2-19"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name of the ARM-Service Connection</span><span class="w"></span>
+<a id="__codelineno-2-20" name="__codelineno-2-20"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-2-21" name="__codelineno-2-21"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(azureSubscription)</span><span class="w"></span>
+<a id="__codelineno-2-22" name="__codelineno-2-22"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">location</span><span class="w"></span>
+<a id="__codelineno-2-23" name="__codelineno-2-23"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Location where the Resources will be deployed to</span><span class="w"></span>
+<a id="__codelineno-2-24" name="__codelineno-2-24"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-2-25" name="__codelineno-2-25"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(location)</span><span class="w"></span>
+<a id="__codelineno-2-26" name="__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27"></a><span class="nt">stages</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-28" name="__codelineno-2-28"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicep</span><span class="w"></span>
+<a id="__codelineno-2-29" name="__codelineno-2-29"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bicep</span><span class="w"></span>
+<a id="__codelineno-2-30" name="__codelineno-2-30"></a><span class="w">    </span><span class="nt">jobs</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-31" name="__codelineno-2-31"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">getTemplateFolders</span><span class="w"></span>
+<a id="__codelineno-2-32" name="__codelineno-2-32"></a><span class="w">        </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Get Template Folders</span><span class="w"></span>
+<a id="__codelineno-2-33" name="__codelineno-2-33"></a><span class="w">        </span><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-34" name="__codelineno-2-34"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PowerShell@2</span><span class="w"></span>
+<a id="__codelineno-2-35" name="__codelineno-2-35"></a><span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mtrx</span><span class="w"></span>
+<a id="__codelineno-2-36" name="__codelineno-2-36"></a><span class="w">            </span><span class="nt">env</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-37" name="__codelineno-2-37"></a><span class="w">              </span><span class="nt">bicepDir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.bicepDir }}</span><span class="w"></span>
+<a id="__codelineno-2-38" name="__codelineno-2-38"></a><span class="w">              </span><span class="nt">bicepParameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.bicepParameter }}</span><span class="w"></span>
+<a id="__codelineno-2-39" name="__codelineno-2-39"></a><span class="w">              </span><span class="nt">resourceGroupName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.resourceGroupName }}</span><span class="w"></span>
+<a id="__codelineno-2-40" name="__codelineno-2-40"></a><span class="w">              </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
+<a id="__codelineno-2-41" name="__codelineno-2-41"></a><span class="w">              </span><span class="nt">location</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.location }}</span><span class="w"></span>
+<a id="__codelineno-2-42" name="__codelineno-2-42"></a><span class="w">            </span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-43" name="__codelineno-2-43"></a><span class="w">              </span><span class="nt">targetType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">filePath</span><span class="w"></span>
+<a id="__codelineno-2-44" name="__codelineno-2-44"></a><span class="w">              </span><span class="nt">filePath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scripts/New-BicepMatrix.ps1</span><span class="w"></span>
+<a id="__codelineno-2-45" name="__codelineno-2-45"></a>
+<a id="__codelineno-2-46" name="__codelineno-2-46"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">runner</span><span class="w"></span>
+<a id="__codelineno-2-47" name="__codelineno-2-47"></a><span class="w">        </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test and Deploy</span><span class="w"></span>
+<a id="__codelineno-2-48" name="__codelineno-2-48"></a><span class="w">        </span><span class="nt">dependsOn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">getTemplateFolders</span><span class="w"></span>
+<a id="__codelineno-2-49" name="__codelineno-2-49"></a><span class="w">        </span><span class="nt">strategy</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-50" name="__codelineno-2-50"></a><span class="w">          </span><span class="nt">matrix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$[ dependencies.getTemplateFolders.outputs[&#39;mtrx.legs&#39;] ]</span><span class="w"></span>
+<a id="__codelineno-2-51" name="__codelineno-2-51"></a><span class="w">          </span><span class="nt">maxParallel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<a id="__codelineno-2-52" name="__codelineno-2-52"></a><span class="w">        </span><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-53" name="__codelineno-2-53"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jobs/steps/bicep_steps.yml</span><span class="w"></span>
+<a id="__codelineno-2-54" name="__codelineno-2-54"></a><span class="w">            </span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-55" name="__codelineno-2-55"></a><span class="w">              </span><span class="nt">bicepDir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(bicepDir)</span><span class="w"></span>
+<a id="__codelineno-2-56" name="__codelineno-2-56"></a><span class="w">              </span><span class="nt">bicepTemplateDir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(bicepTemplateDir)</span><span class="w"></span>
+<a id="__codelineno-2-57" name="__codelineno-2-57"></a><span class="w">              </span><span class="nt">bicepParameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(bicepParameter)</span><span class="w"></span>
+<a id="__codelineno-2-58" name="__codelineno-2-58"></a><span class="w">              </span><span class="nt">resourceGroupName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(resourceGroupName)</span><span class="w"></span>
+<a id="__codelineno-2-59" name="__codelineno-2-59"></a><span class="w">              </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(azureSubscription)</span><span class="w"></span>
+<a id="__codelineno-2-60" name="__codelineno-2-60"></a><span class="w">              </span><span class="nt">location</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(location)</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
-<h5 id="deploy-bicep">Deploy Bicep<a class="headerlink" href="#deploy-bicep" title="Permanent link">&para;</a></h5>
-<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">azure-pipelines/jobs/steps/deploy_bicep.yml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
+</details>
+<h5 id="bicep_stepsyml">bicep_steps.yml<a class="headerlink" href="#bicep_stepsyml" title="Permanent link">&para;</a></h5>
+<p>This step-template will:</p>
+<ol>
+<li>validate that the bicep is buildable (which is converting it to a ARM Template)</li>
+<li>create a resource group (no problem if called more than once and all runs belong to the same RG)</li>
+<li>do some verifications if the bicep is valid and deployable</li>
+<li>If conditions are met, it is calling another template to finally deploy the resources to Azure Resource Manager.</li>
+</ol>
+<details class="quote">
+<summary>YAML</summary>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">azure-pipelines/jobs/steps/bicep_steps.yml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-3-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-3-3"> 3</a></span>
 <span class="normal"><a href="#__codelineno-3-4"> 4</a></span>
@@ -912,44 +916,131 @@
 <span class="normal"><a href="#__codelineno-3-31">31</a></span>
 <span class="normal"><a href="#__codelineno-3-32">32</a></span>
 <span class="normal"><a href="#__codelineno-3-33">33</a></span>
-<span class="normal"><a href="#__codelineno-3-34">34</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
+<span class="normal"><a href="#__codelineno-3-34">34</a></span>
+<span class="normal"><a href="#__codelineno-3-35">35</a></span>
+<span class="normal"><a href="#__codelineno-3-36">36</a></span>
+<span class="normal"><a href="#__codelineno-3-37">37</a></span>
+<span class="normal"><a href="#__codelineno-3-38">38</a></span>
+<span class="normal"><a href="#__codelineno-3-39">39</a></span>
+<span class="normal"><a href="#__codelineno-3-40">40</a></span>
+<span class="normal"><a href="#__codelineno-3-41">41</a></span>
+<span class="normal"><a href="#__codelineno-3-42">42</a></span>
+<span class="normal"><a href="#__codelineno-3-43">43</a></span>
+<span class="normal"><a href="#__codelineno-3-44">44</a></span>
+<span class="normal"><a href="#__codelineno-3-45">45</a></span>
+<span class="normal"><a href="#__codelineno-3-46">46</a></span>
+<span class="normal"><a href="#__codelineno-3-47">47</a></span>
+<span class="normal"><a href="#__codelineno-3-48">48</a></span>
+<span class="normal"><a href="#__codelineno-3-49">49</a></span>
+<span class="normal"><a href="#__codelineno-3-50">50</a></span>
+<span class="normal"><a href="#__codelineno-3-51">51</a></span>
+<span class="normal"><a href="#__codelineno-3-52">52</a></span>
+<span class="normal"><a href="#__codelineno-3-53">53</a></span>
+<span class="normal"><a href="#__codelineno-3-54">54</a></span>
+<span class="normal"><a href="#__codelineno-3-55">55</a></span>
+<span class="normal"><a href="#__codelineno-3-56">56</a></span>
+<span class="normal"><a href="#__codelineno-3-57">57</a></span>
+<span class="normal"><a href="#__codelineno-3-58">58</a></span>
+<span class="normal"><a href="#__codelineno-3-59">59</a></span>
+<span class="normal"><a href="#__codelineno-3-60">60</a></span>
+<span class="normal"><a href="#__codelineno-3-61">61</a></span>
+<span class="normal"><a href="#__codelineno-3-62">62</a></span>
+<span class="normal"><a href="#__codelineno-3-63">63</a></span>
+<span class="normal"><a href="#__codelineno-3-64">64</a></span>
+<span class="normal"><a href="#__codelineno-3-65">65</a></span>
+<span class="normal"><a href="#__codelineno-3-66">66</a></span>
+<span class="normal"><a href="#__codelineno-3-67">67</a></span>
+<span class="normal"><a href="#__codelineno-3-68">68</a></span>
+<span class="normal"><a href="#__codelineno-3-69">69</a></span>
+<span class="normal"><a href="#__codelineno-3-70">70</a></span>
+<span class="normal"><a href="#__codelineno-3-71">71</a></span>
+<span class="normal"><a href="#__codelineno-3-72">72</a></span>
+<span class="normal"><a href="#__codelineno-3-73">73</a></span>
+<span class="normal"><a href="#__codelineno-3-74">74</a></span>
+<span class="normal"><a href="#__codelineno-3-75">75</a></span>
+<span class="normal"><a href="#__codelineno-3-76">76</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
 <a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicepDir</span><span class="w"></span>
 <a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(System.DefaultWorkingDirectory)</span><span class="w"></span>
+<a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(bicepDir)</span><span class="w"></span>
 <a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicepTemplateDir</span><span class="w"></span>
 <a id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resourceGroupName</span><span class="w"></span>
-<a id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(resourceGroupName)</span><span class="w"></span>
+<a id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(bicepTemplateDir)</span><span class="w"></span>
+<a id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicepParameter</span><span class="w"></span>
 <a id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azureSubscription</span><span class="w"></span>
-<a id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(azureSubscription)</span><span class="w"></span>
+<a id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(bicepParameter)</span><span class="w"></span>
+<a id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resourceGroupName</span><span class="w"></span>
 <a id="__codelineno-3-12" name="__codelineno-3-12"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-3-13" name="__codelineno-3-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">location</span><span class="w"></span>
-<a id="__codelineno-3-14" name="__codelineno-3-14"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(location)</span><span class="w"></span>
+<a id="__codelineno-3-13" name="__codelineno-3-13"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(resourceGroupName)</span><span class="w"></span>
+<a id="__codelineno-3-14" name="__codelineno-3-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azureSubscription</span><span class="w"></span>
 <a id="__codelineno-3-15" name="__codelineno-3-15"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-3-16" name="__codelineno-3-16"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bicepParameter</span><span class="w"></span>
-<a id="__codelineno-3-17" name="__codelineno-3-17"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-3-18" name="__codelineno-3-18"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dev</span><span class="w"></span>
-<a id="__codelineno-3-19" name="__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20"></a><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-3-21" name="__codelineno-3-21"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AzureCLI@2</span><span class="w"></span>
-<a id="__codelineno-3-22" name="__codelineno-3-22"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DeployBicepFile</span><span class="w"></span>
-<a id="__codelineno-3-23" name="__codelineno-3-23"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy Bicep file</span><span class="w"></span>
-<a id="__codelineno-3-24" name="__codelineno-3-24"></a><span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-3-25" name="__codelineno-3-25"></a><span class="w">      </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
-<a id="__codelineno-3-26" name="__codelineno-3-26"></a><span class="w">      </span><span class="nt">scriptType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash</span><span class="w"></span>
-<a id="__codelineno-3-27" name="__codelineno-3-27"></a><span class="w">      </span><span class="nt">scriptLocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inlineScript</span><span class="w"></span>
-<a id="__codelineno-3-28" name="__codelineno-3-28"></a><span class="w">      </span><span class="nt">workingDirectory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}</span><span class="w"></span>
-<a id="__codelineno-3-29" name="__codelineno-3-29"></a><span class="w">      </span><span class="nt">inlineScript</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
-<a id="__codelineno-3-30" name="__codelineno-3-30"></a><span class="w">        </span><span class="no">az deployment group create \</span><span class="w"></span>
-<a id="__codelineno-3-31" name="__codelineno-3-31"></a><span class="w">          </span><span class="no">--name $(Build.BuildNumber) \</span><span class="w"></span>
-<a id="__codelineno-3-32" name="__codelineno-3-32"></a><span class="w">          </span><span class="no">--resource-group ${{ parameters.ResourceGroupName }} \</span><span class="w"></span>
-<a id="__codelineno-3-33" name="__codelineno-3-33"></a><span class="w">          </span><span class="no">--template-file main.bicep \</span><span class="w"></span>
-<a id="__codelineno-3-34" name="__codelineno-3-34"></a><span class="w">          </span><span class="no">--parameters @main.parameters.${{parameters.bicepParameter}}.json</span><span class="w"></span>
+<a id="__codelineno-3-16" name="__codelineno-3-16"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(azureSubscription)</span><span class="w"></span>
+<a id="__codelineno-3-17" name="__codelineno-3-17"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">location</span><span class="w"></span>
+<a id="__codelineno-3-18" name="__codelineno-3-18"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-3-19" name="__codelineno-3-19"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(location)</span><span class="w"></span>
+<a id="__codelineno-3-20" name="__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21"></a><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-3-22" name="__codelineno-3-22"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">az bicep build --file main.bicep</span><span class="w"></span>
+<a id="__codelineno-3-23" name="__codelineno-3-23"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Bicep Linter</span><span class="w"></span>
+<a id="__codelineno-3-24" name="__codelineno-3-24"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LintBicepCode</span><span class="w"></span>
+<a id="__codelineno-3-25" name="__codelineno-3-25"></a><span class="w">    </span><span class="nt">workingDirectory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(bicepDir)/$(bicepTemplateDir)</span><span class="w"></span>
+<a id="__codelineno-3-26" name="__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">create_resourceGroup.yml</span><span class="w"></span>
+<a id="__codelineno-3-28" name="__codelineno-3-28"></a><span class="w">    </span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-3-29" name="__codelineno-3-29"></a><span class="w">      </span><span class="nt">resourceGroupName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.resourceGroupName }}</span><span class="w"></span>
+<a id="__codelineno-3-30" name="__codelineno-3-30"></a><span class="w">      </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
+<a id="__codelineno-3-31" name="__codelineno-3-31"></a><span class="w">      </span><span class="nt">location</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.location }}</span><span class="w"></span>
+<a id="__codelineno-3-32" name="__codelineno-3-32"></a>
+<a id="__codelineno-3-33" name="__codelineno-3-33"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AzureCLI@2</span><span class="w"></span>
+<a id="__codelineno-3-34" name="__codelineno-3-34"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RunPreflightValidation</span><span class="w"></span>
+<a id="__codelineno-3-35" name="__codelineno-3-35"></a><span class="w">    </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">succeeded()</span><span class="w"></span>
+<a id="__codelineno-3-36" name="__codelineno-3-36"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run preflight validation</span><span class="w"></span>
+<a id="__codelineno-3-37" name="__codelineno-3-37"></a><span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-3-38" name="__codelineno-3-38"></a><span class="w">      </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
+<a id="__codelineno-3-39" name="__codelineno-3-39"></a><span class="w">      </span><span class="nt">workingDirectory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(bicepDir)/$(bicepTemplateDir)</span><span class="w"></span>
+<a id="__codelineno-3-40" name="__codelineno-3-40"></a><span class="w">      </span><span class="nt">scriptType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash</span><span class="w"></span>
+<a id="__codelineno-3-41" name="__codelineno-3-41"></a><span class="w">      </span><span class="nt">scriptLocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inlineScript</span><span class="w"></span>
+<a id="__codelineno-3-42" name="__codelineno-3-42"></a><span class="w">      </span><span class="nt">inlineScript</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
+<a id="__codelineno-3-43" name="__codelineno-3-43"></a><span class="w">        </span><span class="no">az deployment group validate \</span><span class="w"></span>
+<a id="__codelineno-3-44" name="__codelineno-3-44"></a><span class="w">          </span><span class="no">--resource-group ${{ parameters.resourceGroupName }} \</span><span class="w"></span>
+<a id="__codelineno-3-45" name="__codelineno-3-45"></a><span class="w">          </span><span class="no">--template-file main.bicep \</span><span class="w"></span>
+<a id="__codelineno-3-46" name="__codelineno-3-46"></a><span class="w">          </span><span class="no">--parameters @main.parameters.${{parameters.bicepParameter}}.json</span><span class="w"></span>
+<a id="__codelineno-3-47" name="__codelineno-3-47"></a>
+<a id="__codelineno-3-48" name="__codelineno-3-48"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AzureCLI@2</span><span class="w"></span>
+<a id="__codelineno-3-49" name="__codelineno-3-49"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RunWhatIf</span><span class="w"></span>
+<a id="__codelineno-3-50" name="__codelineno-3-50"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run what-if</span><span class="w"></span>
+<a id="__codelineno-3-51" name="__codelineno-3-51"></a><span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-3-52" name="__codelineno-3-52"></a><span class="w">      </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
+<a id="__codelineno-3-53" name="__codelineno-3-53"></a><span class="w">      </span><span class="nt">workingDirectory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(bicepDir)/$(bicepTemplateDir)</span><span class="w"></span>
+<a id="__codelineno-3-54" name="__codelineno-3-54"></a><span class="w">      </span><span class="nt">scriptType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash</span><span class="w"></span>
+<a id="__codelineno-3-55" name="__codelineno-3-55"></a><span class="w">      </span><span class="nt">scriptLocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inlineScript</span><span class="w"></span>
+<a id="__codelineno-3-56" name="__codelineno-3-56"></a><span class="w">      </span><span class="nt">inlineScript</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
+<a id="__codelineno-3-57" name="__codelineno-3-57"></a><span class="w">        </span><span class="no">az deployment group what-if \</span><span class="w"></span>
+<a id="__codelineno-3-58" name="__codelineno-3-58"></a><span class="w">          </span><span class="no">--resource-group ${{ parameters.resourceGroupName }} \</span><span class="w"></span>
+<a id="__codelineno-3-59" name="__codelineno-3-59"></a><span class="w">          </span><span class="no">--template-file main.bicep \</span><span class="w"></span>
+<a id="__codelineno-3-60" name="__codelineno-3-60"></a><span class="w">          </span><span class="no">--parameters @main.parameters.${{parameters.bicepParameter}}.json</span><span class="w"></span>
+<a id="__codelineno-3-61" name="__codelineno-3-61"></a>
+<a id="__codelineno-3-62" name="__codelineno-3-62"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AzureCLI@2</span><span class="w"></span>
+<a id="__codelineno-3-63" name="__codelineno-3-63"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DeployBicepFile</span><span class="w"></span>
+<a id="__codelineno-3-64" name="__codelineno-3-64"></a><span class="w">    </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">and(succeeded(), in(&#39;True&#39;, variables[&#39;isMain&#39;], variables[&#39;isStable&#39;]))</span><span class="w"></span>
+<a id="__codelineno-3-65" name="__codelineno-3-65"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy Bicep Template</span><span class="w"></span>
+<a id="__codelineno-3-66" name="__codelineno-3-66"></a><span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-3-67" name="__codelineno-3-67"></a><span class="w">      </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
+<a id="__codelineno-3-68" name="__codelineno-3-68"></a><span class="w">      </span><span class="nt">scriptType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash</span><span class="w"></span>
+<a id="__codelineno-3-69" name="__codelineno-3-69"></a><span class="w">      </span><span class="nt">scriptLocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inlineScript</span><span class="w"></span>
+<a id="__codelineno-3-70" name="__codelineno-3-70"></a><span class="w">      </span><span class="nt">workingDirectory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(bicepDir)/$(bicepTemplateDir)</span><span class="w"></span>
+<a id="__codelineno-3-71" name="__codelineno-3-71"></a><span class="w">      </span><span class="nt">inlineScript</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
+<a id="__codelineno-3-72" name="__codelineno-3-72"></a><span class="w">        </span><span class="no">az deployment group create \</span><span class="w"></span>
+<a id="__codelineno-3-73" name="__codelineno-3-73"></a><span class="w">          </span><span class="no">--name $(Build.BuildNumber) \</span><span class="w"></span>
+<a id="__codelineno-3-74" name="__codelineno-3-74"></a><span class="w">          </span><span class="no">--resource-group ${{ parameters.ResourceGroupName }} \</span><span class="w"></span>
+<a id="__codelineno-3-75" name="__codelineno-3-75"></a><span class="w">          </span><span class="no">--template-file main.bicep \</span><span class="w"></span>
+<a id="__codelineno-3-76" name="__codelineno-3-76"></a><span class="w">          </span><span class="no">--parameters @main.parameters.${{parameters.bicepParameter}}.json</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
-<h4 id="mkdocs-material">mkdocs-material<a class="headerlink" href="#mkdocs-material" title="Permanent link">&para;</a></h4>
-<p>This template is used to build and deploy the documentation you are just looking at <img alt="😅" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f605.svg" title=":sweat_smile:" />:</p>
-<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">azure-pipelines/jobs/mkdocs-material.yml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1"> 1</a></span>
+</details>
+<h5 id="create_resourcegroupyml">create_resourceGroup.yml<a class="headerlink" href="#create_resourcegroupyml" title="Permanent link">&para;</a></h5>
+<p>Well, I think the headline has already explained what this step is all about <img alt="🙊" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f64a.svg" title=":speak_no_evil:" /></p>
+<details class="quote">
+<summary>YAML</summary>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">azure-pipelines/jobs/steps/create_resourceGroup.yml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-4-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-4-3"> 3</a></span>
 <span class="normal"><a href="#__codelineno-4-4"> 4</a></span>
@@ -969,49 +1060,99 @@
 <span class="normal"><a href="#__codelineno-4-18">18</a></span>
 <span class="normal"><a href="#__codelineno-4-19">19</a></span>
 <span class="normal"><a href="#__codelineno-4-20">20</a></span>
-<span class="normal"><a href="#__codelineno-4-21">21</a></span>
-<span class="normal"><a href="#__codelineno-4-22">22</a></span>
-<span class="normal"><a href="#__codelineno-4-23">23</a></span>
-<span class="normal"><a href="#__codelineno-4-24">24</a></span>
-<span class="normal"><a href="#__codelineno-4-25">25</a></span>
-<span class="normal"><a href="#__codelineno-4-26">26</a></span>
-<span class="normal"><a href="#__codelineno-4-27">27</a></span>
-<span class="normal"><a href="#__codelineno-4-28">28</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pythonVersion</span><span class="w"></span>
+<span class="normal"><a href="#__codelineno-4-21">21</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resourceGroupName</span><span class="w"></span>
 <a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$(pythonVersion)</span><span class="w"></span>
-<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocsSiteDir</span><span class="w"></span>
-<a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<a id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;site&#39;</span><span class="w"></span>
-<a id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocsDeploy</span><span class="w"></span>
-<a id="__codelineno-4-9" name="__codelineno-4-9"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span><span class="w"></span>
-<a id="__codelineno-4-10" name="__codelineno-4-10"></a><span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<a id="__codelineno-4-11" name="__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12"></a><span class="nt">jobs</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-4-13" name="__codelineno-4-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocs</span><span class="w"></span>
-<a id="__codelineno-4-14" name="__codelineno-4-14"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MkDocs-Material</span><span class="w"></span>
-<a id="__codelineno-4-15" name="__codelineno-4-15"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-4-16" name="__codelineno-4-16"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">steps/checkout_submodules.yml</span><span class="w"></span>
-<a id="__codelineno-4-17" name="__codelineno-4-17"></a><span class="w">        </span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-4-18" name="__codelineno-4-18"></a><span class="w">          </span><span class="nt">submodule</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;src/mkdocs-material&#39;</span><span class="w"></span>
-<a id="__codelineno-4-19" name="__codelineno-4-19"></a><span class="w">          </span><span class="nt">checkoutSelf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<a id="__codelineno-4-20" name="__codelineno-4-20"></a>
-<a id="__codelineno-4-21" name="__codelineno-4-21"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">steps/build_mkdocs.yml</span><span class="w"></span>
-<a id="__codelineno-4-22" name="__codelineno-4-22"></a><span class="w">        </span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-4-23" name="__codelineno-4-23"></a><span class="w">          </span><span class="nt">pythonVersion</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;${{</span><span class="nv"> </span><span class="s">parameters.pythonVersion</span><span class="nv"> </span><span class="s">}}&#39;</span><span class="w"></span>
-<a id="__codelineno-4-24" name="__codelineno-4-24"></a><span class="w">          </span><span class="nt">mkdocsSiteDir</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;${{</span><span class="nv"> </span><span class="s">parameters.mkdocsSiteDir</span><span class="nv"> </span><span class="s">}}&#39;</span><span class="w"></span>
-<a id="__codelineno-4-25" name="__codelineno-4-25"></a>
-<a id="__codelineno-4-26" name="__codelineno-4-26"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ if eq(parameters.mkdocsDeploy, &#39;True&#39;) }}</span><span class="p p-Indicator">:</span><span class="w"></span>
-<a id="__codelineno-4-27" name="__codelineno-4-27"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocs gh-deploy --force --site-dir &#39;${{ parameters.mkdocsSiteDir }}&#39; --verbose</span><span class="w"></span>
-<a id="__codelineno-4-28" name="__codelineno-4-28"></a><span class="w">            </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy to GitHub-Pages</span><span class="w"></span>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azureSubscription</span><span class="w"></span>
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">location</span><span class="w"></span>
+<a id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-4-8" name="__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9"></a><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-4-10" name="__codelineno-4-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AzureCLI@2</span><span class="w"></span>
+<a id="__codelineno-4-11" name="__codelineno-4-11"></a><span class="w">    </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">succeeded()</span><span class="w"></span>
+<a id="__codelineno-4-12" name="__codelineno-4-12"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create RG ${{ parameters.resourceGroupName }}</span><span class="w"></span>
+<a id="__codelineno-4-13" name="__codelineno-4-13"></a><span class="w">    </span><span class="nt">continueOnError</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<a id="__codelineno-4-14" name="__codelineno-4-14"></a><span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-4-15" name="__codelineno-4-15"></a><span class="w">      </span><span class="nt">azureSubscription</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ parameters.azureSubscription }}</span><span class="w"></span>
+<a id="__codelineno-4-16" name="__codelineno-4-16"></a><span class="w">      </span><span class="nt">scriptType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash</span><span class="w"></span>
+<a id="__codelineno-4-17" name="__codelineno-4-17"></a><span class="w">      </span><span class="nt">scriptLocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inlineScript</span><span class="w"></span>
+<a id="__codelineno-4-18" name="__codelineno-4-18"></a><span class="w">      </span><span class="nt">inlineScript</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
+<a id="__codelineno-4-19" name="__codelineno-4-19"></a><span class="w">        </span><span class="no">az group create \</span><span class="w"></span>
+<a id="__codelineno-4-20" name="__codelineno-4-20"></a><span class="w">          </span><span class="no">--name ${{ parameters.resourceGroupName }} \</span><span class="w"></span>
+<a id="__codelineno-4-21" name="__codelineno-4-21"></a><span class="w">          </span><span class="no">--location ${{ parameters.location }}</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
+</details>
+<h4 id="mkdocs-material">mkdocs-material<a class="headerlink" href="#mkdocs-material" title="Permanent link">&para;</a></h4>
+<p>This template is used to build and deploy the documentation you are just looking at <img alt="😅" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f605.svg" title=":sweat_smile:" /></p>
+<p>Validation is done with building the docs, if there is no error I suggest that everything will be fine after it is just a static website.</p>
+<p>The Deployment will only run if parameter <code>mkdocsDeploy</code> is <code>true</code></p>
+<details class="quote">
+<summary>YAML</summary>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">azure-pipelines/jobs/mkdocs-material.yml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-5-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-5-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-5-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-5-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-5-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-5-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-5-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-5-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-5-10">10</a></span>
+<span class="normal"><a href="#__codelineno-5-11">11</a></span>
+<span class="normal"><a href="#__codelineno-5-12">12</a></span>
+<span class="normal"><a href="#__codelineno-5-13">13</a></span>
+<span class="normal"><a href="#__codelineno-5-14">14</a></span>
+<span class="normal"><a href="#__codelineno-5-15">15</a></span>
+<span class="normal"><a href="#__codelineno-5-16">16</a></span>
+<span class="normal"><a href="#__codelineno-5-17">17</a></span>
+<span class="normal"><a href="#__codelineno-5-18">18</a></span>
+<span class="normal"><a href="#__codelineno-5-19">19</a></span>
+<span class="normal"><a href="#__codelineno-5-20">20</a></span>
+<span class="normal"><a href="#__codelineno-5-21">21</a></span>
+<span class="normal"><a href="#__codelineno-5-22">22</a></span>
+<span class="normal"><a href="#__codelineno-5-23">23</a></span>
+<span class="normal"><a href="#__codelineno-5-24">24</a></span>
+<span class="normal"><a href="#__codelineno-5-25">25</a></span>
+<span class="normal"><a href="#__codelineno-5-26">26</a></span>
+<span class="normal"><a href="#__codelineno-5-27">27</a></span>
+<span class="normal"><a href="#__codelineno-5-28">28</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pythonVersion</span><span class="w"></span>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Python Version to use when building MkDocs-Material</span><span class="w"></span>
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocsSiteDir</span><span class="w"></span>
+<a id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name of the Directory where MkDocs will be built to</span><span class="w"></span>
+<a id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<a id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocsDeploy</span><span class="w"></span>
+<a id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">When disabled MkDocs will only be built</span><span class="w"></span>
+<a id="__codelineno-5-10" name="__codelineno-5-10"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span><span class="w"></span>
+<a id="__codelineno-5-11" name="__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="nt">jobs</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-5-13" name="__codelineno-5-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocs</span><span class="w"></span>
+<a id="__codelineno-5-14" name="__codelineno-5-14"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MkDocs-Material</span><span class="w"></span>
+<a id="__codelineno-5-15" name="__codelineno-5-15"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-5-16" name="__codelineno-5-16"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">steps/checkout_submodules.yml</span><span class="w"></span>
+<a id="__codelineno-5-17" name="__codelineno-5-17"></a><span class="w">        </span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-5-18" name="__codelineno-5-18"></a><span class="w">          </span><span class="nt">submodule</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;src/mkdocs-material&#39;</span><span class="w"></span>
+<a id="__codelineno-5-19" name="__codelineno-5-19"></a><span class="w">          </span><span class="nt">checkoutSelf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<a id="__codelineno-5-20" name="__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">steps/build_mkdocs.yml</span><span class="w"></span>
+<a id="__codelineno-5-22" name="__codelineno-5-22"></a><span class="w">        </span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-5-23" name="__codelineno-5-23"></a><span class="w">          </span><span class="nt">pythonVersion</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;${{</span><span class="nv"> </span><span class="s">parameters.pythonVersion</span><span class="nv"> </span><span class="s">}}&#39;</span><span class="w"></span>
+<a id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="w">          </span><span class="nt">mkdocsSiteDir</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;${{</span><span class="nv"> </span><span class="s">parameters.mkdocsSiteDir</span><span class="nv"> </span><span class="s">}}&#39;</span><span class="w"></span>
+<a id="__codelineno-5-25" name="__codelineno-5-25"></a>
+<a id="__codelineno-5-26" name="__codelineno-5-26"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ if eq(parameters.mkdocsDeploy, &#39;True&#39;) }}</span><span class="p p-Indicator">:</span><span class="w"></span>
+<a id="__codelineno-5-27" name="__codelineno-5-27"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocs gh-deploy --force --site-dir &#39;${{ parameters.mkdocsSiteDir }}&#39; --verbose</span><span class="w"></span>
+<a id="__codelineno-5-28" name="__codelineno-5-28"></a><span class="w">            </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy to GitHub-Pages</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</details>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      2022-05-23
+      2022-05-28
     
   </small>
 </div>
@@ -1105,7 +1246,7 @@
     <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.annotate", "content.tooltips", "navigation.expand", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.efad133d.min.js"></script>
+      <script src="../../assets/javascripts/bundle.3a4b43e5.min.js"></script>
       
     
   </body>

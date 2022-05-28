@@ -50,6 +50,7 @@ stages:
         dependsOn: getTemplateFolders
         strategy:
           matrix: $[ dependencies.getTemplateFolders.outputs['mtrx.legs'] ]
+          maxParallel: 1
         steps:
           - template: jobs/steps/bicep_steps.yml
             parameters:

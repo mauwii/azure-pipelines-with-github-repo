@@ -19,15 +19,6 @@ parameters:
     default: $(location)
 
 steps:
-  - script: |
-      echo "${JSON}" > main.parameters.$(bicepParameter).json
-      ls -la
-      cat main.parameters.$(bicepParameter).json
-    workingDirectory: $(bicepDir)/$(bicepTemplateDir)
-    displayName: Create Bicep Parameters
-    env:
-      JSON: ${{ convertToJson(parameters.bicep_parameters_template) }}
-
   - script: az bicep build --file main.bicep
     displayName: Run Bicep Linter
     name: LintBicepCode
@@ -52,7 +43,7 @@ steps:
         az deployment group validate \
           --resource-group ${{ parameters.resourceGroupName }} \
           --template-file main.bicep \
-          --parameters @main.parameters.${{parameters.bicepParameter}}.json
+          --parameters env=$(bicepParameter)
 
   - task: AzureCLI@2
     name: RunWhatIf
@@ -66,7 +57,7 @@ steps:
         az deployment group what-if \
           --resource-group ${{ parameters.resourceGroupName }} \
           --template-file main.bicep \
-          --parameters @main.parameters.${{parameters.bicepParameter}}.json
+          --parameters env=$(bicepParameter)
 
   - task: AzureCLI@2
     name: DeployBicepFile
@@ -82,4 +73,4 @@ steps:
           --name $(Build.BuildNumber) \
           --resource-group ${{ parameters.ResourceGroupName }} \
           --template-file main.bicep \
-          --parameters @main.parameters.${{parameters.bicepParameter}}.json
+          --parameters env=$(bicepParameter)

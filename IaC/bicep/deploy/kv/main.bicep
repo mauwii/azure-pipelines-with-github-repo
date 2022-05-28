@@ -17,14 +17,43 @@ param enabledForTemplateDeployment bool = false
 param tenantId string = subscription().tenantId
 
 @description('Specifies the object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. Get it by using Get-AzADUser or Get-AzADServicePrincipal cmdlets.')
-param objectId string
+param objectId string = 'bb36fc31-5a0b-42db-8800-1a945c93eece'
 
 @description('Specifies the permissions to keys in the vault. Valid values are: all, encrypt, decrypt, wrapKey, unwrapKey, sign, verify, get, list, create, update, import, delete, backup, restore, recover, and purge.')
+@allowed([
+  'backup'
+  'create'
+  'decrypt'
+  'delete'
+  'encrypt'
+  'get'
+  'import'
+  'list'
+  'purge'
+  'recover'
+  'release'
+  'restore'
+  'sign'
+  'unwrapKey'
+  'update'
+  'verify'
+  'wrapKey'
+])
 param keysPermissions array = [
   'list'
 ]
 
 @description('Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge.')
+@allowed([
+  'backup'
+  'delete'
+  'get'
+  'list'
+  'purge'
+  'recover'
+  'restore'
+  'set'
+])
 param secretsPermissions array = [
   'list'
 ]

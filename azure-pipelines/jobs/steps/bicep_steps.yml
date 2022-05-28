@@ -43,7 +43,7 @@ steps:
         az deployment group validate \
           --resource-group ${{ parameters.resourceGroupName }} \
           --template-file main.bicep \
-          --parameters env=$(bicepParameter)
+          --parameters @main.parameters.${{parameters.bicepParameter}}.json
 
   - task: AzureCLI@2
     name: RunWhatIf
@@ -57,7 +57,7 @@ steps:
         az deployment group what-if \
           --resource-group ${{ parameters.resourceGroupName }} \
           --template-file main.bicep \
-          --parameters env=$(bicepParameter)
+          --parameters @main.parameters.${{parameters.bicepParameter}}.json
 
   - task: AzureCLI@2
     name: DeployBicepFile
@@ -73,4 +73,4 @@ steps:
           --name $(Build.BuildNumber) \
           --resource-group ${{ parameters.ResourceGroupName }} \
           --template-file main.bicep \
-          --parameters env=$(bicepParameter)
+          --parameters @main.parameters.${{parameters.bicepParameter}}.json

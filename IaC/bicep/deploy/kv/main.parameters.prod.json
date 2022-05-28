@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "keyVaultName": {
+      "value": "kv"
+    },
+    // "location": {
+    //     "value": "" // defaults to resourcegroup location
+    // },
+    "enabledForDeployment": {
+      "value": true
+    },
+    "enabledForDiskEncryption": {
+      "value": false
+    },
+    "enabledForTemplateDeployment": {
+      "value": true
+    },
+    // "tenantId": {
+    //   "value": "" // defaults to subscriptions tenantId
+    // },
+    "objectId": {
+      "value": "bb36fc31-5a0b-42db-8800-1a945c93eece"
+    },
+    "keysPermissions": {
+      "value": [
+        "list"
+      ]
+    },
+    "secretsPermissions": {
+      "value": [
+        "list"
+      ]
+    },
+    "skuName": {
+      "value": "standard"
+    }
+  }
+}

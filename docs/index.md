@@ -37,9 +37,11 @@ graph LR;
 
 This is the YAML file which was used to Configure the website you are currently viewing.
 
-```yaml title="mkdocs.yml" linenums="1"
---8<-- "mkdocs.yml"
-```
+??? quote YAML
+
+    ```yaml title="mkdocs.yml" linenums="1"
+    --8<-- "mkdocs.yml"
+    ```
 
 ## License
 

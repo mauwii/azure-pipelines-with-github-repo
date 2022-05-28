@@ -1,10 +1,31 @@
 variables:
-  pythonVersion: '3.9'
-  vmImageName: ubuntu-latest
-  resourceGroupName: azure-pipelines-with-github-repo
-  projectName: apwgr
-  location: westeurope
-  azureSubscription: azure-mauwii
-  mkdocsSiteDir: site
-  mkdocsDeploy: ${{ False }}
-  bicepParameter: dev
+  - name: isMain
+    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
+  - name: isStable
+    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
+  - name: isPullRequest
+    value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
+  - name: sourceBranchName
+    value: $[ variables['Build.SourceBranchName'] ]
+  - name: pythonVersion
+    value: '3.9'
+  - name: vmImageName
+    value: ubuntu-latest
+  - name: resourceGroupName
+    value: azure-pipelines-with-github-repo
+  - name: projectName
+    value: apwgr
+  - name: location
+    value: westeurope
+  - name: azureSubscription
+    value: azure-mauwii
+  - name: mkdocsSiteDir
+    value: site
+  - name: mkdocsDeploy
+    value: ${{ false }}
+  - name: bicepParameter
+    value: dev
+  - name: environment
+    value: dev
+  - name: bicepDir
+    value: IaC/bicep/deploy

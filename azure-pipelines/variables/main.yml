@@ -1,3 +1,7 @@
 variables:
-  environment: dev
-  bicepParameter: dev
+  - name: environment
+    value: dev
+  - name: bicepParameter
+    value: dev
+  - name: mkdocsDeploy
+    value: ${{ true }}

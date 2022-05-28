@@ -14,13 +14,7 @@ parameters:
   - name: bicepDir
     displayName: Directory containing Folders with Bicep Templates
     type: string
-    default: 'IaC/bicep/deploy'
-  - name: bicepTemplateDir
-    displayName: Directory containing the main.bicep
-    type: object
-    default:
-      - 'acr'
-      - 'kv'
+    default: $(bicepDir)
   - name: bicepParameter
     displayName: Used in some templates to change Resource Name or other variables
     type: string
@@ -47,7 +41,6 @@ stages:
     parameters:
       bicepDir: ${{ parameters.bicepDir }}
       bicepParameter: ${{ parameters.bicepParameter }}
-      bicepTemplateDir: ${{ parameters.bicepTemplateDir }}
       resourceGroupName: ${{ parameters.resourceGroupName }}
       azureSubscription: ${{ parameters.azureSubscription }}
       location: ${{ parameters.location }}

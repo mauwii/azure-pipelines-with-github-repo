@@ -2,7 +2,6 @@ parameters:
   - name: bicepDir
     displayName: Directory containing Folders with Bicep Templates
     type: string
-    default: ${{ variables['bicepDir'] }}
   - name: bicepParameter
     displayName: Used in some templates to change Resource Name or other variables
     type: string
@@ -10,19 +9,15 @@ parameters:
       - dev
       - stg
       - prod
-    default: ${{ variables['bicepParameter'] }}
   - name: resourceGroupName
     displayName: Name of the Resource Group where templates will be deployed to
     type: string
-    default: ${{ variables['resourceGroupName'] }}
   - name: azureSubscription
     displayName: Name of the ARM-Service Connection
     type: string
-    default: ${{ variables['azureSubscription'] }}
   - name: location
     displayName: Location where the Resources will be deployed to
     type: string
-    default: $(location)
 
 stages:
   - stage: bicep

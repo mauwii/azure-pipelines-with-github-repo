@@ -19,3 +19,9 @@ pool:
 
 extends:
   template: ../bicep_stage.yml
+  parameters:
+    bicepDir: $(bicepDir)
+    bicepParameter: $(bicepParameter)
+    resourceGroupName: $(resourceGroupName)
+    azureSubscription: $(azureSubscription)
+    location: $(location)

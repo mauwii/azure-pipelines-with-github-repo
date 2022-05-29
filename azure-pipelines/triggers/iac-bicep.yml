@@ -15,7 +15,7 @@ variables:
   - template: ../variables/default.yml
 
 pool:
-  vmImage: ${{ variables.vmImageName }}
+  vmImage: $(vmImageName)
 
 extends:
   template: ../bicep_stage.yml

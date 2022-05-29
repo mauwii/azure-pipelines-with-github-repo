@@ -14,7 +14,7 @@ variables:
       - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
 
 pool:
-  vmImage: ${{ variables.vmImageName }}
+  vmImage: $(vmImageName)
 
 extends:
   template: azure-pipelines/main.yml

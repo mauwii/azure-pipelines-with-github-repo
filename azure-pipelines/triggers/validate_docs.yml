@@ -20,6 +20,6 @@ variables:
 extends:
   template: ../mkdocs_stage.yml
   parameters:
-    pythonVersion: ${{ variables.pythonVersion }}
-    mkdocsSiteDir: ${{ variables.mkdocsSiteDir }}
-    mkdocsDeploy: ${{ variables.mkdocsDeploy }}
+    pythonVersion: '3.9'
+    mkdocsSiteDir: 'site'
+    mkdocsDeploy: false

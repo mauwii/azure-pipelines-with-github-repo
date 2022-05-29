@@ -1,5 +1,6 @@
 trigger:
   batch: true
+
   branches:
     include:
       - refs/heads/main
@@ -13,10 +14,14 @@ variables:
       - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
 
 pool:
-  vmImage: $(vmImageName)
+  vmImage: ${{ variables.vmImageName }}
 
 extends:
   template: azure-pipelines/main.yml
   parameters:
+    bicepDir: '${{ variables.bicepDir }}'
+    bicepParameter: '${{ variables.environment }}'
+    resourceGroupName: '${{ variables.resourceGroupName }}'
+    azureSubscription: '${{ variables.azureSubscription }}'
+    location: '${{ variables.location }}'
     mkdocsDeploy: ${{ variables['mkdocsDeploy'] }}
-    bicepParameter: ${{ variables['bicepParameter'] }}

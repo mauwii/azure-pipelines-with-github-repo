@@ -15,13 +15,13 @@ variables:
   - template: ../variables/default.yml
 
 pool:
-  vmImage: $(vmImageName)
+  vmImage: ${{ variables.vmImageName }}
 
 extends:
   template: ../bicep_stage.yml
   parameters:
-    bicepDir: '$(bicepDir)'
+    bicepDir: '${{ variables.bicepDir }}'
     bicepParameter: '${{ variables.environment }}'
-    resourceGroupName: '$(resourceGroupName)'
-    azureSubscription: '$(azureSubscription)'
-    location: '$(location)'
+    resourceGroupName: '${{ variables.resourceGroupName }}'
+    azureSubscription: '${{ variables.azureSubscription }}'
+    location: '${{ variables.location }}'

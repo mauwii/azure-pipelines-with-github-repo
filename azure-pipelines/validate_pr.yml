@@ -30,5 +30,5 @@ pool:
 extends:
   template: main.yml
   parameters:
-    mkdocsDeploy: False
+    mkdocsDeploy: false
     bicepParameter: ${{ variables['bicepParameter'] }}

@@ -7,13 +7,13 @@ parameters:
     type: string
   - name: getAppInsights
     type: boolean
-    default: False
+    default: false
   - name: publishArtifact
     type: boolean
-    default: False
+    default: false
   - name: exportDjangoRoot
     type: boolean
-    default: False
+    default: false
 
 jobs:
   - job: buildWebApp

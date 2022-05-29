@@ -1,7 +1,6 @@
 name: 'experimental'
 
 trigger:
-  batch: true
   branches:
     include:
       - feature/experimental/*
@@ -9,66 +8,21 @@ trigger:
 resources:
   repositories:
     - repository: DevOpsBuildAgent
-      type: github
-      name: Mauwii/DevOpsBuildAgent
       endpoint: Mauwii
+      name: Mauwii/DevOpsBuildAgent
       trigger:
-        branches:
-          include:
-            - main
-
-variables:
-  - name: isMain
-    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
-    readonly: true
-  - name: isStable
-    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
-    readonly: true
-  - name: isPullRequest
-    value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
-    readonly: true
-  - name: sourceBranchName
-    value: $[ variables['Build.SourceBranchName'] ]
-  - template: variables/default.yml
-  - template: variables/aci/devopsagent.yml
-  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
-      - template: variables/${{ variables['Build.SourceBranchName'] }}.yml
+        - main
 
 pool:
-  vmImage: $(vmImageName)
+  vmImage: ubuntu-latest
 
 stages:
-  - stage: build
-    displayName: Build Container
+  - stage: docker
+    displayName: Docker
+    dependsOn:
     jobs:
-      - job:
+      - job: buildx64
+        displayName: linux-x64
+        dependsOn:
         steps:
-          - checkout: DevOpsBuildAgent
-            path: src/Repo
-            displayName: checkout DevOpsBuildAgent
-            submodules: false
-          - task: Docker@2
-            inputs:
-              containerRegistry: 'docker-jfrog'
-              command: 'login'
-          - task: Docker@2
-            displayName: Build Dockercontainer
-            name: buildDockerfile
-            inputs:
-              containerRegistry: 'docker-jfrog'
-              repository: 'default-docker-local/devopsbuildagent'
-              command: 'build'
-              Dockerfile: '$(Build.Repository.LocalPath)/Dockerfile'
-              buildContext: '$(Build.Repository.LocalPath)/**'
-              tags: |
-                latest
-                $(Build.BuildId)
-              arguments: '--build-arg TARGETARCH=$(Agent.OS)-$(Agent.OSArchitecture)'
-          - task: Docker@2
-            inputs:
-              containerRegistry: 'docker-jfrog'
-              repository: 'default-docker-local/devopsbuildagent'
-              command: 'push'
-              tags: |
-                latest
-                $(Build.BuildId)
+          - script: Hello World!

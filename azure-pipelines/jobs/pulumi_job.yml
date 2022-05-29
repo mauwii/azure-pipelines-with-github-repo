@@ -1,0 +1,15 @@
+parameters:
+  - name: pulumiStack
+    type: string
+  - name: pulumiInstall
+    type: boolean
+  - name: pulumiUpgrade
+    type: boolean
+
+steps:
+  - template: steps/pulumi_install.yml
+    parameters:
+      pulumiStack: ${{ parameters.pulumiStack }}
+      pulumiUpgrade: ${{ parameters.upgrade}}
+
+    

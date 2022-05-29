@@ -1,13 +1,13 @@
 parameters:
   - name: pythonVersion
+    displayName: Python Version to use when building MkDocs-Material
     type: string
-    default: $(pythonVersion)
   - name: mkdocsSiteDir
+    displayName: Name of the Directory where MkDocs will be built to
     type: string
-    default: 'site'
   - name: mkdocsDeploy
+    displayName: When disabled MkDocs will only be built
     type: boolean
-    default: False
 
 jobs:
   - job: mkdocs
@@ -16,7 +16,7 @@ jobs:
       - template: steps/checkout_submodules.yml
         parameters:
           submodule: 'src/mkdocs-material'
-          checkoutSelf: True
+          checkoutSelf: true
 
       - template: steps/build_mkdocs.yml
         parameters:

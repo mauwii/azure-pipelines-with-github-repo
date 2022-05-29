@@ -3,3 +3,5 @@ variables:
     value: dev
   - name: bicepParameter
     value: dev
+  - name: mkdocsDeploy
+    value: ${{ true }}

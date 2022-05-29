@@ -4,7 +4,7 @@ parameters:
     default: '3.9'
   - name: publishArtifact
     type: boolean
-    default: False
+    default: false
   - name: sourceDir
     type: string
     default: $(variables['Build.SourcesDirectory'])

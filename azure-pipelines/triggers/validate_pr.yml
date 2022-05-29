@@ -17,5 +17,9 @@ pool:
 extends:
   template: ../main.yml
   parameters:
-    mkdocsDeploy: ${{ variables['mkdocsDeploy'] }}
-    bicepParameter: ${{ variables['bicepParameter'] }}
+    bicepDir: '${{ variables.bicepDir }}'
+    bicepParameter: '${{ variables.environment }}'
+    resourceGroupName: '${{ variables.resourceGroupName }}'
+    azureSubscription: '${{ variables.azureSubscription }}'
+    location: '${{ variables.location }}'
+    mkdocsDeploy: false

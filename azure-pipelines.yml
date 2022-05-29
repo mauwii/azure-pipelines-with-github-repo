@@ -24,4 +24,4 @@ extends:
     resourceGroupName: '${{ variables.resourceGroupName }}'
     azureSubscription: '${{ variables.azureSubscription }}'
     location: '${{ variables.location }}'
-    mkdocsDeploy: ${{ variables['mkdocsDeploy'] }}
+    mkdocsDeploy: ${{ variables.mkdocsDeploy }}

@@ -15,7 +15,7 @@ variables:
   - template: ../variables/default.yml
 
 pool:
-  vmImage: windows-latest
+  vmImage: ubuntu-latest
 
 extends:
   template: ../bicep_stage.yml

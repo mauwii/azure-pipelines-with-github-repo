@@ -1,0 +1,6 @@
+parameters:
+  - name: pulumiStack
+    type: string
+
+steps:
+- script: pulumi stack select ${{ parameters.pulumiStack}}

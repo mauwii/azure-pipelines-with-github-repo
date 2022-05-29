@@ -1,0 +1,12 @@
+parameters:
+  - name: pulumiStack
+    type: string
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: |
+    pulumi stack select ${{ parameters.pulumiStack}}
+    pulumi up
+    

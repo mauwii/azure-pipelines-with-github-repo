@@ -21,7 +21,7 @@ extends:
   template: ../bicep_stage.yml
   parameters:
     bicepDir: '$(bicepDir)'
-    bicepParameter: '$(environment)'
+    bicepParameter: '${{ variables.environment }}'
     resourceGroupName: '$(resourceGroupName)'
     azureSubscription: '$(azureSubscription)'
     location: '$(location)'

@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Jira Servicedesk
+    url: https://mauwii.atlassian.net/servicedesk/
+    about: My Jira Servicedesk where you can Suggest new Features, Report Bugs, and much more ...
   - name: GitHub Support
     url: https://support.github.com/
     about: For help in case of problems with your GitHub Account

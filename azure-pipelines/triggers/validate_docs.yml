@@ -31,9 +31,9 @@ parameters:
 variables:
   - template: ../variables/default.yml
 
-extends:
-  template: ../mkdocs_stage.yml
-  parameters:
-    pythonVersion: '${{ parameters.pythonVersion }}'
-    mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
-    mkdocsDeploy: '${{ parameters.mkdocsDeploy }}'
+stages:
+  - template: ../mkdocs_stage.yml
+    parameters:
+      pythonVersion: '${{ parameters.pythonVersion }}'
+      mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
+      mkdocsDeploy: '${{ parameters.mkdocsDeploy }}'

@@ -9,6 +9,8 @@ variables:
     value: $[ variables['Build.SourceBranchName'] ]
   - name: pythonVersion
     value: '3.9'
+  - name: environment
+    value: dev
   - name: vmImageName
     value: ubuntu-latest
   - name: resourceGroupName
@@ -23,9 +25,5 @@ variables:
     value: site
   - name: mkdocsDeploy
     value: ${{ false }}
-  - name: bicepParameter
-    value: dev
-  - name: environment
-    value: dev
   - name: bicepDir
     value: IaC/bicep/deploy

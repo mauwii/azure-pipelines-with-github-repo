@@ -12,10 +12,10 @@ trigger:
 pr: none
 
 variables:
-  - template: ../variables/default.yml
+  - template: '../variables/default.yml'
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-18.04'
 
 extends:
   template: ../bicep_stage.yml

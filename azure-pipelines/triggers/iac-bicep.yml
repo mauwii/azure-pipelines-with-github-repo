@@ -15,7 +15,7 @@ variables:
   - template: ../variables/default.yml
 
 pool:
-  vmImage: $(vmImageName)
+  vmImage: windows-latest
 
 extends:
   template: ../bicep_stage.yml

@@ -1,6 +1,5 @@
 trigger:
   batch: true
-
   branches:
     include:
       - refs/heads/main
@@ -16,12 +15,52 @@ variables:
 pool:
   vmImage: $(vmImageName)
 
+parameters:
+  - name: pythonVersion
+    displayName: Python Version to use when building MkDocs-Material
+    type: string
+    default: '3.9'
+  - name: mkdocsSiteDir
+    displayName: Name of the Directory where MkDocs will be built to
+    type: string
+    default: 'site'
+  - name: mkdocsDeploy
+    displayName: Deploy MkDocs to GitHub-Pages
+    type: boolean
+    default: false
+  - name: bicepDir
+    displayName: Directory containing Folders with Bicep Templates
+    type: string
+    default: $(bicepDir)
+  - name: bicepParameter
+    displayName: Used in some templates to change Resource Name or other variables
+    type: string
+    values:
+      - dev
+      - stg
+      - prod
+    default: dev
+  - name: resourceGroupName
+    displayName: Name of the Resource Group where templates will be deployed to
+    type: string
+    default: ${{ variables['resourceGroupName'] }}
+  - name: azureSubscription
+    displayName: Name of the ARM-Service Connection
+    type: string
+    default: ${{ variables['azureSubscription'] }}
+  - name: location
+    displayName: Location where the Resources will be deployed to
+    type: string
+    default: $(location)
+
 extends:
   template: azure-pipelines/main.yml
   parameters:
-    bicepDir: '${{ variables.bicepDir }}'
-    bicepParameter: '${{ variables.environment }}'
-    resourceGroupName: '${{ variables.resourceGroupName }}'
-    azureSubscription: '${{ variables.azureSubscription }}'
-    location: '${{ variables.location }}'
-    mkdocsDeploy: ${{ variables.mkdocsDeploy }}
+    bicepDir: ${{ parameters.bicepDir }}
+    bicepParameter: ${{ parameters.bicepParameter }}
+    resourceGroupName: ${{ parameters.resourceGroupName }}
+    azureSubscription: ${{ parameters.azureSubscription }}
+    location: ${{ parameters.location }}
+    pythonVersion: ${{ parameters.pythonVersion }}
+    mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
+    mkdocsDeploy: ${{ parameters.mkdocsDeploy }}

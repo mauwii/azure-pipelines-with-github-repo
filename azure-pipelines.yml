@@ -43,11 +43,11 @@ parameters:
   - name: resourceGroupName
     displayName: Name of the Resource Group where templates will be deployed to
     type: string
-    default: ${{ variables['resourceGroupName'] }}
+    default: $(resourceGroupName)
   - name: azureSubscription
     displayName: Name of the ARM-Service Connection
     type: string
-    default: ${{ variables['azureSubscription'] }}
+    default: $(azureSubscription)
   - name: location
     displayName: Location where the Resources will be deployed to
     type: string

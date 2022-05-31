@@ -18,6 +18,7 @@ pool:
 resources:
  repositories:
    - repository: self
+     endpoint: Mauwii
 
 parameters:
   - name: pythonVersion

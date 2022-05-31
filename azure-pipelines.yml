@@ -15,6 +15,10 @@ variables:
 pool:
   vmImage: $(vmImageName)
 
+resources:
+ repositories:
+   - repository: self
+
 parameters:
   - name: pythonVersion
     displayName: Python Version to use when building MkDocs-Material

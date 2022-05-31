@@ -28,6 +28,11 @@ parameters:
     type: boolean
     default: false
 
+resources:
+ repositories:
+   - repository: self
+     endpoint: Mauwii
+
 variables:
   - template: ../variables/default.yml
 

@@ -12,6 +12,11 @@ parameters:
     type: boolean
     default: false
 
+resources:
+ repositories:
+   - repository: self
+     endpoint: Mauwii
+
 stages:
   - stage: mkdocs
     displayName: MkDocs

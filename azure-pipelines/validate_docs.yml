@@ -12,7 +12,7 @@ trigger:
       - azure-pipelines/mkdocs_stage.yml
 
 pool:
-  vmImage: ubuntu-latest
+  name: local
 
 parameters:
   - name: pythonVersion

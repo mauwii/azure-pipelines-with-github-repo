@@ -2,7 +2,7 @@ parameters:
   - name: pythonVersion
     displayName: Python Version to use when building MkDocs-Material
     type: string
-    default: $(pythonVersion)
+    default: 3.9
   - name: mkdocsSiteDir
     displayName: Name of the Directory where MkDocs will be built to
     type: string

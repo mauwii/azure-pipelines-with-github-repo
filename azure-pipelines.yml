@@ -74,3 +74,4 @@ extends:
     pythonVersion: ${{ parameters.pythonVersion }}
     mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
     mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
+    vmImage: ${{ parameters.vmImage }}

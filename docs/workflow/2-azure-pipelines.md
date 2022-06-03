@@ -21,7 +21,7 @@ This stage-template contains is defining the complete pipeline. I had it separat
 ??? quote "YAML"
 
     ``` yaml title="azure-pipelines/main.yml" linenums="1"
-    --8<-- "azure-pipelines/main.yml"
+    --8<-- "azure-pipelines/stages/main.yml"
     ```
 
 #### bicep_stage.yml
@@ -31,7 +31,7 @@ This stage is seperated in two jobs. where the first job is enumerating how ofte
 ??? quote "YAML"
 
     ``` yaml title="azure-pipelines/bicep_stage.yml" linenums="1"
-    --8<-- "azure-pipelines/bicep_stage.yml"
+    --8<-- "azure-pipelines/stages/bicep_stage.yml"
     ```
 
 ##### bicep_steps.yml
@@ -46,7 +46,7 @@ This step-template will:
 ??? quote "YAML"
 
     ``` yaml title="azure-pipelines/jobs/steps/bicep_steps.yml" linenums="1"
-    --8<-- "azure-pipelines/jobs/steps/bicep_steps.yml"
+    --8<-- "azure-pipelines/stages/jobs/steps/bicep_steps.yml"
     ```
 
 ##### create_resourceGroup.yml
@@ -56,7 +56,7 @@ Well, I think the headline has already explained what this step is all about :sp
 ??? quote "YAML"
 
     ``` yaml title="azure-pipelines/jobs/steps/create_resourceGroup.yml" linenums="1"
-    --8<-- "azure-pipelines/jobs/steps/create_resourceGroup.yml"
+    --8<-- "azure-pipelines/stages/jobs/steps/create_resourceGroup.yml"
     ```
 
 #### mkdocs-material
@@ -70,5 +70,5 @@ The Deployment will only run if parameter `mkdocsDeploy` is `true`
 ??? quote "YAML"
 
     ``` yaml title="azure-pipelines/jobs/mkdocs-material.yml" linenums="1"
-    --8<-- "azure-pipelines/jobs/mkdocs-material.yml"
+    --8<-- "azure-pipelines/stages/jobs/mkdocs-material.yml"
     ```

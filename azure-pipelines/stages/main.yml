@@ -43,11 +43,6 @@ parameters:
       - 'macOS-latest'
       - 'windows-latest'
 
-resources:
- repositories:
-   - repository: self
-     endpoint: Mauwii
-
 stages:
   - template: bicep_stage.yml
     parameters:

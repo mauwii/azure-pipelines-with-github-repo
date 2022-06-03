@@ -36,6 +36,11 @@ parameters:
     type: string
     default: $(location)
 
+resources:
+ repositories:
+   - repository: self
+     endpoint: Mauwii
+
 stages:
   - template: bicep_stage.yml
     parameters:

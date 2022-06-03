@@ -10,7 +10,7 @@ parameters:
     type: boolean
 
 jobs:
-  - job: mkdocs
+  - job:
     displayName: MkDocs-Material
     steps:
       - template: steps/checkout_submodules.yml

@@ -1,0 +1,44 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - feature/*
+      - issue/*
+  paths:
+    include:
+      - docs
+      - mkdocs.yml
+      - src/requirements-mkdocs-material.txt
+      - azure-pipelines/mkdocs_stage.yml
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: pythonVersion
+    displayName: Python Version to use when building MkDocs-Material
+    type: string
+    default: $(pythonVersion)
+  - name: mkdocsSiteDir
+    displayName: Name of the Directory where MkDocs will be built to
+    type: string
+    default: 'site'
+  - name: mkdocsDeploy
+    displayName: When disabled MkDocs will only be built
+    type: boolean
+    default: false
+
+resources:
+ repositories:
+   - repository: self
+     endpoint: Mauwii
+
+variables:
+  - template: variables/default.yml
+
+stages:
+  - template: stages/mkdocs_stage.yml
+    parameters:
+      pythonVersion: '${{ parameters.pythonVersion }}'
+      mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
+      mkdocsDeploy: '${{ parameters.mkdocsDeploy }}'

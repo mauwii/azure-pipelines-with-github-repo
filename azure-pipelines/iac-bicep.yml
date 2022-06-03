@@ -1,25 +1,27 @@
-trigger: none
-
-pr:
-  autoCancel: false
+trigger:
+  batch: true
   branches:
     include:
-      - main
-      - stable
+      - feature/*
+      - issue/*
+  paths:
+    include:
+      - IaC/bicep/deploy
+      - azure-pipelines/triggers/iac-bicep.yml
+
+pr: none
 
 variables:
   - template: variables/default.yml
 
-
 pool:
-  vmImage: $(vmImageName)
+  vmImage: 'ubuntu-18.04'
 
 extends:
-  template: stages/main.yml
+  template: stages/bicep_stage.yml
   parameters:
     bicepDir: '${{ variables.bicepDir }}'
     bicepParameter: '${{ variables.environment }}'
     resourceGroupName: '${{ variables.resourceGroupName }}'
     azureSubscription: '${{ variables.azureSubscription }}'
     location: '${{ variables.location }}'
-    mkdocsDeploy: false

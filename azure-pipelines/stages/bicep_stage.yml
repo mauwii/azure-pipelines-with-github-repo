@@ -22,6 +22,8 @@ parameters:
 stages:
   - stage: bicep
     displayName: Bicep
+    pool:
+      vmImage: $(vmImage)
     jobs:
       - job: getTemplateFolders
         displayName: Get Template Folders

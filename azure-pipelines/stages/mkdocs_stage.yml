@@ -2,19 +2,18 @@ parameters:
   - name: pythonVersion
     displayName: Python Version to use when building MkDocs-Material
     type: string
-    default: $(pythonVersion)
   - name: mkdocsSiteDir
     displayName: Name of the Directory where MkDocs will be built to
     type: string
-    default: 'site'
   - name: mkdocsDeploy
     displayName: When disabled MkDocs will only be built
     type: boolean
-    default: false
 
 stages:
   - stage: mkdocs
-    displayName: MkDocs
+    displayName: MkDocs-Material
+    pool:
+      vmImage: $(vmImage)
     jobs:
       - template: jobs/mkdocs-material.yml
         parameters:

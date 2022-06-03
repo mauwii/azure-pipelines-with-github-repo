@@ -7,11 +7,6 @@ trigger:
 
 pr: none
 
-variables:
-  - template: azure-pipelines/variables/default.yml
-  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
-      - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
-
 resources:
   repositories:
     - repository: self
@@ -63,8 +58,10 @@ parameters:
       - 'windows-latest'
     default: 'ubuntu-latest'
 
-pool:
-  vmImage: ${{ parameters.vmImage }}
+variables:
+  - template: azure-pipelines/variables/default.yml
+  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
+      - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
 
 extends:
   template: azure-pipelines/stages/main.yml

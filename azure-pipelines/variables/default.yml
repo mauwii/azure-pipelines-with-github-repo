@@ -27,3 +27,5 @@ variables:
     value: ${{ false }}
   - name: bicepDir
     value: IaC/bicep/deploy
+  - name: vmImage
+    value: ${{ parameters.vmImage }}

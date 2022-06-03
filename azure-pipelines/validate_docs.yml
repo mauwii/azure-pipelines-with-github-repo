@@ -34,10 +34,10 @@ resources:
      endpoint: Mauwii
 
 variables:
-  - template: ../variables/default.yml
+  - template: variables/default.yml
 
 stages:
-  - template: ../mkdocs_stage.yml
+  - template: stages/mkdocs_stage.yml
     parameters:
       pythonVersion: '${{ parameters.pythonVersion }}'
       mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'

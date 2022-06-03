@@ -12,13 +12,13 @@ trigger:
 pr: none
 
 variables:
-  - template: '../variables/default.yml'
+  - template: variables/default.yml
 
 pool:
   vmImage: 'ubuntu-18.04'
 
 extends:
-  template: ../bicep_stage.yml
+  template: stages/bicep_stage.yml
   parameters:
     bicepDir: '${{ variables.bicepDir }}'
     bicepParameter: '${{ variables.environment }}'

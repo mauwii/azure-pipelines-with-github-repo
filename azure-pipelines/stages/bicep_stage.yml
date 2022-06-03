@@ -18,12 +18,19 @@ parameters:
   - name: location
     displayName: Location where the Resources will be deployed to
     type: string
+  - name: vmImage
+    displayName: Image the Build Agent should use
+    type: string
+    values:
+      - 'ubuntu-latest'
+      - 'macOS-latest'
+      - 'windows-latest'
 
 stages:
   - stage: bicep
     displayName: Bicep
     pool:
-      vmImage: $(vmImage)
+      vmImage: ${{ parameters.vmImage }}
     jobs:
       - job: getTemplateFolders
         displayName: Get Template Folders

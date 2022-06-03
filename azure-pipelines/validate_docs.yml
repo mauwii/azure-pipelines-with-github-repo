@@ -11,6 +11,14 @@ parameters:
     displayName: When disabled MkDocs will only be built
     type: boolean
     default: false
+  - name: vmImage
+    displayName: Image the Build Agent should use
+    type: string
+    values:
+      - 'ubuntu-latest'
+      - 'macOS-latest'
+      - 'windows-latest'
+    default: 'ubuntu-latest'
 
 resources:
  repositories:
@@ -38,3 +46,4 @@ stages:
       pythonVersion: '${{ parameters.pythonVersion }}'
       mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
       mkdocsDeploy: '${{ parameters.mkdocsDeploy }}'
+      vmImage:  '${{ parameters.vmImage }}'

@@ -8,12 +8,19 @@ parameters:
   - name: mkdocsDeploy
     displayName: When disabled MkDocs will only be built
     type: boolean
+  - name: vmImage
+    displayName: Image the Build Agent should use
+    type: string
+    values:
+      - 'ubuntu-latest'
+      - 'macOS-latest'
+      - 'windows-latest'
 
 stages:
   - stage: mkdocs
     displayName: MkDocs-Material
     pool:
-      vmImage: $(vmImage)
+      vmImage: ${{ parameters.vmImage }}
     jobs:
       - template: jobs/mkdocs-material.yml
         parameters:

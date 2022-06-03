@@ -50,6 +50,7 @@ stages:
       - job: runner
         displayName: Test and Deploy
         dependsOn: getTemplateFolders
+        condition: succeeded()
         strategy:
           matrix: $[ dependencies.getTemplateFolders.outputs['mtrx.legs'] ]
           maxParallel: 1

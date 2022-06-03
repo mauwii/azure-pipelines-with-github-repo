@@ -12,13 +12,10 @@ variables:
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
       - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
 
-pool:
-  vmImage: $(vmImageName)
-
 resources:
- repositories:
-   - repository: self
-     endpoint: Mauwii
+  repositories:
+    - repository: self
+      endpoint: Mauwii
 
 parameters:
   - name: pythonVersion
@@ -36,7 +33,7 @@ parameters:
   - name: bicepDir
     displayName: Directory containing Folders with Bicep Templates
     type: string
-    default: $(bicepDir)
+    default: '$(bicepDir)'
   - name: bicepParameter
     displayName: Used in some templates to change Resource Name or other variables
     type: string
@@ -48,15 +45,26 @@ parameters:
   - name: resourceGroupName
     displayName: Name of the Resource Group where templates will be deployed to
     type: string
-    default: $(resourceGroupName)
+    default: '$(resourceGroupName)'
   - name: azureSubscription
     displayName: Name of the ARM-Service Connection
     type: string
-    default: $(azureSubscription)
+    default: '$(azureSubscription)'
   - name: location
-    displayName: Location where the Resources will be deployed to
+    displayName: Location where the Resources will be deployed
     type: string
-    default: $(location)
+    default: '$(location)'
+  - name: vmImage
+    displayName: Image the Build Agent should use
+    type: string
+    values:
+      - 'ubuntu-latest'
+      - 'macOS-latest'
+      - 'windows-latest'
+    default: 'ubuntu-latest'
+
+pool:
+  vmImage: ${{ parameters.vmImage }}
 
 extends:
   template: azure-pipelines/stages/main.yml

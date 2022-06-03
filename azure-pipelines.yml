@@ -59,7 +59,7 @@ parameters:
     default: $(location)
 
 extends:
-  template: azure-pipelines/main.yml
+  template: azure-pipelines/stages/main.yml
   parameters:
     bicepDir: ${{ parameters.bicepDir }}
     bicepParameter: ${{ parameters.bicepParameter }}

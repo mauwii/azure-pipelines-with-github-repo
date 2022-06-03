@@ -29,3 +29,5 @@ variables:
     value: IaC/bicep/deploy
   - name: vmImage
     value: ${{ parameters.vmImage }}
+  - name: MaxConcurrency
+    value: 1

@@ -1,3 +1,15 @@
+trigger:
+  branches:
+    include:
+      - feature/*
+      - issue/*
+  paths:
+    include:
+      - docs
+      - mkdocs.yml
+      - src/requirements-mkdocs-material.txt
+      - azure-pipelines/mkdocs_stage.yml
+
 parameters:
   - name: pythonVersion
     displayName: Python Version to use when building MkDocs-Material
@@ -29,26 +41,6 @@ parameters:
       - 'Azure Pipelines'
       - 'local'
     default: 'Azure Pipelines'
-
-resources:
-  containers:
-    - container: ubuntu1804
-      image: ubuntu:18.04
-  repositories:
-    - repository: self
-      endpoint: Mauwii
-      batch: true
-      trigger:
-        branches:
-          include:
-            - feature/*
-            - issue/*
-        paths:
-          include:
-            - docs
-            - mkdocs.yml
-            - src/requirements-mkdocs-material.txt
-            - azure-pipelines/mkdocs_stage.yml
 
 variables:
   - template: variables/default.yml

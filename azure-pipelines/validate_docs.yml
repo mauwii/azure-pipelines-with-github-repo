@@ -2,7 +2,11 @@ parameters:
   - name: pythonVersion
     displayName: Python Version to use when building MkDocs-Material
     type: string
-    default: 3.9
+    values:
+      - '3.8'
+      - '3.9'
+      - '3.10'
+    default: '3.9'
   - name: mkdocsSiteDir
     displayName: Name of the Directory where MkDocs will be built to
     type: string
@@ -19,6 +23,12 @@ parameters:
       - 'macOS-latest'
       - 'windows-latest'
     default: 'ubuntu-latest'
+  - name: agentpool
+    displayName: Agent-Pool to be used
+    values:
+      - 'Azure Pipelines'
+      - 'local'
+    default: 'Azure Pipelines'
 
 resources:
  repositories:
@@ -47,3 +57,4 @@ stages:
       mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
       mkdocsDeploy: '${{ parameters.mkdocsDeploy }}'
       vmImage:  '${{ parameters.vmImage }}'
+      agentpool: '${{ parameters.agentpool }}'

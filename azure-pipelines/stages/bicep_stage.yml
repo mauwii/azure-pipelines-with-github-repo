@@ -39,7 +39,6 @@ stages:
       name: ${{ parameters.agentpool }}
       ${{ if eq(parameters['agentpool'], 'Azure Pipelines') }}:
         vmImage: ${{ parameters.vmImage }}
-        container: ubuntu:18.04
     jobs:
       - job: getTemplateFolders
         displayName: Get Template Folders

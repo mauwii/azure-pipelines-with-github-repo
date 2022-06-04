@@ -31,10 +31,13 @@ parameters:
     default: 'Azure Pipelines'
 
 resources:
- repositories:
-   - repository: self
-     endpoint: Mauwii
-     trigger:
+  containers:
+    - container: ubuntu1804
+      image: ubuntu:18.04
+  repositories:
+    - repository: self
+      endpoint: Mauwii
+      trigger:
       batch: true
       branches:
         include:
@@ -56,5 +59,5 @@ stages:
       pythonVersion: '${{ parameters.pythonVersion }}'
       mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
       mkdocsDeploy: '${{ parameters.mkdocsDeploy }}'
-      vmImage:  '${{ parameters.vmImage }}'
+      vmImage: '${{ parameters.vmImage }}'
       agentpool: '${{ parameters.agentpool }}'

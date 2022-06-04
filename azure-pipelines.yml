@@ -59,10 +59,9 @@ parameters:
     default: 'ubuntu-latest'
 
 variables:
+  - template: azure-pipelines/variables/default.yml
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
       - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
-  - ${{ if and(ne(variables['Build.SourceBranchName'], 'refs/heads/main'), ne(variables['Build.SourceBranchName'], 'refs/heads/stable')) }}:
-      - template: azure-pipelines/variables/default.yml
 
 stages:
   - template: azure-pipelines/stages/main.yml

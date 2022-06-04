@@ -30,6 +30,7 @@ stages:
       name: ${{ parameters.agentpool }}
       ${{ if eq(parameters['agentpool'], 'Azure Pipelines') }}:
         vmImage: ${{ parameters.vmImage }}
+        container: ubuntu:18.04
     jobs:
       - template: jobs/mkdocs-material.yml
         parameters:

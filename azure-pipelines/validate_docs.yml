@@ -37,18 +37,18 @@ resources:
   repositories:
     - repository: self
       endpoint: Mauwii
-      trigger:
       batch: true
-      branches:
-        include:
-          - feature/*
-          - issue/*
-      paths:
-        include:
-          - docs
-          - mkdocs.yml
-          - src/requirements-mkdocs-material.txt
-          - azure-pipelines/mkdocs_stage.yml
+      trigger:
+        branches:
+          include:
+            - feature/*
+            - issue/*
+        paths:
+          include:
+            - docs
+            - mkdocs.yml
+            - src/requirements-mkdocs-material.txt
+            - azure-pipelines/mkdocs_stage.yml
 
 variables:
   - template: variables/default.yml

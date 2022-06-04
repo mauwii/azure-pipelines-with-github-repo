@@ -22,11 +22,6 @@ parameters:
       - 'local'
     default: 'Azure Pipelines'
 
-resources:
-  containers:
-    - container: ubuntu1804
-      image: ubuntu:18.04
-
 stages:
   - stage: mkdocs
     displayName: MkDocs-Material

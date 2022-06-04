@@ -45,6 +45,11 @@ parameters:
 variables:
   - template: variables/default.yml
 
+resources:
+  containers:
+    - container: ubuntu1804
+      image: ubuntu:18.04
+
 stages:
   - template: stages/mkdocs_stage.yml
     parameters:

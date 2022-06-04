@@ -10,7 +10,6 @@ pr:
 variables:
   - template: variables/default.yml
 
-
 pool:
   vmImage: $(vmImageName)
 

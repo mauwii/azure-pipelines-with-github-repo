@@ -13,7 +13,6 @@ steps:
     inputs:
       versionSpec: '${{ parameters.pythonVersion }}'
       addToPath: true
-      architecture: x64
 
   - script: pip install --upgrade pip wheel setuptools
     displayName: update tools

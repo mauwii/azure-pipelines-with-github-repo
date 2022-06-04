@@ -63,15 +63,15 @@ variables:
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
       - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
 
-stages:
-  - template: azure-pipelines/stages/main.yml
-    parameters:
-      bicepDir: ${{ parameters.bicepDir }}
-      bicepParameter: ${{ parameters.bicepParameter }}
-      resourceGroupName: ${{ parameters.resourceGroupName }}
-      azureSubscription: ${{ parameters.azureSubscription }}
-      location: ${{ parameters.location }}
-      pythonVersion: ${{ parameters.pythonVersion }}
-      mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
-      mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
-      vmImage: ${{ parameters.vmImage }}
+extends:
+  template: azure-pipelines/stages/main.yml
+  parameters:
+    bicepDir: ${{ parameters.bicepDir }}
+    bicepParameter: ${{ parameters.bicepParameter }}
+    resourceGroupName: ${{ parameters.resourceGroupName }}
+    azureSubscription: ${{ parameters.azureSubscription }}
+    location: ${{ parameters.location }}
+    pythonVersion: ${{ parameters.pythonVersion }}
+    mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
+    mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
+    vmImage: ${{ parameters.vmImage }}

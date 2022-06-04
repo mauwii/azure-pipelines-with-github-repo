@@ -25,12 +25,20 @@ parameters:
       - 'ubuntu-latest'
       - 'macOS-latest'
       - 'windows-latest'
+  - name: agentpool
+    displayName: Agent-Pool to be used
+    values:
+      - 'Azure Pipelines'
+      - 'local'
+    default: 'Azure Pipelines'
 
 stages:
   - stage: bicep
     displayName: Bicep
     pool:
-      vmImage: ${{ parameters.vmImage }}
+      name: ${{ parameters.agentpool }}
+      ${{ if eq(parameters['agentpool'], 'Azure Pipelines') }}:
+        vmImage: ${{ parameters.vmImage }}
     jobs:
       - job: getTemplateFolders
         displayName: Get Template Folders

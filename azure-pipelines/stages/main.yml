@@ -42,6 +42,12 @@ parameters:
       - 'ubuntu-latest'
       - 'macOS-latest'
       - 'windows-latest'
+  - name: agentpool
+    displayName: Agent-Pool to be used
+    values:
+      - 'Azure Pipelines'
+      - 'local'
+    default: 'Azure Pipelines'
 
 stages:
   - template: bicep_stage.yml
@@ -52,6 +58,7 @@ stages:
       azureSubscription: ${{ parameters.azureSubscription }}
       location: ${{ parameters.location }}
       vmImage: ${{ parameters.vmImage }}
+      agentpool: ${{ parameters.agentpool }}
 
   - template: mkdocs_stage.yml
     parameters:
@@ -59,3 +66,4 @@ stages:
       mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
       mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
       vmImage: ${{ parameters.vmImage }}
+      agentpool: ${{ parameters.agentpool }}

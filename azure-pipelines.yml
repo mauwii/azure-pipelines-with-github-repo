@@ -57,6 +57,12 @@ parameters:
       - 'macOS-latest'
       - 'windows-latest'
     default: 'ubuntu-latest'
+  - name: agentpool
+    displayName: Agent-Pool to be used
+    values:
+      - 'Azure Pipelines'
+      - 'local'
+    default: 'Azure Pipelines'
 
 variables:
   - template: azure-pipelines/variables/default.yml
@@ -75,3 +81,4 @@ extends:
     mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
     mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
     vmImage: ${{ parameters.vmImage }}
+    agentpool: ${{ parameters.agentpool }}

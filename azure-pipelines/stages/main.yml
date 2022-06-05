@@ -48,6 +48,9 @@ parameters:
       - 'Azure Pipelines'
       - 'local'
     default: 'Azure Pipelines'
+  - name: cleanup
+    type: boolean
+    default: false
 
 stages:
   - template: bicep_stage.yml
@@ -67,3 +70,23 @@ stages:
       mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
       vmImage: ${{ parameters.vmImage }}
       agentpool: ${{ parameters.agentpool }}
+
+  - stage: cleanup
+    displayName: 'I`m just a cleaner'
+    dependsOn:
+      - bicep
+      - mkdocs
+    condition: and(succeeded(), eq(parameters.cleanup, 'true'))
+    jobs:
+      - job:
+        displayName: 'clean your stuff away'
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: azure-mauwii
+              scriptType: pscore
+              inlineScript: |
+                az group delete --resource-group ${env:RG} --yes
+            env:
+              RG: ${{ parameters.resourceGroupName }}
+

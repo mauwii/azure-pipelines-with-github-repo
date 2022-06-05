@@ -88,3 +88,4 @@ extends:
     mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
     vmImage: ${{ parameters.vmImage }}
     agentpool: ${{ parameters.agentpool }}
+    cleanup: ${{ parameters.cleanup }}

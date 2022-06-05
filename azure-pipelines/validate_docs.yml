@@ -1,12 +1,23 @@
+trigger:
+  branches:
+    include:
+      - feature/*
+      - issue/*
+  paths:
+    include:
+      - docs
+      - mkdocs.yml
+      - src/requirements-mkdocs-material.txt
+      - azure-pipelines/mkdocs_stage.yml
+
 parameters:
   - name: pythonVersion
     displayName: Python Version to use when building MkDocs-Material
     type: string
     values:
+      - '3.6'
       - '3.8'
-      - '3.9'
-      - '3.10'
-    default: '3.9'
+    default: '3.8'
   - name: mkdocsSiteDir
     displayName: Name of the Directory where MkDocs will be built to
     type: string
@@ -30,25 +41,13 @@ parameters:
       - 'local'
     default: 'Azure Pipelines'
 
-resources:
- repositories:
-   - repository: self
-     endpoint: Mauwii
-     trigger:
-      batch: true
-      branches:
-        include:
-          - feature/*
-          - issue/*
-      paths:
-        include:
-          - docs
-          - mkdocs.yml
-          - src/requirements-mkdocs-material.txt
-          - azure-pipelines/mkdocs_stage.yml
-
 variables:
   - template: variables/default.yml
+
+resources:
+  containers:
+    - container: ubuntu1804
+      image: ubuntu:18.04
 
 stages:
   - template: stages/mkdocs_stage.yml
@@ -56,5 +55,5 @@ stages:
       pythonVersion: '${{ parameters.pythonVersion }}'
       mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
       mkdocsDeploy: '${{ parameters.mkdocsDeploy }}'
-      vmImage:  '${{ parameters.vmImage }}'
+      vmImage: '${{ parameters.vmImage }}'
       agentpool: '${{ parameters.agentpool }}'

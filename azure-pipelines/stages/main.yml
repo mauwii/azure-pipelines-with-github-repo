@@ -76,7 +76,7 @@ stages:
     dependsOn:
       - bicep
       - mkdocs
-    condition: and(succeeded(), eq(parameters.cleanup, 'true'))
+    condition: and(succeeded(), eq( ${{ parameters.cleanup }}, 'true'))
     jobs:
       - job:
         displayName: 'clean your stuff away'

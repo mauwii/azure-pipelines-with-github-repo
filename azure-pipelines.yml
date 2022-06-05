@@ -66,6 +66,9 @@ parameters:
       - 'Azure Pipelines'
       - 'local'
     default: 'Azure Pipelines'
+  - name: cleanup
+    type: boolean
+    default: true
 
 variables:
   - template: azure-pipelines/variables/default.yml

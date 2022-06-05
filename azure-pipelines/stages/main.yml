@@ -80,13 +80,14 @@ stages:
         condition: succeeded()
         jobs:
           - job:
+            strategy:
+              maxParallel: 1
             displayName: 'clean your stuff away'
             steps:
               - task: AzureCLI@2
                 inputs:
                   azureSubscription: azure-mauwii
                   scriptType: pscore
-                  inlineScript: |
-                    az group delete --resource-group ${env:RG} --yes
+                  inlineScript: az group delete --resource-group ${env:RG} --yes
                 env:
                   RG: ${{ parameters.resourceGroupName }}

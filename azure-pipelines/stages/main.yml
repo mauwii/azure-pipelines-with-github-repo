@@ -79,6 +79,9 @@ stages:
           - mkdocs
         condition: succeeded()
         jobs:
+          - ${{ if eq(parameters.agentpool, 'local') }}:
+            pool:
+              name: 'local'
           - job:
             strategy:
               maxParallel: 1

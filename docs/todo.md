@@ -1,5 +1,6 @@
 ---
 title: ToDo
+template: overrides/main.html
 ---
 
 - [ ] Clean up all the mess which has grown over the last weeks of development

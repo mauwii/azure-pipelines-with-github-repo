@@ -1,5 +1,6 @@
 ---
 title: Repository
+template: overrides/main.html
 ---
 
 In this Section you will find Informations related to the Workflow of the Repository.

@@ -78,11 +78,12 @@ stages:
           - bicep
           - mkdocs
         condition: succeeded()
+
         jobs:
-          - ${{ if eq(parameters.agentpool, 'local') }}:
-            pool:
-              name: 'local'
           - job:
+            ${{ if eq(parameters.agentpool, 'local') }}:
+              pool:
+                name: 'local'
             strategy:
               maxParallel: 1
             displayName: 'clean your stuff away'

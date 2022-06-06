@@ -92,6 +92,7 @@ stages:
                 inputs:
                   azureSubscription: azure-mauwii
                   scriptType: pscore
+                  scriptLocation: inlineScript
                   inlineScript: az group delete --resource-group ${env:RG} --yes
                 env:
                   RG: ${{ parameters.resourceGroupName }}

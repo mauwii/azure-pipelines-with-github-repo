@@ -4,6 +4,8 @@
 
 ## Intro
 
+First of all a huge Thank you to Microsoft for the free Build Agents!!! Finally I can continue to use my playground as before :kissing_heart:
+
 Until yet I have only been using Azure-Repos in my DevOps Projects, but since this is done different at a recent project I am participating, I felt the need for a playground with similar conditions to explore the differences which appear when using Azure-DevOps with a GitHub Repository instead of the integrated Azure-Repos. Welcome to the Result :see_no_evil:
 
 Of course this is one of the things which will obviously never finish, but the reason is that I cannot imagine mysellf stopping from playing around with stuff like this in my spare time :trollface:
@@ -11,7 +13,7 @@ Of course this is one of the things which will obviously never finish, but the r
 ## What is being used
 
 - [GitHub](https://github.com/Mauwii/azure-pipelines-with-github-repo/)
-- [Azure-DevOps](https://dev.azure.com/mauwiidev/azure-pipelines-with-github-repo/)
+- [Azure-DevOps](https://dev.azure.com/Mauwii/azure-pipelines-with-github-repo/)
 - [Jira](https://mauwii.atlassian.net/jira/software/c/projects/APWGR/issues)
 - [MkDocs-Material](https://squidfunk.github.io/mkdocs-material/)
 

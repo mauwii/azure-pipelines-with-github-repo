@@ -93,6 +93,19 @@ stages:
                   azureSubscription: azure-mauwii
                   scriptType: pscore
                   scriptLocation: inlineScript
-                  inlineScript: az group delete --resource-group ${env:RG} --yes
+                  inlineScript: |
+                    Remove-AzResourceGroup `
+                      -Name $env:RG `
+                      -Force
+
+                    $KeyVaultToDelete = Get-AzKeyVault -InRemovedState
+                    foreach ($KV in ${KeyVaultToDelete}) {
+                      Write-Host "Deleting" $KV.VaultName
+                      Remove-AzKeyVault `
+                        -VaultName $KV.VaultName `
+                        -Location $KV.Location `
+                        -InRemovedState -Force
+                    }
+
                 env:
                   RG: ${{ parameters.resourceGroupName }}

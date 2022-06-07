@@ -77,8 +77,7 @@ stages:
         dependsOn:
           - bicep
           - mkdocs
-        condition: succeeded()
-
+        condition: always()
         jobs:
           - job:
             ${{ if eq(parameters.agentpool, 'local') }}:

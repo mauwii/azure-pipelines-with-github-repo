@@ -17,9 +17,6 @@
     "env": {
       "value": "dev"
     },
-    // "location": {
-    //     "value": "" // defaults to resourcegroup location
-    // },
     "pythonVersion": {
       "value": "3.9"
     }

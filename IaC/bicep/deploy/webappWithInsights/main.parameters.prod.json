@@ -17,11 +17,8 @@
     "env": {
       "value": "prod"
     },
-    // "location": {
-    //     "value": "" // defaults to resourcegroup location
-    // },
     "pythonVersion": {
-      "value": "3.9"
+      "value": "3.8"
     }
   }
 }

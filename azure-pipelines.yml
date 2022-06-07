@@ -17,9 +17,10 @@ parameters:
     displayName: Python Version to use when building MkDocs-Material
     type: string
     values:
-      - '3.6'
+      - '3.7'
       - '3.8'
-    default: '3.8'
+      - '3.9'
+    default: '3.9'
   - name: mkdocsSiteDir
     displayName: Name of the Directory where MkDocs will be built to
     type: string
@@ -52,14 +53,6 @@ parameters:
     displayName: Location where the Resources will be deployed
     type: string
     default: '$(location)'
-  # - name: vmImage
-  #   displayName: Image the Build Agent should use
-  #   type: string
-  #   values:
-  #     - 'ubuntu-latest'
-  #     - 'macOS-latest'
-  #     - 'windows-latest'
-  #   default: 'ubuntu-latest'
   - name: agentpool
     displayName: Agent-Pool to be used
     values:
@@ -88,4 +81,3 @@ extends:
     mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
     cleanup: ${{ parameters.cleanup }}
     agentpool: ${{ parameters.agentpool }}
-    # vmImage: ${{ parameters.vmImage }}

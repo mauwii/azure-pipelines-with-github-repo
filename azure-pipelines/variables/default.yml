@@ -8,7 +8,7 @@ variables:
   - name: sourceBranchName
     value: $[ variables['Build.SourceBranchName'] ]
   - name: pythonVersion
-    value: '3.8'
+    value: '3.9'
   - name: environment
     value: dev
   - name: resourceGroupName

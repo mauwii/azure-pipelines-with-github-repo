@@ -11,8 +11,6 @@ variables:
     value: '3.8'
   - name: environment
     value: dev
-  - name: vmImageName
-    value: ubuntu-latest
   - name: resourceGroupName
     value: azure-pipelines-with-github-repo
   - name: projectName
@@ -27,7 +25,9 @@ variables:
     value: ${{ false }}
   - name: bicepDir
     value: IaC/bicep/deploy
-  - name: vmImage
-    value: ${{ parameters.vmImage }}
   - name: MaxConcurrency
     value: 1
+  # - name: vmImageName
+  #   value: ubuntu-latest
+  # - name: vmImage
+  #   value: ${{ parameters.vmImage }}

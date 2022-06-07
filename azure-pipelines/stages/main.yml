@@ -35,13 +35,13 @@ parameters:
     displayName: Location where the Resources will be deployed to
     type: string
     default: $(location)
-  - name: vmImage
-    displayName: Image the Build Agent should use
-    type: string
-    values:
-      - 'ubuntu-latest'
-      - 'macOS-latest'
-      - 'windows-latest'
+  # - name: vmImage
+  #   displayName: Image the Build Agent should use
+  #   type: string
+  #   values:
+  #     - 'ubuntu-latest'
+  #     - 'macOS-latest'
+  #     - 'windows-latest'
   - name: agentpool
     displayName: Agent-Pool to be used
     values:
@@ -60,16 +60,16 @@ stages:
       resourceGroupName: ${{ parameters.resourceGroupName }}
       azureSubscription: ${{ parameters.azureSubscription }}
       location: ${{ parameters.location }}
-      vmImage: ${{ parameters.vmImage }}
       agentpool: ${{ parameters.agentpool }}
+      # vmImage: ${{ parameters.vmImage }}
 
   - template: mkdocs_stage.yml
     parameters:
       pythonVersion: ${{ parameters.pythonVersion }}
       mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
       mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
-      vmImage: ${{ parameters.vmImage }}
       agentpool: ${{ parameters.agentpool }}
+      # vmImage: ${{ parameters.vmImage }}
 
   - ${{ if eq(parameters.cleanup, 'true') }}:
       - stage: cleanup

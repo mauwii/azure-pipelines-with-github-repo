@@ -52,14 +52,14 @@ parameters:
     displayName: Location where the Resources will be deployed
     type: string
     default: '$(location)'
-  - name: vmImage
-    displayName: Image the Build Agent should use
-    type: string
-    values:
-      - 'ubuntu-latest'
-      - 'macOS-latest'
-      - 'windows-latest'
-    default: 'ubuntu-latest'
+  # - name: vmImage
+  #   displayName: Image the Build Agent should use
+  #   type: string
+  #   values:
+  #     - 'ubuntu-latest'
+  #     - 'macOS-latest'
+  #     - 'windows-latest'
+  #   default: 'ubuntu-latest'
   - name: agentpool
     displayName: Agent-Pool to be used
     values:
@@ -86,6 +86,6 @@ extends:
     pythonVersion: ${{ parameters.pythonVersion }}
     mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
     mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
-    vmImage: ${{ parameters.vmImage }}
-    agentpool: ${{ parameters.agentpool }}
     cleanup: ${{ parameters.cleanup }}
+    agentpool: ${{ parameters.agentpool }}
+    # vmImage: ${{ parameters.vmImage }}

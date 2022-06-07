@@ -97,9 +97,8 @@ stages:
                     Remove-AzResourceGroup `
                       -Name $env:RG `
                       -Force
-
                     $KeyVaultToDelete = Get-AzKeyVault -InRemovedState
-                    foreach ($KV in ${KeyVaultToDelete}) {
+                    foreach ($KV in $KeyVaultToDelete) {
                       Write-Host "Deleting" $KV.VaultName
                       Remove-AzKeyVault `
                         -VaultName $KV.VaultName `

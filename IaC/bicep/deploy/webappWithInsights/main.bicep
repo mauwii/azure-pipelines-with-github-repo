@@ -36,7 +36,7 @@ param location string = resourceGroup().location
   '3.8'
   '3.9'
 ])
-param pythonVersion string = '3.9'
+param pythonVersion string = '3.8'
 
 
 @description('Name that will be used to build associated artifacts')
@@ -142,7 +142,7 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
-resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08-01' = {
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' = {
   name: logAnalyticsName
   location: location
   tags: {

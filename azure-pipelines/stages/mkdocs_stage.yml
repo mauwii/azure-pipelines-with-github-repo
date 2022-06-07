@@ -8,13 +8,6 @@ parameters:
   - name: mkdocsDeploy
     displayName: When disabled MkDocs will only be built
     type: boolean
-  # - name: vmImage
-  #   displayName: Image the Build Agent should use
-  #   type: string
-  #   values:
-  #     - 'ubuntu-latest'
-  #     - 'macOS-latest'
-  #     - 'windows-latest'
   - name: agentpool
     displayName: Agent-Pool to be used
     values:
@@ -28,9 +21,6 @@ stages:
     condition: succeeded()
     pool:
       name: ${{ parameters.agentpool }}
-    #   ${{ if eq(parameters['agentpool'], 'Azure Pipelines') }}:
-    #     vmImage: ${{ parameters.vmImage }}
-    #     container: ubuntu1804
     jobs:
       - template: jobs/mkdocs-material.yml
         parameters:

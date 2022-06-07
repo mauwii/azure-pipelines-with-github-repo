@@ -23,13 +23,11 @@ steps:
     displayName: Run Bicep Linter
     name: LintBicepCode
     workingDirectory: $(bicepDir)/$(bicepTemplateDir)
-
   - template: create_resourceGroup.yml
     parameters:
       resourceGroupName: ${{ parameters.resourceGroupName }}
       azureSubscription: ${{ parameters.azureSubscription }}
       location: ${{ parameters.location }}
-
   - task: AzureCLI@2
     name: RunPreflightValidation
     condition: succeeded()
@@ -44,7 +42,6 @@ steps:
           --resource-group ${{ parameters.resourceGroupName }} \
           --template-file main.bicep \
           --parameters @main.parameters.${{parameters.bicepParameter}}.json
-
   - task: AzureCLI@2
     name: RunWhatIf
     displayName: Run what-if
@@ -58,7 +55,6 @@ steps:
           --resource-group ${{ parameters.resourceGroupName }} \
           --template-file main.bicep \
           --parameters @main.parameters.${{parameters.bicepParameter}}.json
-
   - task: AzureCLI@2
     name: DeployBicepFile
     condition: and(succeeded(), in('True', variables['isMain'], variables['isStable']))

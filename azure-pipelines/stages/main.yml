@@ -35,13 +35,6 @@ parameters:
     displayName: Location where the Resources will be deployed to
     type: string
     default: $(location)
-  # - name: vmImage
-  #   displayName: Image the Build Agent should use
-  #   type: string
-  #   values:
-  #     - 'ubuntu-latest'
-  #     - 'macOS-latest'
-  #     - 'windows-latest'
   - name: agentpool
     displayName: Agent-Pool to be used
     values:
@@ -61,7 +54,6 @@ stages:
       azureSubscription: ${{ parameters.azureSubscription }}
       location: ${{ parameters.location }}
       agentpool: ${{ parameters.agentpool }}
-      # vmImage: ${{ parameters.vmImage }}
 
   - template: mkdocs_stage.yml
     parameters:
@@ -69,7 +61,6 @@ stages:
       mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
       mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
       agentpool: ${{ parameters.agentpool }}
-      # vmImage: ${{ parameters.vmImage }}
 
   - ${{ if eq(parameters.cleanup, 'true') }}:
       - stage: cleanup
@@ -87,12 +78,12 @@ stages:
               maxParallel: 1
             displayName: 'clean your stuff away'
             steps:
-              - task: AzureCLI@2
+              - task: AzurePowerShell@5
                 inputs:
                   azureSubscription: azure-mauwii
-                  scriptType: pscore
-                  scriptLocation: inlineScript
-                  inlineScript: |
+                  pwsh: true
+                  ScriptType: InlineScript
+                  inline: |
                     Remove-AzResourceGroup `
                       -Name $env:RG `
                       -Force
@@ -104,6 +95,5 @@ stages:
                         -Location $KV.Location `
                         -InRemovedState -Force
                     }
-
                 env:
                   RG: ${{ parameters.resourceGroupName }}

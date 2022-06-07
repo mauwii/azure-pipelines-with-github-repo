@@ -1,5 +1,6 @@
 parameters:
   - name: bicepDir
+    displayName: Directory containing the bicep-parameterfiles
     type: string
     default: $(bicepDir)
 

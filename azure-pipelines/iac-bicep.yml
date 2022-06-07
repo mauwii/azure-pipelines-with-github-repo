@@ -22,4 +22,3 @@ extends:
     resourceGroupName: '${{ variables.resourceGroupName }}'
     azureSubscription: '${{ variables.azureSubscription }}'
     location: '${{ variables.location }}'
-    # vmImage: 'ubuntu-latest'

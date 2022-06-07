@@ -1,28 +1,30 @@
-name: 'experimental'
-
 trigger:
   branches:
     include:
       - feature/experimental/*
 
+variables:
+  - template: ../variables/default.yml
+  - template: ../variables/aci/devopsagent.yml
+  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
+      - template: ../variables/${{ variables['Build.SourceBranchName'] }}.yml
+
 resources:
   repositories:
-    - repository: DevOpsBuildAgent
+    - repository: devopsagent
       endpoint: Mauwii
       name: Mauwii/DevOpsBuildAgent
       trigger:
         - main
 
 pool:
-  vmImage: ubuntu-latest
+  name: 'Azure Pipelines'
+  # vmImage: ubuntu-latest
 
 stages:
-  - stage: docker
-    displayName: Docker
-    dependsOn:
+  - stage: build
+    displayName: Build Container
     jobs:
-      - job: buildx64
-        displayName: linux-x64
-        dependsOn:
-        steps:
-          - script: Hello World!
+      - job: matrix
+        strategy:
+          matrix:

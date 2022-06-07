@@ -1,9 +1,12 @@
 parameters:
   - name: resourceGroupName
+    displayName: Resourcegroup Name
     type: string
   - name: azureSubscription
+    displayName: Azure Service Connection
     type: string
   - name: location
+    displayName: Resourcegroup Location
     type: string
 
 steps:

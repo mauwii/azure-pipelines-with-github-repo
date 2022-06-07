@@ -10,9 +10,6 @@ pr:
 variables:
   - template: variables/default.yml
 
-# pool:
-#   vmImage: $(vmImageName)
-
 extends:
   template: stages/main.yml
   parameters:
@@ -22,4 +19,3 @@ extends:
     azureSubscription: '${{ variables.azureSubscription }}'
     location: '${{ variables.location }}'
     mkdocsDeploy: false
-    # vmImage: 'ubuntu-latest'

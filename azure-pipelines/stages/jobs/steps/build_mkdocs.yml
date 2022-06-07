@@ -1,6 +1,9 @@
-# Pipeline Template to build MkDocs
 parameters:
   - name: pythonVersion
+    displayName: Python Version to use
+    values:
+      - '3.8'
+      - '3.9'
     type: string
     default: $(pythonVersion)
   - name: mkdocsSiteDir

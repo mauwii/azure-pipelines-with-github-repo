@@ -18,13 +18,6 @@ parameters:
   - name: location
     displayName: Location where the Resources will be deployed to
     type: string
-  # - name: vmImage
-  #   displayName: Image the Build Agent should use
-  #   type: string
-  #   values:
-  #     - 'ubuntu-latest'
-  #     - 'macOS-latest'
-  #     - 'windows-latest'
   - name: agentpool
     displayName: Agent-Pool to be used
     values:
@@ -37,8 +30,6 @@ stages:
     displayName: Bicep
     pool:
       name: ${{ parameters.agentpool }}
-    #   ${{ if eq(parameters['agentpool'], 'Azure Pipelines') }}:
-    #     vmImage: ${{ parameters.vmImage }}
     jobs:
       - job: getTemplateFolders
         displayName: Get Template Folders
@@ -54,7 +45,6 @@ stages:
             inputs:
               targetType: filePath
               filePath: scripts/New-BicepMatrix.ps1
-
       - job: runner
         displayName: Test and Deploy
         dependsOn: getTemplateFolders

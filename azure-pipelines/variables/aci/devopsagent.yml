@@ -2,7 +2,7 @@ variables:
   - name: location
     value: westeurope
   - name: containername
-    value: devopsagent-westeurope-mauwiidev
+    value: devopsagent-westeurope-mauwii
   - name: containerimage
     value: mauwii/devopsbuildagent
   - name: containerport
@@ -14,7 +14,7 @@ variables:
   - name: restartPolicy
     value: OnFailure
   - name: AZP_URL
-    value: 'https://dev.azure.com/mauwiidev'
+    value: 'https://dev.azure.com/Mauwii'
   # - name: AZP_TOKEN
   #   value: $(AZP_TOKEN)
   - name: AZP_AGENT_NAME

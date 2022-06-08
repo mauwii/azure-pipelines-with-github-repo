@@ -5,9 +5,6 @@
     "keyVaultName": {
       "value": "kv"
     },
-    // "location": {
-    //     "value": "" // defaults to resourcegroup location
-    // },
     "enabledForDeployment": {
       "value": true
     },
@@ -17,20 +14,26 @@
     "enabledForTemplateDeployment": {
       "value": true
     },
-    // "tenantId": {
-    //   "value": "" // defaults to subscriptions tenantId
-    // },
     "objectId": {
-      "value": "bb36fc31-5a0b-42db-8800-1a945c93eece"
+      "value": "b89892bb-b42d-4bfa-a75b-a70e119274e2"
     },
     "keysPermissions": {
       "value": [
-        "list"
+        "create",
+        "list",
+        "delete",
+        "import",
+        "sign",
+        "update",
+        "verify"
       ]
     },
     "secretsPermissions": {
       "value": [
-        "list"
+        "list",
+        "delete",
+        "purge",
+        "set"
       ]
     },
     "skuName": {

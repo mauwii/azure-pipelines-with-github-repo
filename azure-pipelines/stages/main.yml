@@ -87,6 +87,7 @@ stages:
                   azureSubscription: azure-mauwii
                   pwsh: true
                   ScriptType: InlineScript
+                  azurePowerShellVersion: LatestVersion
                   inline: |
                     Remove-AzResourceGroup `
                       -Name ${env:RG} `

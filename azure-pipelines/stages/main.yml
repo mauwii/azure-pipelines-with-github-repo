@@ -89,8 +89,9 @@ stages:
                   ScriptType: InlineScript
                   inline: |
                     Remove-AzResourceGroup `
-                      -Name $env:RG `
-                      -Force
+                      -Name ${env:RG} `
+                      -Force `
+                      -ErrorAction Ignore
                     $KeyVaultToDelete = (Get-AzKeyVault -InRemovedState)
                     foreach ( $KV in $KeyVaultToDelete )
                     {

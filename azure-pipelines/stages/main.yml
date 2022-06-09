@@ -67,40 +67,7 @@ stages:
       agentpool: ${{ parameters.agentpool }}
 
   - ${{ if eq(parameters.cleanup, 'true') }}:
-      - stage: cleanup
-        displayName: 'I`m just a cleaner'
-        dependsOn:
-          - bicep
-          - mkdocs
-        condition: always()
-        jobs:
-          - job:
-            ${{ if eq(parameters.agentpool, 'local') }}:
-              pool:
-                name: 'local'
-            strategy:
-              maxParallel: 1
-            displayName: 'clean your stuff away'
-            steps:
-              - task: AzurePowerShell@5
-                inputs:
-                  azureSubscription: azure-mauwii
-                  pwsh: true
-                  ScriptType: InlineScript
-                  azurePowerShellVersion: LatestVersion
-                  inline: |
-                    Remove-AzResourceGroup `
-                      -Name ${env:RG} `
-                      -Force `
-                      -ErrorAction Ignore
-                    $KeyVaultToDelete = (Get-AzKeyVault -InRemovedState)
-                    foreach ( $KV in $KeyVaultToDelete )
-                    {
-                      Write-Host "Deleting" $KV.VaultName
-                      Remove-AzKeyVault `
-                        -VaultName $KV.VaultName `
-                        -Location $KV.Location `
-                        -InRemovedState -Force
-                    }
-                env:
-                  RG: ${{ parameters.resourceGroupName }}
+      - template: cleanup.yml
+        parameters:
+          agentpool: ${{ parameters.agentpool }}
+          resourceGroupName: ${{ parameters.resourceGroupName }}

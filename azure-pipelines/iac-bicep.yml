@@ -14,11 +14,13 @@ pr: none
 variables:
   - template: variables/default.yml
 
-extends:
-  template: stages/bicep_stage.yml
-  parameters:
-    bicepDir: '${{ variables.bicepDir }}'
-    bicepParameter: '${{ variables.environment }}'
-    resourceGroupName: '${{ variables.resourceGroupName }}'
-    azureSubscription: '${{ variables.azureSubscription }}'
-    location: '${{ variables.location }}'
+stages:
+  - template: stages/bicep_stage.yml
+    parameters:
+      bicepDir: '${{ variables.bicepDir }}'
+      bicepParameter: '${{ variables.environment }}'
+      resourceGroupName: '${{ variables.resourceGroupName }}'
+      azureSubscription: '${{ variables.azureSubscription }}'
+      location: '${{ variables.location }}'
+
+  - template: cleanup.yml

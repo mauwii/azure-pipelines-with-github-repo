@@ -1,0 +1,47 @@
+parameters:
+  - name: agentpool
+    displayName: Agent-Pool to be used
+    values:
+      - 'Azure Pipelines'
+      - 'local'
+    default: 'Azure Pipelines'
+  - name: resourceGroupName
+    displayName: Name of the Resource Group where templates will be deployed to
+    type: string
+    default: $(resourceGroupName)
+
+stages:
+  - stage: cleanup
+    displayName: 'I`m just a cleaner'
+    condition: always()
+    jobs:
+      - job:
+        ${{ if eq(parameters.agentpool, 'local') }}:
+          pool:
+            name: 'local'
+        strategy:
+          maxParallel: 1
+        displayName: 'clean your stuff away'
+        steps:
+          - task: AzurePowerShell@5
+            inputs:
+              azureSubscription: azure-mauwii
+              pwsh: true
+              ScriptType: InlineScript
+              azurePowerShellVersion: LatestVersion
+              inline: |
+                Remove-AzResourceGroup `
+                  -Name ${env:RG} `
+                  -Force `
+                  -ErrorAction Ignore
+                $KeyVaultToDelete = (Get-AzKeyVault -InRemovedState)
+                foreach ( $KV in $KeyVaultToDelete )
+                {
+                  Write-Host "Deleting" $KV.VaultName
+                  Remove-AzKeyVault `
+                    -VaultName $KV.VaultName `
+                    -Location $KV.Location `
+                    -InRemovedState -Force
+                }
+            env:
+              RG: ${{ parameters.resourceGroupName }}

@@ -13,6 +13,7 @@ variables:
 extends:
   template: stages/main.yml
   parameters:
+    pythonVersion: '${{ variables.pythonVersion }}'
     bicepDir: '${{ variables.bicepDir }}'
     bicepParameter: '${{ variables.environment }}'
     resourceGroupName: '${{ variables.resourceGroupName }}'

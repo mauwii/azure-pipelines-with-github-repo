@@ -1,5 +1,6 @@
 variables:
-  - name: baseos
+  - template: variables/default.yml
+  - name: baseOS
     value: 'linux'
   - name: baseDistro
     value: 'ubuntu'
@@ -12,19 +13,40 @@ variables:
   - name: dockerimage
     value: 'devopsbuildagent'
 
-strategy:
-  matrix:
-    amd64:
-      dockerdefaultplatformarch: 'amd64'
-      platformarch: 'x86_64'
-      targetproc: 'x64'
-    arm64:
-      dockerdefaultplatformarch: 'arm64'
-      platformarch: 'arm64'
-      targetproc: 'x64'
+resources:
+  repositories:
+    - repository: DevOpsBuildAgent
+      endpoint: Mauwii
+      name: Mauwii/DevOpsBuildAgent
+      trigger:
+        - main
 
-steps:
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: 'env'
+jobs:
+  - job:
+    strategy:
+      matrix:
+        amd64:
+          dockerdefaultplatformos: ${{ variables.baseOS }}
+          dockerdefaultplatformarch: 'amd64'
+          platformarch: 'x86_64'
+          targetOS: ${{ variables.baseOS }}
+          targetproc: 'x64'
+        arm64:
+          dockerdefaultplatformos: ${{ variables.baseOS }}
+          dockerdefaultplatformarch: 'arm64'
+          platformarch: 'arm64'
+          targetOS: ${{ variables.baseOS }}
+          targetproc: 'x64'
+    steps:
+      - bash: 'env'
+      # - task: Docker@2
+      #   inputs:
+      #     containerRegistry: 'docker-mauwii'
+      #     command: 'login'
+      # - task: Docker@2
+      #   inputs:
+      #     containerRegistry: 'docker-mauwii'
+      #     repository: 'mauwii/devopsbuildagent'
+      #     command: 'build'
+      #     Dockerfile: 'src/devopsbuildagent/Dockerfile'
+      #     arguments: '--build-arg targetarch=$(targetOS)-$(targetproc)'

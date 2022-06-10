@@ -1,6 +1,6 @@
 # Azure-DevOps with GitHub-Repo
 
-[![Build Status](https://dev.azure.com/mauwiidev/azure-pipelines-with-github-repo/_apis/build/status/azure-pipelines.yml?branchName=main)](https://dev.azure.com/mauwiidev/azure-pipelines-with-github-repo/_build/latest?definitionId=65&branchName=main)
+[![Build Status](https://dev.azure.com/Mauwii/azure-pipelines-with-github-repo/_apis/build/status/azure-pipelines.yml?branchName=main)](https://dev.azure.com/Mauwii/azure-pipelines-with-github-repo/_build/latest?definitionId=10&branchName=main)
 
 ## Intro
 

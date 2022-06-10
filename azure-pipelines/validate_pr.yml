@@ -19,4 +19,3 @@ extends:
     resourceGroupName: '${{ variables.resourceGroupName }}'
     azureSubscription: '${{ variables.azureSubscription }}'
     location: '${{ variables.location }}'
-    mkdocsDeploy: false

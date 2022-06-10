@@ -21,7 +21,7 @@ variables:
     value: 'mauwii'
   - name: dockerimage
     value: 'devopsbuildagent'
-            
+
 jobs:
   - job:
     strategy:

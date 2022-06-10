@@ -33,7 +33,10 @@ parameters:
   - name: mkdocsDeploy
     displayName: Deploy MkDocs to GitHub-Pages
     type: boolean
-    default: $(mkdocsDeploy)
+    ${{ if eq(variables.mkdocsDeploy, 'True') }}:
+      default: true
+    ${{ if eq(variables.mkdocsDeploy, 'False') }}:
+      default: false
   - name: bicepDir
     displayName: Directory containing Folders with Bicep Templates
     type: string
@@ -66,7 +69,10 @@ parameters:
     default: 'Azure Pipelines'
   - name: cleanup
     type: boolean
-    default: $(cleanup)
+    ${{ if eq(variables.cleanup, 'True') }}:
+      default: true
+    ${{ if eq(variables.cleanup, 'False') }}:
+      default: false
 
 extends:
   template: azure-pipelines/stages/main.yml

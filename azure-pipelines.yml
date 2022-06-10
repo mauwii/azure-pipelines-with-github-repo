@@ -12,6 +12,11 @@ resources:
     - repository: self
       endpoint: Mauwii
 
+variables:
+  - template: azure-pipelines/variables/default.yml
+  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
+      - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
+
 parameters:
   - name: pythonVersion
     displayName: Python Version to use when building MkDocs-Material
@@ -28,7 +33,7 @@ parameters:
   - name: mkdocsDeploy
     displayName: Deploy MkDocs to GitHub-Pages
     type: boolean
-    default: false
+    default: $(mkdocsDeploy)
   - name: bicepDir
     displayName: Directory containing Folders with Bicep Templates
     type: string
@@ -52,7 +57,7 @@ parameters:
   - name: location
     displayName: Location where the Resources will be deployed
     type: string
-    default: '$(location)'
+    default: $[ variables['location']]
   - name: agentpool
     displayName: Agent-Pool to be used
     values:
@@ -61,12 +66,7 @@ parameters:
     default: 'Azure Pipelines'
   - name: cleanup
     type: boolean
-    default: true
-
-variables:
-  - template: azure-pipelines/variables/default.yml
-  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
-      - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
+    default: $[ variables['cleanup'] ]
 
 extends:
   template: azure-pipelines/stages/main.yml

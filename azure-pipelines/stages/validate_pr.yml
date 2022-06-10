@@ -12,9 +12,8 @@ pr:
 variables:
   - template: variables/default.yml
 
-extends:
-  template: main.yml
-  parameters:
-    mkdocsDeploy: ${{ false }}
-    bicepParameter: ${{ variables['bicepParameter'] }}
-    cleanup: ${{ true }}
+stages:
+  - template: main.yml
+    parameters:
+      mkdocsDeploy: ${{ false }}
+      bicepParameter: ${{ variables['bicepParameter'] }}

@@ -27,6 +27,8 @@ variables:
     value: IaC/bicep/deploy
   - name: MaxConcurrency
     value: 1
+  - name: bicepDeploy
+    value: ${{ false }}
   # - name: vmImageName
   #   value: ubuntu-latest
   # - name: vmImage

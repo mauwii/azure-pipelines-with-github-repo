@@ -1,6 +1,6 @@
 ---
 title: Home
-template: overrides/home.html
+# template: overrides/home.html
 ---
 
 ## Intro
@@ -46,4 +46,5 @@ This is the YAML file which was used to Configure the website you are currently 
 
 ## License
 
---8<-- "LICENSE"
+??? quote License
+    --8<-- "LICENSE"

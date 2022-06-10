@@ -1,6 +1,6 @@
 ---
 title: Azure-Pipelines
-template: overrides/main.html
+# template: overrides/main.html
 ---
 
 ### azure-pipelines.yml

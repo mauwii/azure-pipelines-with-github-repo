@@ -10,21 +10,11 @@ pr:
       - stable
 
 variables:
-  - name: isMain
-    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/main') ]
-    readonly: true
-  - name: isStable
-    value: $[ eq(variables['Build.SourceBranch'], 'refs/heads/stable') ]
-    readonly: true
-  - name: isPullRequest
-    value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
-    readonly: true
-  - name: sourceBranchName
-    value: $[ variables['Build.SourceBranchName'] ]
   - template: variables/default.yml
 
 extends:
   template: main.yml
   parameters:
-    mkdocsDeploy: false
+    mkdocsDeploy: ${{ false }}
     bicepParameter: ${{ variables['bicepParameter'] }}
+    cleanup: ${{ true }}

@@ -18,7 +18,7 @@ parameters:
 steps:
   - ${{ each value in parameters.matrix }}:
       - task: Bash@3
-        displayName: ${{ value }} export
+        displayName: '${{ value.dockerdefaultplatformarch }} export'
         inputs:
           targetType: 'inline'
           script: 'export'

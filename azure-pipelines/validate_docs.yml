@@ -8,6 +8,7 @@ trigger:
       - docs
       - mkdocs.yml
       - src/requirements-mkdocs-material.txt
+      - src/mkdocs-material
       - azure-pipelines/mkdocs_stage.yml
 
 parameters:

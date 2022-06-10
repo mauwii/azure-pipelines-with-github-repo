@@ -23,7 +23,9 @@ resources:
       endpoint: Mauwii
       name: Mauwii/DevOpsBuildAgent
       trigger:
-        - main
+        branches:
+          include:
+            - main
 
 steps:
   - bash: env

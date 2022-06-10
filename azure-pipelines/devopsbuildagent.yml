@@ -50,11 +50,11 @@ steps:
           targetType: 'inline'
           script: 'env'
         env:
-          dockerdefaultplatformos: $[ value['dockerdefaultplatformos'] ]
-          dockerdefaultplatformarch: $[ value['dockerdefaultplatformarch'] ]
-          platformarch: $[ value['platformarch'] ]
-          targetOS: $[ value['targetOS'] ]
-          targetproc: $[ value['targetproc'] ]
+          dockerdefaultplatformos: ${{ value.dockerdefaultplatformos }}
+          dockerdefaultplatformarch: ${{ value.dockerdefaultplatformarch }}
+          platformarch: ${{ value.platformarch }}
+          TARGETOS: ${{ value.targetOS }}
+          TARGETPROC: ${{ value.targetproc }}
   # - task: Docker@2
   #   inputs:
   #     containerRegistry: 'docker-mauwii'

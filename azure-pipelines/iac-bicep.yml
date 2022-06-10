@@ -4,6 +4,7 @@ trigger:
     include:
       - feature/*
       - issue/*
+      - update/*
   paths:
     include:
       - IaC/bicep/deploy

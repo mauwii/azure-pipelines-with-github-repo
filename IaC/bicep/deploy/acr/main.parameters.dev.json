@@ -5,9 +5,6 @@
     "acrName": {
       "value": "bicepacr"
     },
-    // "location": {
-    //     "value": "" // defaults to resourcegroup location
-    // },
     "acrSku": {
       "value": "Basic"
     },

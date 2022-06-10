@@ -7,7 +7,7 @@ trigger:
   paths:
     include:
       - IaC/bicep/deploy
-      - azure-pipelines/triggers/iac-bicep.yml
+      - azure-pipelines/iac-bicep.yml
 
 pr: none
 
@@ -22,5 +22,3 @@ stages:
       resourceGroupName: '${{ variables.resourceGroupName }}'
       azureSubscription: '${{ variables.azureSubscription }}'
       location: '${{ variables.location }}'
-
-  - template: cleanup.yml

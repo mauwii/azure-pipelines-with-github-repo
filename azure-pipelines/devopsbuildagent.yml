@@ -27,7 +27,7 @@ variables:
 
 strategy:
   matrix:
-    ${{ parameters.matrix }}
+    $(parameters.matrix)
 
 steps:
 - task: Bash@3

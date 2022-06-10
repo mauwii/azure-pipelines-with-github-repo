@@ -33,6 +33,6 @@ steps:
           containerRegistry: 'docker-mauwii'
           repository: 'mauwii/devopsbuildagent'
           command: 'build'
-          Dockerfile: 'src/devopsbuildagent/Dockerfile'
+          Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
           tags: '${{ variables.baseOS }}.${{ variables.baseDistro }}.${{ variables.baseVersion }}.${{ value.dockerdefaultplatformarch}}.${{ value.targetProc }}.$(Build.BuildId)'
           arguments: '--build-arg targetarch=${{ value.targetOS }}-${{ value.targetProc }}'

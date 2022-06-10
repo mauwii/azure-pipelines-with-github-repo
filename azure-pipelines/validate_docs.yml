@@ -8,7 +8,13 @@ trigger:
       - docs
       - mkdocs.yml
       - src/requirements-mkdocs-material.txt
-      - azure-pipelines/mkdocs_stage.yml
+      - src/mkdocs-material
+      - azure-pipelines/validate_docs.yml
+      - azure-pipelines/stages/mkdocs_stage.yml
+      - azure-pipelines/stages/jobs/mkdocs-material.yml
+      - azure-pipelines/stages/jobs/steps/build_mkdocs.yml
+
+pr: none
 
 parameters:
   - name: pythonVersion

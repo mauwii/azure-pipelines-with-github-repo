@@ -20,26 +20,20 @@ parameters:
         targetProc: 'x64'
 
 steps:
-  - ${{ each value in parameters.matrix }}:
-      - task: Bash@3
-        displayName: '${{ value.dockerdefaultplatformarch }} export'
-        inputs:
-          targetType: 'inline'
-          script: 'export'
+  - ${{ each leg in parameters.matrix }}:
+      - bash: 'export'
+        displayName: '${{ leg.dockerdefaultplatformarch }} export'
         env:
-          dockerdefaultplatformos: ${{ value.dockerdefaultplatformos }}
-          dockerdefaultplatformarch: ${{ value.dockerdefaultplatformarch }}
-          platformarch: ${{ value.platformarch }}
-          targetOS: ${{ value.targetOS }}
-          targetproc: ${{ value.targetproc }}
+          ${{ each variable in leg }}:
+            ${{ variable.key }}: ${{ variable.value }}
       - script: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
-        displayName: 'qemu for ${{ value.dockerdefaultplatformarch }}'
+        displayName: 'qemu for ${{ leg.dockerdefaultplatformarch }}'
       - task: Docker@2
-        displayName: 'build ${{ value.dockerdefaultplatformarch }}'
+        displayName: 'build ${{ leg.dockerdefaultplatformarch }}'
         inputs:
           containerRegistry: 'docker-mauwii'
           repository: 'mauwii/devopsbuildagent'
           command: 'build'
           Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
-          tags: '${{ value.dockerdefaultplatformos }}.${{ value.baseDistro }}.${{ value.baseVersion }}.${{ value.dockerdefaultplatformarch }}.${{ value.targetProc }}'
-          arguments: '--build-arg platformarch="${{ value.dockerdefaultplatformarch }}" --build-arg targetarch="${{ value.targetOS }}-${{ value.targetProc }}"'
+          tags: '${{ leg.dockerdefaultplatformos }}.${{ leg.baseDistro }}.${{ leg.baseVersion }}.${{ leg.dockerdefaultplatformarch }}.${{ leg.targetProc }}'
+          arguments: '--build-arg platformarch="${{ leg.dockerdefaultplatformarch }}" --build-arg targetarch="${{ leg.targetOS }}-${{ leg.targetProc }}"'

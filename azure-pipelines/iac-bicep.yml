@@ -7,7 +7,7 @@ trigger:
   paths:
     include:
       - IaC/bicep/deploy
-      - azure-pipelines/triggers/iac-bicep.yml
+      - azure-pipelines/iac-bicep.yml
 
 pr: none
 

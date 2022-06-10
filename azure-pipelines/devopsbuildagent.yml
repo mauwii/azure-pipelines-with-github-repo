@@ -1,15 +1,13 @@
-parameters:
-  - name: matrix
-    type: object
-    default:
-      amd64:
-        dockerdefaultplatformarch: 'amd64'
-        platformarch: 'x86_64'
-        targetproc: 'x64'
-      arm64:
-        dockerdefaultplatformarch: 'arm64'
-        platformarch: 'arm64'
-        targetproc: 'x64'
+strategy:
+  matrix:
+    amd64:
+      dockerdefaultplatformarch: 'amd64'
+      platformarch: 'x86_64'
+      targetproc: 'x64'
+    arm64:
+      dockerdefaultplatformarch: 'arm64'
+      platformarch: 'arm64'
+      targetproc: 'x64'
 
 variables:
   baseos: 'linux'
@@ -27,14 +25,5 @@ resources:
       trigger:
         - main
 
-stages:
-  - stage: docker
-    displayName: Docker
-    jobs:
-      - job:
-        strategy:
-          matrix:
-            ${{ parameters.matrix }}
-          maxParallel: 2
-        steps:
-          - bash: env
+steps:
+  - bash: env

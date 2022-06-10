@@ -1,16 +1,3 @@
-parameters:
-  - name: matrix
-    type: object
-    default:
-        amd64:
-          dockerdefaultplatformarch: 'amd64'
-          platformarch: 'x86_64'
-          targetproc: 'x64'
-        arm64:
-          dockerdefaultplatformarch: 'arm64'
-          platformarch: 'arm64'
-          targetproc: 'x64'
-
 variables:
   - name: baseos
     value: 'linux'
@@ -27,7 +14,14 @@ variables:
 
 strategy:
   matrix:
-    $(parameters.matrix)
+    amd64:
+      dockerdefaultplatformarch: 'amd64'
+      platformarch: 'x86_64'
+      targetproc: 'x64'
+    arm64:
+      dockerdefaultplatformarch: 'arm64'
+      platformarch: 'arm64'
+      targetproc: 'x64'
 
 steps:
 - task: Bash@3

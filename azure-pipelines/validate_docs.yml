@@ -14,6 +14,8 @@ trigger:
       - azure-pipelines/stages/jobs/mkdocs-material.yml
       - azure-pipelines/stages/jobs/steps/build_mkdocs.yml
 
+pr: none
+
 parameters:
   - name: pythonVersion
     displayName: Python Version to use when building MkDocs-Material

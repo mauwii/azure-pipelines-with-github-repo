@@ -7,3 +7,12 @@ variables:
     value: ${{ true }}
   - name: mkdocsDeploy
     value: ${{ true }}
+
+parameters:
+  - name: mkdocsDeploy
+    displayName: Deploy MkDocs to GitHub-Pages
+    type: boolean
+    default: true
+  - name: cleanup
+    type: boolean
+    default: true

@@ -20,11 +20,11 @@ steps:
   - script: pip install --upgrade pip wheel setuptools
     displayName: update tools
 
-  - script: pip install -e src/mkdocs-material
-    displayName: install MkDocs-Material
-
   - script: pip install -r src/requirements-mkdocs-material.txt
     displayName: install requirements
+
+  - script: pip install -e src/mkdocs-material
+    displayName: install MkDocs-Material
 
   - script: mkdocs build --site-dir ${{ parameters.mkdocsSiteDir }} --verbose
     displayName: build docs

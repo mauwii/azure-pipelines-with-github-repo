@@ -7,30 +7,32 @@ parameters:
         dockerdefaultplatformarch: 'amd64'
         platformarch: 'x86_64'
         targetOS: $(baseOS)
-        targetproc: 'x64'
+        targetProc: 'x64'
       - arm64:
         dockerdefaultplatformos: $(baseOS)
         dockerdefaultplatformarch: 'arm64'
         platformarch: 'arm64'
         targetOS: $(baseOS)
-        targetproc: 'x64'
+        targetProc: 'x64'
 
 steps:
   - ${{ each value in parameters.matrix }}:
       - task: Bash@3
+        displayName: ${{ value }} export
         inputs:
           targetType: 'inline'
-          script: 'env'
+          script: 'export'
         env:
           dockerdefaultplatformos: ${{ value.dockerdefaultplatformos }}
           dockerdefaultplatformarch: ${{ value.dockerdefaultplatformarch }}
           platformarch: ${{ value.platformarch }}
           targetOS: ${{ value.targetOS }}
           targetproc: ${{ value.targetproc }}
-  # - task: Docker@2
-  #   inputs:
-  #     containerRegistry: 'docker-mauwii'
-  #     repository: 'mauwii/devopsbuildagent'
-  #     command: 'build'
-  #     Dockerfile: 'src/devopsbuildagent/Dockerfile'
-  #     arguments: '--build-arg targetarch=${{ parameters.targetOS }}-${{ parameters.targetArch }}'
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'docker-mauwii'
+          repository: 'mauwii/devopsbuildagent'
+          command: 'build'
+          Dockerfile: 'src/devopsbuildagent/Dockerfile'
+          tags: '${{ variables.baseOS }}.${{ variables.baseDistro }}.${{ variables.baseVersion }}.${{ value.dockerdefaultplatformarch}}.${{ value.targetProc }}.$(Build.BuildId)'
+          arguments: '--build-arg targetarch=${{ value.targetOS }}-${{ value.targetProc }}'

@@ -28,10 +28,3 @@ steps:
       containerRegistry: 'docker-mauwii'
       command: 'login'
   - template: stages/jobs/steps/build_devopsbuildagent.yml
-  # - task: Docker@2
-  #   inputs:
-  #     containerRegistry: 'docker-mauwii'
-  #     repository: 'mauwii/devopsbuildagent'
-  #     command: 'build'
-  #     Dockerfile: 'src/devopsbuildagent/Dockerfile'
-  #     arguments: '--build-arg targetarch=$(targetOS)-$(targetproc)'

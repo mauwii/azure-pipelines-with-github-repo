@@ -1,12 +1,12 @@
-resources:
-  repositories:
-    - repository: DevOpsBuildAgent
-      endpoint: Mauwii
-      name: Mauwii/DevOpsBuildAgent
-      trigger:
-        branches:
-          include:
-            - main
+# resources:
+#   repositories:
+#     - repository: DevOpsBuildAgent
+#       endpoint: Mauwii
+#       name: Mauwii/DevOpsBuildAgent
+#       trigger:
+#         branches:
+#           include:
+#             - main
 
 variables:
   - name: baseOS

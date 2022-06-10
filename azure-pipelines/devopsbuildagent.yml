@@ -1,31 +1,36 @@
-strategy:
-  matrix:
-    amd64:
-      dockerdefaultplatformarch: 'amd64'
-      platformarch: 'x86_64'
-      targetproc: 'x64'
-    arm64:
-      dockerdefaultplatformarch: 'arm64'
-      platformarch: 'arm64'
-      targetproc: 'x64'
+parameters:
+  - name: matrix
+    type: object
+    default:
+        amd64:
+          dockerdefaultplatformarch: 'amd64'
+          platformarch: 'x86_64'
+          targetproc: 'x64'
+        arm64:
+          dockerdefaultplatformarch: 'arm64'
+          platformarch: 'arm64'
+          targetproc: 'x64'
 
 variables:
-  baseos: 'linux'
-  baseDistro: 'ubuntu'
-  baseVersion: '20.04'
-  dockerRegistry: 'docker.io'
-  dockerhubuser: 'mauwii'
-  dockerimage: 'devopsbuildagent'
+  - name: baseos
+    value: 'linux'
+  - name: baseDistro
+    value: 'ubuntu'
+  - name: baseVersion
+    value: '20.04'
+  - name: dockerRegistry
+    value: 'docker.io'
+  - name: dockerhubuser
+    value: 'mauwii'
+  - name: dockerimage
+    value: 'devopsbuildagent'
 
-resources:
-  repositories:
-    - repository: DevOpsBuildAgent
-      endpoint: Mauwii
-      name: Mauwii/DevOpsBuildAgent
-      trigger:
-        branches:
-          include:
-            - main
+strategy:
+  matrix:
+    ${{ parameters.matrix }}
 
 steps:
-  - bash: env
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'env'

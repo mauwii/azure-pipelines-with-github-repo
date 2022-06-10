@@ -12,7 +12,7 @@ parameters:
         targetProc: 'x64'
       - arm64:
         dockerdefaultplatformos: $(baseOS)
-        dockerdefaultplatformarch: 'arm64'
+        dockerdefaultplatformarch: 'arm64v8'
         baseDistro: $(baseDistro)
         baseVersion: $(baseVersion)
         platformarch: 'arm64'
@@ -36,4 +36,4 @@ steps:
           command: 'build'
           Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
           tags: '${{ leg.dockerdefaultplatformos }}.${{ leg.baseDistro }}.${{ leg.baseVersion }}.${{ leg.dockerdefaultplatformarch }}.${{ leg.targetProc }}'
-          arguments: '--build-arg platformarch="${{ leg.dockerdefaultplatformarch }}" --build-arg targetarch="${{ leg.targetOS }}-${{ leg.targetProc }}"'
+          arguments: '--build-arg "BASEARCH=${{ leg.dockerdefaultplatformarch }}" --build-arg "targetproc=${{ leg.targetProc }}"'

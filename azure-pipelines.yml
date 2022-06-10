@@ -33,6 +33,7 @@ parameters:
   - name: mkdocsDeploy
     displayName: Deploy MkDocs to GitHub-Pages
     type: boolean
+    default: true
   - name: bicepDir
     displayName: Directory containing Folders with Bicep Templates
     type: string
@@ -64,7 +65,9 @@ parameters:
       - 'local'
     default: 'Azure Pipelines'
   - name: cleanup
+    displayName: 'Run cleanup stage'
     type: boolean
+    default: true
 
 extends:
   template: azure-pipelines/stages/main.yml

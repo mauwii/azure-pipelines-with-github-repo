@@ -3,16 +3,3 @@ variables:
     value: dev
   - name: bicepParameter
     value: dev
-  - name: bicepDeploy
-    value: ${{ true }}
-  - name: mkdocsDeploy
-    value: ${{ true }}
-
-parameters:
-  - name: mkdocsDeploy
-    displayName: Deploy MkDocs to GitHub-Pages
-    type: boolean
-    default: true
-  - name: cleanup
-    type: boolean
-    default: true

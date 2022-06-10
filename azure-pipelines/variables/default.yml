@@ -21,24 +21,11 @@ variables:
     value: azure-mauwii
   - name: mkdocsSiteDir
     value: site
-  - name: mkdocsDeploy
-    value: ${{ false }}
   - name: bicepDir
     value: IaC/bicep/deploy
   - name: MaxConcurrency
     value: 1
-  - name: bicepDeploy
-    value: ${{ false }}
   # - name: vmImageName
   #   value: ubuntu-latest
   # - name: vmImage
   #   value: ${{ parameters.vmImage }}
-
-parameters:
-  - name: mkdocsDeploy
-    displayName: Deploy MkDocs to GitHub-Pages
-    type: boolean
-    default: false
-  - name: cleanup
-    type: boolean
-    default: false

@@ -22,39 +22,12 @@ variables:
   - name: dockerimage
     value: 'devopsbuildagent'
 
-parameters:
-  - name: matrix
-    type: object
-    default:
-      amd64:
-        dockerdefaultplatformos: $[ variables['baseOS'] ]
-        dockerdefaultplatformarch: 'amd64'
-        platformarch: 'x86_64'
-        targetOS: $[ variables['baseOS'] ]
-        targetproc: 'x64'
-      arm64:
-        dockerdefaultplatformos: $[ variables['baseOS'] ]
-        dockerdefaultplatformarch: 'arm64'
-        platformarch: 'arm64'
-        targetOS: $[ variables['baseOS'] ]
-        targetproc: 'x64'
-
 steps:
   - task: Docker@2
     inputs:
       containerRegistry: 'docker-mauwii'
       command: 'login'
-  - ${{ each value in parameters.matrix }}:
-      - task: Bash@3
-        inputs:
-          targetType: 'inline'
-          script: 'env'
-        env:
-          dockerdefaultplatformos: ${{ value.dockerdefaultplatformos }}
-          dockerdefaultplatformarch: ${{ value.dockerdefaultplatformarch }}
-          platformarch: ${{ value.platformarch }}
-          TARGETOS: ${{ value.targetOS }}
-          TARGETPROC: ${{ value.targetproc }}
+  - template: stages/jobs/steps/build_devopsbuildagent.yml
   # - task: Docker@2
   #   inputs:
   #     containerRegistry: 'docker-mauwii'

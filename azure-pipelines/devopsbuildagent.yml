@@ -27,34 +27,34 @@ parameters:
     type: object
     default:
       amd64:
-        dockerdefaultplatformos: $(baseOS)
+        dockerdefaultplatformos: $[ variables['baseOS'] ]
         dockerdefaultplatformarch: 'amd64'
         platformarch: 'x86_64'
-        targetOS: $(baseOS)
+        targetOS: $[ variables['baseOS'] ]
         targetproc: 'x64'
       arm64:
-        dockerdefaultplatformos: $(baseOS)
+        dockerdefaultplatformos: $[ variables['baseOS'] ]
         dockerdefaultplatformarch: 'arm64'
         platformarch: 'arm64'
-        targetOS: $(baseOS)
+        targetOS: $[ variables['baseOS'] ]
         targetproc: 'x64'
 
 steps:
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'docker-mauwii'
+      command: 'login'
   - ${{ each value in parameters.matrix }}:
       - task: Bash@3
         inputs:
           targetType: 'inline'
           script: 'env'
         env:
-          dockerdefaultplatformos: ${{ value.dockerdefaultplatformos }}
-          dockerdefaultplatformarch: ${{ value.dockerdefaultplatformarch }}
-          platformarch: ${{ value.platformarch }}
-          targetOS: ${{ value.targetOS }}
-          targetproc: ${{ value.targetproc }}
-  # - task: Docker@2
-  #   inputs:
-  #     containerRegistry: 'docker-mauwii'
-  #     command: 'login'
+          dockerdefaultplatformos: $[ value['dockerdefaultplatformos'] ]
+          dockerdefaultplatformarch: $[ value['dockerdefaultplatformarch'] ]
+          platformarch: $[ value['platformarch'] ]
+          targetOS: $[ value['targetOS'] ]
+          targetproc: $[ value['targetproc'] ]
   # - task: Docker@2
   #   inputs:
   #     containerRegistry: 'docker-mauwii'

@@ -26,16 +26,16 @@ jobs:
     strategy:
       matrix:
         amd64:
-          dockerdefaultplatformos: ${{ variables.baseOS }}
+          dockerdefaultplatformos: $(variables.baseOS)
           dockerdefaultplatformarch: 'amd64'
           platformarch: 'x86_64'
-          targetOS: ${{ variables.baseOS }}
+          targetOS: $(variables.baseOS)
           targetproc: 'x64'
         arm64:
-          dockerdefaultplatformos: ${{ variables.baseOS }}
+          dockerdefaultplatformos: $(variables.baseOS)
           dockerdefaultplatformarch: 'arm64'
           platformarch: 'arm64'
-          targetOS: ${{ variables.baseOS }}
+          targetOS: $(variables.baseOS)
           targetproc: 'x64'
     steps:
       - bash: 'env'

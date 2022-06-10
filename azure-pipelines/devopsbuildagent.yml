@@ -23,6 +23,9 @@ variables:
     value: 'devopsbuildagent'
 
 steps:
+  - template: stages/jobs/steps/checkout_submodules.yml
+    parameters:
+      submodule: src/devopsbuildagent
   - task: Docker@2
     inputs:
       containerRegistry: 'docker-mauwii'

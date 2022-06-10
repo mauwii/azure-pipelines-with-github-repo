@@ -5,12 +5,16 @@ parameters:
       - amd64:
         dockerdefaultplatformos: $(baseOS)
         dockerdefaultplatformarch: 'amd64'
+        baseDistro: $(baseDistro)
+        baseVersion: $(baseVersion)
         platformarch: 'x86_64'
         targetOS: $(baseOS)
         targetProc: 'x64'
       - arm64:
         dockerdefaultplatformos: $(baseOS)
         dockerdefaultplatformarch: 'arm64'
+        baseDistro: $(baseDistro)
+        baseVersion: $(baseVersion)
         platformarch: 'arm64'
         targetOS: $(baseOS)
         targetProc: 'x64'
@@ -34,5 +38,5 @@ steps:
           repository: 'mauwii/devopsbuildagent'
           command: 'build'
           Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
-          tags: '${{ variables.baseOS }}.${{ variables.baseDistro }}.${{ variables.baseVersion }}.${{ value.dockerdefaultplatformarch}}.${{ value.targetProc }}.$(Build.BuildId)'
+          tags: '${{ value.dockerdefaultplatformos }}.${{ value.baseDistro }}.${{ value.baseVersion }}.${{ value.dockerdefaultplatformarch }}.${{ value.targetProc }}'
           arguments: '--build-arg targetarch=${{ value.targetOS }}-${{ value.targetProc }}'

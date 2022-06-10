@@ -22,5 +22,3 @@ stages:
       resourceGroupName: '${{ variables.resourceGroupName }}'
       azureSubscription: '${{ variables.azureSubscription }}'
       location: '${{ variables.location }}'
-
-  - template: cleanup.yml

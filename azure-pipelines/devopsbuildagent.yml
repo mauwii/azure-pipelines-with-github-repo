@@ -27,6 +27,7 @@ steps:
     parameters:
       submodule: src/DevOpsBuildAgent
   - task: Docker@2
+    displayName: dockerhub login
     inputs:
       containerRegistry: 'docker-mauwii'
       command: 'login'

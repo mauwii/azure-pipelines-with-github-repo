@@ -25,16 +25,16 @@ jobs:
     strategy:
       matrix:
         amd64:
-          dockerdefaultplatformos: '$(baseOS)'
+          dockerdefaultplatformos: 'linux'
           dockerdefaultplatformarch: 'amd64'
           platformarch: 'x86_64'
-          targetOS: '$(baseOS)'
+          targetOS: 'linux'
           targetproc: 'x64'
         arm64:
-          dockerdefaultplatformos: '$(baseOS)'
+          dockerdefaultplatformos: 'linux'
           dockerdefaultplatformarch: 'arm64'
           platformarch: 'arm64'
-          targetOS: '$(baseOS)'
+          targetOS: 'linux'
           targetproc: 'x64'
     steps:
       - task: Bash@3

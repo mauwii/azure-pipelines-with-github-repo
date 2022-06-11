@@ -1,13 +1,3 @@
-# resources:
-#   repositories:
-#     - repository: DevOpsBuildAgent
-#       endpoint: Mauwii
-#       name: Mauwii/DevOpsBuildAgent
-#       trigger:
-#         branches:
-#           include:
-#             - main
-
 trigger:
   branches:
     include:
@@ -19,6 +9,18 @@ trigger:
     include:
       - azure-pipelines/devopsbuildagent.yml
       - src/DevOpsBuildAgent
+
+pr: none
+
+# resources:
+#   repositories:
+#     - repository: DevOpsBuildAgent
+#       endpoint: Mauwii
+#       name: Mauwii/DevOpsBuildAgent
+#       trigger:
+#         branches:
+#           include:
+#             - main
 
 variables:
   - name: baseOS

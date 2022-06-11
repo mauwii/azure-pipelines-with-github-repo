@@ -14,10 +14,10 @@ stages:
     jobs:
       - job:
         steps:
-          - task: Bash@3
+          - task: AzureCLI@2
             inputs:
-              targetType: 'inline'
-              script: |
-                # Write your commands here
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: 'az resource list'
+              azureSubscription: azure-mauwii
 
-                echo 'Hello world'

@@ -10,7 +10,7 @@ parameters:
         platformarch: 'x86_64'
         targetOS: $(baseOS)
         targetProc: 'x64'
-      - arm64:
+      - arm64v8:
         dockerdefaultplatformos: $(baseOS)
         dockerdefaultplatformarch: 'arm64v8'
         baseDistro: $(baseDistro)
@@ -21,19 +21,21 @@ parameters:
 
 steps:
   - ${{ each leg in parameters.matrix }}:
+      - bash: 'export tag="${{ leg.dockerdefaultplatformos }}.${{ leg.baseDistro }}.${{ leg.baseVersion }}.${{ leg.dockerdefaultplatformarch }}.${{ leg.targetProc }}"'
+        displayName: 'create Tag'
       - bash: 'export'
         displayName: '${{ leg.dockerdefaultplatformarch }} export'
         env:
           ${{ each variable in leg }}:
             ${{ variable.key }}: ${{ variable.value }}
-      - script: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
-        displayName: 'qemu for ${{ leg.dockerdefaultplatformarch }}'
-      - task: Docker@2
-        displayName: 'build ${{ leg.dockerdefaultplatformarch }}'
-        inputs:
-          containerRegistry: 'docker-mauwii'
-          repository: 'mauwii/devopsbuildagent'
-          command: 'build'
-          Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
-          tags: '${{ leg.dockerdefaultplatformos }}.${{ leg.baseDistro }}.${{ leg.baseVersion }}.${{ leg.dockerdefaultplatformarch }}.${{ leg.targetProc }}'
-          arguments: '--build-arg "BASEARCH=${{ leg.dockerdefaultplatformarch }}" --build-arg "targetproc=${{ leg.targetProc }}"'
+      # - script: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
+      #   displayName: 'qemu for ${{ leg.key }}'
+      # - task: Docker@2
+      #   displayName: 'build ${{ leg.key }}'
+      #   inputs:
+      #     containerRegistry: 'docker-mauwii'
+      #     repository: 'mauwii/devopsbuildagent'
+      #     command: 'build'
+      #     Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
+      #     tags: '${{ leg.dockerdefaultplatformos }}.${{ leg.baseDistro }}.${{ leg.baseVersion }}.${{ leg.dockerdefaultplatformarch }}.${{ leg.targetProc }}'
+      #     arguments: '--build-arg "BASEARCH=${{ leg.key }}" --build-arg "targetproc=${{ leg.targetProc }}"'

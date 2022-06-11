@@ -22,82 +22,84 @@ variables:
   - name: dockerimage
     value: 'devopsbuildagent'
 
-jobs:
-  - job:
+stages:
+  - stage: build
+    jobs:
+      - job:
+        strategy:
+          matrix:
+            amd64:
+              baseOS: 'linux'
+              baseDistro: 'ubuntu'
+              baseVersion: '20.04'
+              baseArch: 'amd64'
+              targetProc: 'x64'
+            arm64v8:
+              baseOS: 'linux'
+              baseDistro: 'ubuntu'
+              baseVersion: '20.04'
+              baseArch: 'arm64v8'
+              targetProc: 'arm64'
+            # arm32v7:
+            #   baseOS: 'linux'
+            #   baseDistro: 'ubuntu'
+            #   baseVersion: '20.04'
+            #   baseArch: 'arm32v7'
+            #   targetProc: 'arm'
+          maxParallel: 2
+        steps:
+          - template: stages/jobs/steps/checkout_submodules.yml
+            parameters:
+              submodule: src/DevOpsBuildAgent
+          - task: Docker@2
+            displayName: docker login
+            inputs:
+              containerRegistry: 'docker-mauwii'
+              command: 'login'
+          - bash: 'echo "##vso[task.setvariable variable=TAG]$(baseOS).$(baseDistro).$(baseVersion).$(baseArch).dev"'
+            displayName: 'set $(baseArch) tag'
+          - script: 'docker pull $(dockerhubuser)/$(dockerimage):$(TAG)'
+            displayName: pull image
+          - script: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
+            displayName: 'qemu for $(baseArch)'
+          - task: Docker@2
+            displayName: 'build $(baseArch)'
+            inputs:
+              containerRegistry: 'docker-mauwii'
+              repository: 'mauwii/devopsbuildagent'
+              command: 'build'
+              Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
+              tags: '$(TAG)'
+              arguments: '--build-arg "BASEARCH=$(baseArch)" --build-arg "targetproc=$(targetProc)"'
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'docker-mauwii'
+              repository: 'mauwii/devopsbuildagent'
+              command: 'push'
+              tags: '$(TAG)'
 
-    strategy:
-      matrix:
-        amd64:
-          baseOS: 'linux'
-          baseDistro: 'ubuntu'
-          baseVersion: '20.04'
-          baseArch: 'amd64'
-          targetProc: 'x64'
-        arm64v8:
-          baseOS: 'linux'
-          baseDistro: 'ubuntu'
-          baseVersion: '20.04'
-          baseArch: 'arm64v8'
-          targetProc: 'arm64'
-        # arm32v7:
-        #   baseOS: 'linux'
-        #   baseDistro: 'ubuntu'
-        #   baseVersion: '20.04'
-        #   baseArch: 'arm32v7'
-        #   targetProc: 'arm'
-      maxParallel: 2
-    steps:
-      - template: stages/jobs/steps/checkout_submodules.yml
-        parameters:
-          submodule: src/DevOpsBuildAgent
-      - task: Docker@2
-        displayName: docker login
-        inputs:
-          containerRegistry: 'docker-mauwii'
-          command: 'login'
-      - bash: 'echo "##vso[task.setvariable variable=TAG]$(baseOS).$(baseDistro).$(baseVersion).$(baseArch).dev"'
-        displayName: 'set $(baseArch) tag'
-      - script: 'docker pull $(dockerhubuser)/$(dockerimage):$(TAG)'
-        displayName: pull image
-      - script: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
-        displayName: 'qemu for $(baseArch)'
-      - task: Docker@2
-        displayName: 'build $(baseArch)'
-        inputs:
-          containerRegistry: 'docker-mauwii'
-          repository: 'mauwii/devopsbuildagent'
-          command: 'build'
-          Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
-          tags: '$(TAG)'
-          arguments: '--build-arg "BASEARCH=$(baseArch)" --build-arg "targetproc=$(targetProc)"'
-      - task: Docker@2
-        inputs:
-          containerRegistry: 'docker-mauwii'
-          repository: 'mauwii/devopsbuildagent'
-          command: 'push'
-          tags: '$(TAG)'
-  - job: manifest
-    dependsOn:
-      amd64
-      arm64v8
-    condition: succeeded()
-    displayName: pushManifest
-    steps:
-      - task: Docker@2
-        displayName: docker login
-        inputs:
-          containerRegistry: 'docker-mauwii'
-          command: 'login'
-      - script: |
-          docker manifest create $(dockerhubuser)/$(dockerimage):dev \
-          $(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.amd64.dev \
-            $(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.arm64v8.dev
-          docker manifest annotate \
-            $(dockerhubuser)/$(dockerimage):dev \
-            $(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.amd64.dev \
-            --os linux --arch amd64
-          docker manifest annotate \
-            $(dockerhubuser)/$(dockerimage):dev \
-            $(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.arm64v8.dev \
-            --os linux --arch arm64 --variant v8
-          docker manifest push --purge $(dockerhubuser)/$(dockerimage):
+  - stage: manifest
+    dependsOn: build
+    jobs:
+      - job:
+        condition: succeeded()
+        displayName: pushManifest
+        steps:
+          - task: Docker@2
+            displayName: docker login
+            inputs:
+              containerRegistry: 'docker-mauwii'
+              command: 'login'
+          - script: |
+              docker manifest create $(dockerhubuser)/$(dockerimage):dev \
+              $(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.amd64.dev \
+                $(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.arm64v8.dev
+              docker manifest annotate \
+                $(dockerhubuser)/$(dockerimage):dev \
+                $(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.amd64.dev \
+                --os linux --arch amd64
+              docker manifest annotate \
+                $(dockerhubuser)/$(dockerimage):dev \
+                $(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.arm64v8.dev \
+                --os linux --arch arm64 --variant v8
+              docker manifest push --purge $(dockerhubuser)/$(dockerimage):

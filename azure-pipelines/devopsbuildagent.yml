@@ -38,23 +38,23 @@ jobs:
           baseVersion: '20.04'
           baseArch: 'arm64v8'
           targetProc: 'arm64'
-        arm32v7:
-          baseOS: 'linux'
-          baseDistro: 'ubuntu'
-          baseVersion: '20.04'
-          baseArch: 'arm32v7'
-          targetProc: 'arm'
-      maxParallel: 3
+        # arm32v7:
+        #   baseOS: 'linux'
+        #   baseDistro: 'ubuntu'
+        #   baseVersion: '20.04'
+        #   baseArch: 'arm32v7'
+        #   targetProc: 'arm'
+      maxParallel: 2
     steps:
       - template: stages/jobs/steps/checkout_submodules.yml
         parameters:
           submodule: src/DevOpsBuildAgent
       - task: Docker@2
-        displayName: dockerhub login
+        displayName: docker login
         inputs:
           containerRegistry: 'docker-mauwii'
           command: 'login'
-      - bash: 'echo "##vso[task.setvariable variable=TAG]$(baseOS).$(baseDistro).$(baseVersion).$(baseArch).$(targetProc).dev"'
+      - bash: 'echo "##vso[task.setvariable variable=TAG]$(baseOS).$(baseDistro).$(baseVersion).$(baseArch).dev"'
         displayName: 'set $(baseArch) tag'
       - script: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
         displayName: 'qemu for $(baseArch)'
@@ -73,3 +73,24 @@ jobs:
           repository: 'mauwii/devopsbuildagent'
           command: 'push'
           tags: '$(TAG)'
+  - job: manifest
+    displayName: pushManifest
+    steps:
+      - task: Docker@2
+        displayName: docker login
+        inputs:
+          containerRegistry: 'docker-mauwii'
+          command: 'login'
+      - script: |
+          docker manifest create $(dockerhubuser)/$(dockerimage):dev \
+          $(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.amd64.dev \
+            $(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.arm64v8.dev
+          docker manifest annotate \
+            $(dockerhubuser)/$(dockerimage):dev \
+            $(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.amd64.dev \
+            --os linux --arch amd64
+          docker manifest annotate \
+            $(dockerhubuser)/$(dockerimage):dev \
+            $(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.arm64v8.dev \
+            --os linux --arch arm64 --variant v8
+          docker manifest push --purge $(dockerhubuser)/$(dockerimage):

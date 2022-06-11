@@ -46,7 +46,7 @@ jobs:
           targetProc: 'arm'
       maxParallel: 3
     steps:
-      - template: steps/checkout_submodules.yml
+      - template: stages/jobs/steps/checkout_submodules.yml
         parameters:
           submodule: src/DevOpsBuildAgent
       - task: Docker@2

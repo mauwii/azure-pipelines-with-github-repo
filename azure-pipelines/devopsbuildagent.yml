@@ -1,12 +1,12 @@
-# resources:
-#   repositories:
-#     - repository: DevOpsBuildAgent
-#       endpoint: Mauwii
-#       name: Mauwii/DevOpsBuildAgent
-#       trigger:
-#         branches:
-#           include:
-#             - main
+resources:
+  repositories:
+    - repository: DevOpsBuildAgent
+      endpoint: Mauwii
+      name: Mauwii/DevOpsBuildAgent
+      trigger:
+        branches:
+          include:
+            - main
 
 variables:
   - name: baseOS
@@ -22,13 +22,24 @@ variables:
   - name: dockerimage
     value: 'devopsbuildagent'
 
-steps:
-  - template: stages/jobs/steps/checkout_submodules.yml
+jobs:
+  - template: stages/jobs/build_devopsbuildagent.yml
     parameters:
-      submodule: src/DevOpsBuildAgent
-  - task: Docker@2
-    displayName: dockerhub login
-    inputs:
-      containerRegistry: 'docker-mauwii'
-      command: 'login'
-  - template: stages/jobs/steps/build_devopsbuildagent.yml
+      amd64:
+        baseOS: 'linux'
+        baseDistro: 'ubuntu'
+        baseVersion: '20.04'
+        baseArch: 'amd64'
+        targetProc: 'x64'
+      arm64v8:
+        baseOS: 'linux'
+        baseDistro: 'ubuntu'
+        baseVersion: '20.04'
+        baseArch: 'arm64v8'
+        targetProc: 'arm64'
+      arm32v7:
+        baseOS: 'linux'
+        baseDistro: 'ubuntu'
+        baseVersion: '20.04'
+        baseArch: 'arm32v7'
+        targetProc: 'arm'

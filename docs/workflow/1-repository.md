@@ -28,7 +28,7 @@ For bigger problems, like f.E. a zero-day, create a branch from stable and name 
 
 ``` mermaid
 graph LR
-  featureBranch[feature/*<br>issue/*] --> main;
+  featureBranch[feature/*<br>issue/*<br>update/*] --> main;
   main -.-> featureBranch;
   main --> stable;
   stable -.-> hotfix;
@@ -41,7 +41,7 @@ graph LR
 
 ``` mermaid
 graph LR
-  featureBranch[feature/*<br>issue/*] -- Pull Request ---> main;
+  featureBranch[feature/*<br>issue/*<br>update/*] -- Pull Request ---> main;
   code[\update<br>Code/] -- Commit Changes --> featureBranch;
   main -. create branch .-> featureBranch;
   main -- Trigger Build --> CheckFeature{Built<br>successful};
@@ -58,10 +58,11 @@ graph LR
 graph LR
   main -- Pull Request ---> stable;
   stable -- Trigger<br>Build --> validateBuild{Built<br>succesfull};
-  stable -. create branch .-> hotfix;
   validateBuild -- Yes --> completePr[/merge PR/];
+  validateBuild -- No --> createHotfix;
   completePr --> deployStable[/Deploy to<br>production/];
-  validateBuild -- No --> hotfix;
+  stable -. create branch .-> createHotfix[create Hotfix];
+  createHotfix -- fix bugs --> hotfix
   hotfix -- Pull Request--> main & stable;
 ```
 

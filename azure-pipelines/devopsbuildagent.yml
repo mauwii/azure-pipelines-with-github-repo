@@ -74,9 +74,6 @@ jobs:
           command: 'push'
           tags: '$(TAG)'
   - job: manifest
-    dependsOn:
-      - amd64
-      - arm64v8
     condition: succeeded()
     displayName: pushManifest
     steps:

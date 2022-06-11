@@ -24,6 +24,7 @@ variables:
 
 jobs:
   - job:
+
     strategy:
       matrix:
         amd64:
@@ -56,6 +57,8 @@ jobs:
           command: 'login'
       - bash: 'echo "##vso[task.setvariable variable=TAG]$(baseOS).$(baseDistro).$(baseVersion).$(baseArch).dev"'
         displayName: 'set $(baseArch) tag'
+      - script: 'docker pull $(dockerhubuser)/$(dockerimage):$(TAG)'
+        displayName: pull image
       - script: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
         displayName: 'qemu for $(baseArch)'
       - task: Docker@2
@@ -74,6 +77,9 @@ jobs:
           command: 'push'
           tags: '$(TAG)'
   - job: manifest
+    dependsOn:
+      amd64
+      arm64v8
     condition: succeeded()
     displayName: pushManifest
     steps:

@@ -31,7 +31,7 @@
   },
   // Settings related to Markdown
   "[markdown]": {
-    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
   },
   "markdown.extension.syntax.plainTheme": true,
   "markdown.extension.completion.root": "${workspaceFolder}",

@@ -17,7 +17,7 @@ parameters:
         baseVersion: $(baseVersion)
         platformarch: 'arm64'
         targetOS: $(baseOS)
-        targetProc: 'x64'
+        targetProc: 'arm64'
 
 steps:
   - ${{ each leg in parameters.matrix }}:

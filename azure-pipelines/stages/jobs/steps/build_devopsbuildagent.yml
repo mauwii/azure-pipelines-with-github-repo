@@ -30,7 +30,6 @@ steps:
         env:
           ${{ each variable in leg }}:
             ${{ variable.key }}: ${{ variable.value }}
-      - script: 'docker pull ${{variable}}'
       - script: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
         displayName: 'qemu for ${{ leg.key }}'
       - task: Docker@2

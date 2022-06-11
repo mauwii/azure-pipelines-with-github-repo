@@ -8,6 +8,18 @@
 #           include:
 #             - main
 
+trigger:
+  branches:
+    include:
+      - refs/heads/main
+      - update/*
+      - feature/*
+      - issue/*
+  paths:
+    include:
+      - azure-pipelines/devopsbuildagent.yml
+      - src/DevOpsBuildAgent
+
 variables:
   - name: baseOS
     value: 'linux'
@@ -78,7 +90,6 @@ stages:
               repository: 'mauwii/devopsbuildagent'
               command: 'push'
               tags: '$(TAG)'
-
   - stage: manifest
     dependsOn: build
     jobs:

@@ -70,7 +70,7 @@ stages:
             inputs:
               containerRegistry: 'docker-mauwii'
               command: 'login'
-          - bash: 'echo "##vso[task.setvariable variable=TAG]$(baseOS).$(baseDistro).$(baseVersion).$(baseArch)${DEVTAG:+.$DEVTAG}"'
+          - bash: 'echo "##vso[task.setvariable variable=TAG]$(baseOS).$(baseDistro).$(baseVersion).$(baseArch).${DEVTAG:-$(Build.BuildId)}"'
             displayName: 'set $(baseArch) tag'
             ${{ if not(in(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
               env:
@@ -105,9 +105,9 @@ stages:
               containerRegistry: 'docker-mauwii'
               command: 'login'
           - bash: |
-              docker manifest create "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.amd64${DEVTAG:+.$DEVTAG}" "$(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.arm64v8${DEVTAG:+.$DEVTAG}"
-              docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.amd64${DEVTAG:+.$DEVTAG}" --os linux --arch amd64
-              docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.arm64v8${DEVTAG:+.$DEVTAG}" --os linux --arch arm64 --variant v8
+              docker manifest create "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.amd64.${DEVTAG:-$(Build.BuildId)}" "$(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.arm64v8.${DEVTAG:-$(Build.BuildId)}"
+              docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.amd64.${DEVTAG:-$(Build.BuildId)}" --os linux --arch amd64
+              docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):linux.ubuntu.20.04.arm64v8.${DEVTAG:-$(Build.BuildId)}" --os linux --arch arm64 --variant v8
               docker manifest push --purge "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}"
             ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
               env:

@@ -26,4 +26,12 @@ stages:
               scriptLocation: inlineScript
               inlineScript: 'az resource list'
               azureSubscription: azure-mauwii
+          - task: AzurePowerShell@5
+            inputs:
+              azureSubscription: 'azure-mauwii'
+              ScriptType: 'InlineScript'
+              Inline: 'Get-AzContext'
+              errorActionPreference: 'continue'
+              azurePowerShellVersion: 'LatestVersion'
+
 

@@ -85,7 +85,9 @@ stages:
                 DEVTAG: 'dev'
           - ${{ each value in parameters.matrix }}:
               - bash: |
-                  docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "${ARCHPARAMETERS_${{ value.key }}}" --os $(baseOS) --arch ${{ value.key }}
+                  ARCHKEY={{ value.key }}
+                  ARCHKEY=${ARCHKEY^^}
+                  docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "${ARCHPARAMETERS_${ARCHKEY}}" --os $(baseOS) --arch ${{ value.key }}
                 ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
                   env:
                     DEVTAG: 'dev'

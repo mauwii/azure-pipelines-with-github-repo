@@ -8,6 +8,7 @@ trigger:
   paths:
     include:
       - azure-pipelines/devopsbuildagent.yml
+      - azure-pipelines/stages/jobs/build_devopsbuildagent_job.yml
       - src/DevOpsBuildAgent
 
 pr: none

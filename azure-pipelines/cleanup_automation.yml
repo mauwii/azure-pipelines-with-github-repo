@@ -1,0 +1,18 @@
+parameters:
+  - name: mngmtgrps
+    displayName: Management Groups
+    type: object
+    default:
+      - mngmtgrp001
+      - mngmtgrp002
+
+steps:
+  - ${{ each mngmtgrp in mngmtgrp }}:
+      - task: AzurePowerShell@5
+        inputs:
+          azurePowerShellVersion: LatestVersion
+          azureSubscription: ${{ mngmtgrp.key }}
+          pwsh: true
+          ScriptType: InlineScript
+          Inline: |
+            Get-AzResourceGroup

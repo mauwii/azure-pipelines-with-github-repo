@@ -33,21 +33,12 @@ stages:
         strategy:
           matrix:
             amd64:
-              baseOS: 'linux'
-              baseDistro: 'ubuntu'
-              baseVersion: '20.04'
               baseArch: 'amd64'
               targetProc: 'x64'
             arm64v8:
-              baseOS: 'linux'
-              baseDistro: 'ubuntu'
-              baseVersion: '20.04'
               baseArch: 'arm64v8'
               targetProc: 'arm64'
             # arm32v7:
-            #   baseOS: 'linux'
-            #   baseDistro: 'ubuntu'
-            #   baseVersion: '20.04'
             #   baseArch: 'arm32v7'
             #   targetProc: 'arm'
           maxParallel: 2

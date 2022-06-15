@@ -85,11 +85,9 @@ stages:
                 DEVTAG: 'dev'
           - ${{ each value in parameters.matrix }}:
               - bash: |
-                  ARCHKEY=${{ value.key }}
-                  ARCHKEY=${ARCHKEY^^}
-                  docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "${ARCHPARAMETERS_$ARCHKEY}" --os $(baseOS) --arch ${{ value.key }}
-                env:
-                  ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+                  docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.key }}.${DEVTAG:-$(Build.BuildId)}" --os $(baseOS) --arch ${{ value.key }}
+                ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+                  env:
                     DEVTAG: 'dev'
           # - bash: |
           #     docker manifest push --purge "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}"

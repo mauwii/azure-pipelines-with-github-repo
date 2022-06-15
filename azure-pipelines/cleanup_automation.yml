@@ -7,7 +7,7 @@ parameters:
       - mngmtgrp002
 
 steps:
-  - ${{ each mngmtgrp in mngmtgrps }}:
+  - ${{ each mngmtgrp in parameters.mngmtgrps }}:
       - task: AzurePowerShell@5
         inputs:
           azurePowerShellVersion: LatestVersion

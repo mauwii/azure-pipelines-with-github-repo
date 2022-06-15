@@ -53,7 +53,7 @@ stages:
   - stage: manifest
     dependsOn: build
     jobs:
-      - template: stages/jobs/pushManifest__job.yml
+      - template: stages/jobs/pushManifest_job.yml
         parameters:
           matrix: ${{ parameters.matrix }}
           maxParallelJobs: ${{ parameters.maxParallelJobs }}

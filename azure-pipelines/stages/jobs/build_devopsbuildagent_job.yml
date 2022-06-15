@@ -1,12 +1,13 @@
 parameters:
   - name: matrix
     type: object
-
+  - name: maxParallelJobs
+    type: number
 jobs:
   - job:
     strategy:
       matrix: ${{ parameters.matrix }}
-      maxParallel: 2
+      maxParallel: ${{ parameters.maxParallelJobs }}
     steps:
       - template: steps/checkout_submodules.yml
         parameters:

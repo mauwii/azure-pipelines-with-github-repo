@@ -37,6 +37,9 @@ parameters:
       arm64v8:
         baseArch: 'arm64v8'
         targetProc: 'arm64'
+  - name: maxParallelJobs
+    type: number
+    default: 2
 
 stages:
   - stage: build
@@ -44,6 +47,7 @@ stages:
       - template: stages/jobs/build_devopsbuildagent_job.yml
         parameters:
           matrix: ${{ parameters.matrix }}
+          maxParallelJobs: ${{ parameters.maxParallelJobs }}
   - stage: manifest
     dependsOn: build
     jobs:

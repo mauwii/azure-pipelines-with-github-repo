@@ -85,9 +85,10 @@ stages:
                 DEVTAG: 'dev'
           - ${{ each value in parameters.matrix }}:
               - bash: |
-                  docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.key }}.${DEVTAG:-$(Build.BuildId)}" --os $(baseOS) --arch ${{ value.key }}
-                ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
-                  env:
+                  docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.key }}.${DEVTAG:-$(Build.BuildId)}" --os $(baseOS) --arch ${{ value.key }}${variant:+ --variant $variant}
+                env:
+                  variant: $(value.variant)
+                  ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
                     DEVTAG: 'dev'
           # - bash: |
           #     docker manifest push --purge "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}"

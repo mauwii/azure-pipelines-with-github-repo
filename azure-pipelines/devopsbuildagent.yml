@@ -65,7 +65,7 @@ stages:
           - ${{ each arch in parameters.matrix }}:
               - bash: |
                   export archParameters+="$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ arch.baseArch }}.${DEVTAG:-$(Build.BuildId)}"
-                displayName: 'add ${{ arch }}'
+                displayName: 'add ${{ arch.baseArch }}'
                 ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
                   env:
                     DEVTAG: 'dev'

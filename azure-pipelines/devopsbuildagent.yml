@@ -37,6 +37,7 @@ parameters:
       arm64v8:
         baseArch: 'arm64v8'
         targetProc: 'arm64'
+        variant: 'v8'
   - name: maxParallelJobs
     type: number
     default: 2
@@ -84,7 +85,7 @@ stages:
                 DEVTAG: 'dev'
           - ${{ each value in parameters.matrix }}:
               - bash: |
-                  variant={{ value['variant.value'] }}
+                  variant={{ value.variant }}
                   docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "${ARCHPARAMETERS_${{ value.key }}}" --os $(baseOS) --arch ${{ value.key }} ${variant:+--variant $variant}
                 ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
                   env:

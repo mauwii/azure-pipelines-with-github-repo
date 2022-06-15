@@ -73,3 +73,13 @@ The Deployment will only run if parameter `mkdocsDeploy` is `true`
     ``` yaml title="azure-pipelines/jobs/mkdocs-material.yml" linenums="1"
     --8<-- "azure-pipelines/stages/jobs/mkdocs-material.yml"
     ```
+
+### devopsbuildagent.yml
+
+This Pipeline will build a dockerized DevOps-Agent, if you want to find out more about it's features, look [here](https://github.com/Mauwii/DevOpsBuildAgent/blob/main/README.md)
+
+??? quote "YAML"
+
+    ```yaml title="azure-pipelines/devopsbuildagent.yml"
+    --8<-- "azure-pipelines/devopsbuildagent.yml"
+    ```

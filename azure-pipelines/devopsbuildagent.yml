@@ -60,19 +60,17 @@ stages:
             inputs:
               containerRegistry: 'docker-mauwii'
               command: 'login'
-          - bash: 'export archParameters=()'
-            displayName: create archParameters variable
           - ${{ each arch in parameters.matrix }}:
               - bash: |
-                  export archParameters+="$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ arch.baseArch }}.${DEVTAG:-$(Build.BuildId)}"
-                displayName: 'add ${{ arch.baseArch }}'
+                  export archParameters=(${archParameters:+"$archParameters" }"$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ arch['baseArch.value'] }}.${DEVTAG:-$(Build.BuildId)}")
                 ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
                   env:
                     DEVTAG: 'dev'
+                displayName: add ${{ arch['basearch.value'] }}
           - bash: 'echo "${archParameters[@]}"'
             displayName: 'debug echo'
-          - bash: 'export'
-            displayName: 'debug export'
+          - bash: 'env'
+            displayName: 'debug env'
           # - bash: |
           #     docker manifest create "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).amd64.${DEVTAG:-$(Build.BuildId)}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).arm64v8.${DEVTAG:-$(Build.BuildId)}"
           #     docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).amd64.${DEVTAG:-$(Build.BuildId)}" --os linux --arch amd64

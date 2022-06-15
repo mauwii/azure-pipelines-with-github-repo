@@ -34,7 +34,7 @@ parameters:
       amd64:
         baseArch: 'amd64'
         targetProc: 'x64'
-      arm64:
+      arm64v8:
         baseArch: 'arm64v8'
         targetProc: 'arm64'
         variant: 'v8'
@@ -63,14 +63,14 @@ stages:
               command: 'login'
           - ${{ each value in parameters.matrix }}:
               - bash: |
-                  export ARCHPARAMETERS_${{ value.baseArch.value }}="$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.baseArch.value }}.${DEVTAG:-$(Build.BuildId)}"
-                  echo "##vso[task.setvariable variable=ARCHPARAMETERS_${{ value.baseArch.value }}]$ARCHPARAMETERS_${{ value.baseArch.value }}"
-                  export ARCHPARAMETERS="${ARCHPARAMETERS:+$ARCHPARAMETERS--}${ARCHPARAMETERS_${{ value.baseArch.value }}}"
+                  export ARCHPARAMETERS_${{ value.key }}="$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.key }}.${DEVTAG:-$(Build.BuildId)}"
+                  echo "##vso[task.setvariable variable=ARCHPARAMETERS_${{ value.key }}]$ARCHPARAMETERS_${{ value.key }}"
+                  export ARCHPARAMETERS="${ARCHPARAMETERS:+$ARCHPARAMETERS--}${ARCHPARAMETERS_${{ value.key }}}"
                   echo "##vso[task.setvariable variable=ARCHPARAMETERS]$ARCHPARAMETERS"
                 ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
                   env:
                     DEVTAG: 'dev'
-                displayName: 'add ${{ value.baseArch.value }}'
+                displayName: 'add ${{ value.key }}'
           - bash: |
               MANIFESTS=(${ARCHPARAMETERS/--/ })
               echo "${MANIFESTS[@]}"
@@ -85,10 +85,9 @@ stages:
                 DEVTAG: 'dev'
           - ${{ each value in parameters.matrix }}:
               - bash: |
-                  docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.baseArch.value }}.${DEVTAG:-$(Build.BuildId)}" --os $(baseOS) --arch ${{ value.key }}${variant:+ --variant $variant}
-                env:
-                  variant: ${{ value.variant }}
-                  ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+                  docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.key }}.${DEVTAG:-$(Build.BuildId)}"
+                ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+                  env:
                     DEVTAG: 'dev'
           # - bash: |
           #     docker manifest push --purge "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}"

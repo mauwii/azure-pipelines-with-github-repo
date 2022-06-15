@@ -69,7 +69,7 @@ stages:
                     DEVTAG: 'dev'
                 displayName: 'add ${{ value.key }}'
           - bash: |
-              echo "$ARCHPARAMETERS_*"
+              echo "$ARCHPARAMETERS*"
             displayName: 'debug echo'
           - bash: 'env'
             displayName: 'debug env'

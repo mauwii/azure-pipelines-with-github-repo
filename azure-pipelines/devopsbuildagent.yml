@@ -76,6 +76,24 @@ stages:
             displayName: 'debug echo'
           - bash: 'env'
             displayName: 'debug env'
+          - bash: |
+              MANIFESTS=(${ARCHPARAMETERS/--/ })
+              docker manifest create "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "${MANIFESTS[@]}"
+            ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+              env:
+                DEVTAG: 'dev'
+          - ${{ each value in parameters.matrix }}:
+              - bash: |
+                  variant={{ value['variant.value'] }}
+                  docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "${ARCHPARAMETERS_${{ value.key }}}" --os $(baseOS) --arch ${{ value.key }} ${variant:+--variant $variant}
+                ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+                  env:
+                    DEVTAG: 'dev'
+          # - bash: |
+          #     docker manifest push --purge "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}"
+          #   ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+          #     env:
+          #       DEVTAG: 'dev'
           # - bash: |
           #     docker manifest create "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).amd64.${DEVTAG:-$(Build.BuildId)}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).arm64v8.${DEVTAG:-$(Build.BuildId)}"
           #     docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).amd64.${DEVTAG:-$(Build.BuildId)}" --os linux --arch amd64

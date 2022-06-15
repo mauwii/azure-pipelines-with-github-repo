@@ -34,7 +34,7 @@ parameters:
       amd64:
         baseArch: 'amd64'
         targetProc: 'x64'
-      arm64v8:
+      arm64:
         baseArch: 'arm64v8'
         targetProc: 'arm64'
         variant: 'v8'
@@ -85,7 +85,7 @@ stages:
                 DEVTAG: 'dev'
           - ${{ each value in parameters.matrix }}:
               - bash: |
-                  docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.key }}.${DEVTAG:-$(Build.BuildId)}" --os $(baseOS) --arch ${{ value.key }}${variant:+ --variant $variant}
+                  docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.key }}.${DEVTAG:-$(Build.BuildId)}" --os $(baseOS) --arch ${{ value.targetProc }}${variant:+ --variant $variant}
                 env:
                   variant: $(value.variant)
                   ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:

@@ -67,7 +67,7 @@ stages:
                   echo "##vso[task.setvariable variable=ARCHPARAMETERS_${{ value.baseArch }}]$ARCHPARAMETERS_${{ value.baseArch }}"
                   export ARCHPARAMETERS="${ARCHPARAMETERS:+$ARCHPARAMETERS--}${ARCHPARAMETERS_${{ value.baseArch }}}"
                   echo "##vso[task.setvariable variable=ARCHPARAMETERS]$ARCHPARAMETERS"
-                ${{ yif not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+                ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
                   env:
                     DEVTAG: 'dev'
                 displayName: 'add ${{ value.baseArch }}'

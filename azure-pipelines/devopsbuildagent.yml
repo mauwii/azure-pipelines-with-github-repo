@@ -62,14 +62,14 @@ stages:
               command: 'login'
           - ${{ each value in parameters.matrix }}:
               - bash: |
-                  export ARCHPARAMETERS+=(${ARCHPARAMETERS:+"$ARCHPARAMETERS" }"$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.key }}.${DEVTAG:-$(Build.BuildId)}")
-                  echo "##vso[task.setvariable variable=ARCHPARAMETERS]$ARCHPARAMETERS"
+                  export ARCHPARAMETERS_${{ value.key }}="$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.key }}.${DEVTAG:-$(Build.BuildId)}"
+                  echo "##vso[task.setvariable variable=ARCHPARAMETERS_${{ value.key }}]$ARCHPARAMETERS_${{ value.key }}"
                 ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
                   env:
                     DEVTAG: 'dev'
                 displayName: 'add ${{ value.key }}'
           - bash: |
-              echo "${ARCHPARAMETERS[@]}"
+              echo "$ARCHPARAMETERS_*"
             displayName: 'debug echo'
           - bash: 'env'
             displayName: 'debug env'

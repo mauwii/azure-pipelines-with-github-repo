@@ -11,7 +11,7 @@ steps:
       - task: AzurePowerShell@5
         inputs:
           azurePowerShellVersion: LatestVersion
-          azureSubscription: ${{ mngmtgrp.key }}
+          azureSubscription: ${{ mngmtgrp }}
           pwsh: true
           ScriptType: InlineScript
           Inline: |

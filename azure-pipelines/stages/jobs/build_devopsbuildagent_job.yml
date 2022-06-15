@@ -8,7 +8,7 @@ jobs:
       matrix: ${{ parameters.matrix }}
       maxParallel: 2
     steps:
-      - template: stages/jobs/steps/checkout_submodules.yml
+      - template: steps/checkout_submodules.yml
         parameters:
           submodule: src/DevOpsBuildAgent
       - task: Docker@2

@@ -71,7 +71,8 @@ stages:
                     DEVTAG: 'dev'
                 displayName: 'add ${{ value.key }}'
           - bash: |
-              echo "${ARCHPARAMETERS[@]}"
+              MANIFESTS=(${ARCHPARAMETERS/--/ })
+              echo "${MANIFESTS[@]}"
             displayName: 'debug echo'
           - bash: 'env'
             displayName: 'debug env'

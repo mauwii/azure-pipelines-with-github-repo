@@ -60,6 +60,9 @@ stages:
             inputs:
               containerRegistry: 'docker-mauwii'
               command: 'login'
+          - ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+              - bash: 'echo "##vso[task.setvariable variable=DEVTAG]dev"'
+                displayName: 'set DEVTAG'
           - ${{ each value in parameters.matrix }}:
               - bash: |
                   export ARCHPARAMETERS_${{ value.key }}="$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.key }}.${DEVTAG:-$(Build.BuildId)}"
@@ -67,34 +70,15 @@ stages:
                   export ARCHPARAMETERS="${ARCHPARAMETERS:+$ARCHPARAMETERS--}${ARCHPARAMETERS_${{ value.key }}}"
                   echo "##vso[task.setvariable variable=ARCHPARAMETERS]$ARCHPARAMETERS"
                 displayName: 'add ${{ value.key }}'
-                ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
-                  env:
-                    DEVTAG: 'dev'
           - bash: |
               MANIFESTS=(${ARCHPARAMETERS/--/ })
               docker manifest create "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "${MANIFESTS[@]}"
             displayName: create manifest
-            ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
-              env:
-                DEVTAG: 'dev'
           - ${{ each value in parameters.matrix }}:
               - bash: |
                   docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.key }}.${DEVTAG:-$(Build.BuildId)}"
                 displayName: 'annotate ${{ value.key }}'
-                ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
-                  env:
-                    DEVTAG: 'dev'
           - bash: |
               docker manifest push --purge "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}"
             displayName: 'push manifest'
-            ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
-              env:
-                DEVTAG: 'dev'
-          # - bash: |
-          #     docker manifest create "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).amd64.${DEVTAG:-$(Build.BuildId)}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).arm64v8.${DEVTAG:-$(Build.BuildId)}"
-          #     docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).amd64.${DEVTAG:-$(Build.BuildId)}" --os linux --arch amd64
-          #     docker manifest annotate "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}" "$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).arm64v8.${DEVTAG:-$(Build.BuildId)}" --os linux --arch arm64 --variant v8
-          #     docker manifest push --purge "$(dockerhubuser)/$(dockerimage):${DEVTAG:-latest}"
-          #   ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
-          #     env:
-          #       DEVTAG: 'dev'
+

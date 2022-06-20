@@ -15,4 +15,51 @@ steps:
           pwsh: true
           ScriptType: InlineScript
           Inline: |
-            Get-AzResourceGroup
+            # Get Subscriptions
+            $AzSubscriptions = Get-AzSubscription
+
+            $currentUTCtime = (Get-Date).ToUniversalTime()
+
+            foreach ($AzSubscription in $AzSubscriptions) {
+              Write-Host `
+                -ForegroundColor Cyan `
+                -NoNewline `
+                "Subscription:"
+              Write-Host $AzSubscription.Name `n
+
+              Set-AzContext `
+                -Subscription $AzSubscription.Id
+
+              az account set --subscription $AzSubscription.Id
+
+              $AzResourceGroups = Get-AzResourceGroup
+
+              foreach ($AzResourceGroup in $AzResourceGroups) {
+                $AzResources = Get-AzResource `
+                  -ResourceGroupName $AzResourceGroup.ResourceGroupName
+                Write-Host `
+                  -ForegroundColor Cyan `
+                  -NoNewline `
+                  "Resource Group: "
+                Write-Host $AzResourceGroup.ResourceGroupName
+
+                foreach ($AzResource in $AzResources) {
+                  Get-AzResource -ResourceId $AzResource.Id
+                  # az resource show `
+                  #   --ids $AzResource.Id `
+                  #   --query "[].{Name:name, RG:resourceGroup, Created:createdTime, Changed:changedTime}" `
+                  #   -o json
+
+                }
+                Write-Host `
+                  -ForegroundColor Cyan `
+                  -NoNewline `
+                  "Done with ResourceGroup "
+                Write-Host $AzResourceGroup.ResourceGroupName `n
+              }
+              Write-Host `
+                -ForegroundColor Cyan `
+                -NoNewline `
+                "Done with Subscription "
+              Write-Host $AzSubscription.Name `n
+            }

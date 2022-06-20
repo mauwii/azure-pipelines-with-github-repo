@@ -12,7 +12,7 @@ steps:
         inputs:
           azureSubscription: '${{ mngmtgrp }}'
           ScriptType: 'FilePath'
-          ScriptPath: '/scripts/cleanupautomation.ps1'
+          ScriptPath: 'scripts/cleanupautomation.ps1'
           azurePowerShellVersion: 'LatestVersion'
           pwsh: true
         env:

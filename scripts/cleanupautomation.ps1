@@ -25,11 +25,8 @@ foreach ($AzSubscription in $AzSubscriptions) {
   az account set `
     --subscription $AzSubscription.Id
 
-  # Get Resource Groups in current Subscription
-  $AzResourceGroups = Get-AzResourceGroup
-
   # Iterate over Resource Groups
-  foreach ($AzResourceGroup in $AzResourceGroups) {
+  foreach ($AzResourceGroup in Get-AzResourceGroup) {
     Write-Host `
       -ForegroundColor Cyan `
       -NoNewline `

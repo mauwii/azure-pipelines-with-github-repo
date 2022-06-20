@@ -3,6 +3,9 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      # Install Azure Powershell Module
+      Install-Module -Name Az -RequiredVersion 8.0.0
+
       # Create Credential
       $User = $env:ApplicationId
       $PWord = ConvertTo-SecureString -String $env:ClientSecret -AsPlainText -Force

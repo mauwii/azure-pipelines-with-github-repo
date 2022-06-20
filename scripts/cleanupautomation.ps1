@@ -3,7 +3,7 @@ az login `
   --service-principal `
   -u $env:ApplicationId `
   -p $env:ClientSecret `
-  -t $env:TenantId
+  -t $env:SpTenantId
 
 # Get Subscriptions
 $AzSubscriptions = Get-AzSubscription
@@ -34,13 +34,14 @@ foreach ($AzSubscription in $AzSubscriptions) {
     Write-Host $AzResourceGroup.ResourceGroupName
 
     foreach ($AzResource in $AzResources) {
-      az resource list `
+      $AzCurrentResource = az resource list `
         --location $AzResource.Location `
         --name $AzResource.Name `
         --query "[].{Name:name, RG:resourceGroup, Created:createdTime, Changed:changedTime}" `
         -o json |
       ConvertFrom-Json
-
+      $AzResourceAge = $currentUTCtime - $AzCurrentResource.Created
+      Write-Host ($AzCurrentResource.Name, "current Age is", $AzResourceAge.Days, "Days")
     }
     Write-Host `
       -ForegroundColor Cyan `

@@ -30,7 +30,7 @@ steps:
               Set-AzContext `
                 -Subscription $AzSubscription.Id
 
-              az account set --subscription $AzSubscription.Id
+              az account set --subscription $AzSubscription.Name
 
               $AzResourceGroups = Get-AzResourceGroup
 

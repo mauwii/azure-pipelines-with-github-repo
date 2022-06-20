@@ -20,7 +20,7 @@ steps:
               --service-principal `
               -u $env:ApplicationId `
               -p $env:ClientSecret `
-              -t $env:TenantId
+              -t $env:SpTenantId
             # Get Subscriptions
             $AzSubscriptions = Get-AzSubscription
             $currentUTCtime = (Get-Date).ToUniversalTime()
@@ -65,4 +65,4 @@ steps:
         env:
           ApplicationId: $(ApplicationId)
           ClientSecret: $(ClientSecret)
-          TenantId: $(TenantId)
+          SpTenantId: $(TenantId)

@@ -62,11 +62,24 @@ foreach ($AzSubscription in $AzSubscriptions) {
         $AzResourceAge = $CurrentUTCtime - $InitialDate
         $DaysToDelete = $OlderResourceDays - $AzResourceAge.Days
       }
+      # Add Deletion Date as Tag to Resources
       if ($DaysToDelete -gt 0) {
         Write-Host ($AzCurrentResource.Name, "will be deleted in", $DaysToDelete, "Days")
+        $DeletionDate = $CurrentUTCtime.AddDays($DaysToDelete)
+        $tags = $AzResource.Tags
+        if ( $tags.Keys -contains "DeletionDate" ) {
+          $tags.Remove("DeletionDate")
+        }
+        $tags += @{DeletionDate=$DeletionDate}
+        Set-AzResource `
+          -ResourceId $AzResource.Id `
+          -Tag $tags `
+          -Force:$true
       }
       else {
-        Write-Host ("Deleting", $AzCurrentResource.Name)
+        Remove-AzResource `
+          -ResourceId $AzResource.Id `
+          -WhatIf:$true
       }
     }
     Write-Host `

@@ -1,0 +1,19 @@
+schedules:
+  - cron: "0 0 * * *"
+    displayName: Daily cleanup
+    branches:
+      include:
+      - main
+
+steps:
+  - task: AzurePowerShell@5
+    inputs:
+      azureSubscription: 'mngmtgrp001'
+      ScriptType: 'FilePath'
+      azurePowerShellVersion: 'LatestVersion'
+      pwsh: true
+      ScriptPath: 'scripts/cleanupautomation.ps1'
+    env:
+      ApplicationId: $(ApplicationId)
+      ClientSecret: $(ClientSecret)
+      SpTenantId: $(TenantId)

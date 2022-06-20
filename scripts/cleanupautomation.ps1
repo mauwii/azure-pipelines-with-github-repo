@@ -9,7 +9,14 @@ az login `
 $AzSubscriptions = Get-AzSubscription
 
 # Get Current UTC-Time
-$currentUTCtime = (Get-Date).ToUniversalTime()
+$CurrentUTCtime = (Get-Date).ToUniversalTime()
+
+# Set Initial Date
+$InitialDate = (Get-Date -Year 2022 -Month 06 -Day 15).ToUniversalTime()
+
+# Days until Resources get deleted
+$NewerResourceDays = 7
+$OlderResourceDays = 14
 
 # Iterate over subscriptions
 foreach ($AzSubscription in $AzSubscriptions) {
@@ -39,14 +46,28 @@ foreach ($AzSubscription in $AzSubscriptions) {
 
     # Iterate over Resources in current Resource Group
     foreach ($AzResource in $AzResources) {
-      # Get Current Resource Age
+      # Get Current Resource Creation Time
       $AzCurrentResource = az resource list `
         --location $AzResource.Location `
         --name $AzResource.Name `
         --query "[].{Name:name, RG:resourceGroup, Created:createdTime, Changed:changedTime}" `
         -o json | ConvertFrom-Json
-      $AzResourceAge = $currentUTCtime - ($AzCurrentResource.Created).ToUniversalTime()
-      Write-Host ($AzCurrentResource.Name, "current Age is", $AzResourceAge.Days, "Days")
+
+      # Check if Resource was created before or after initial date to give devs more days to react on older resources
+      if (($AzCurrentResource.Created).ToUniversalTime() -gt $InitialDate) {
+        $AzResourceAge = $CurrentUTCtime - ($AzCurrentResource.Created).ToUniversalTime()
+        $DaysToDelete = $NewerResourceDays - $AzResourceAge.Days
+      }
+      else {
+        $AzResourceAge = $CurrentUTCtime - $InitialDate
+        $DaysToDelete = $OlderResourceDays - $AzResourceAge.Days
+      }
+      if ($DaysToDelete -gt 0) {
+        Write-Host ($AzCurrentResource.Name, "will be deleted in", $DaysToDelete, "Days")
+      }
+      else {
+        Write-Host ("Deleting", $AzCurrentResource.Name)
+      }
     }
     Write-Host `
       -ForegroundColor Cyan `

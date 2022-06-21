@@ -1,0 +1,16 @@
+resources:
+  repositories:
+    - repository: devopsbuildagent
+      endpoint: Mauwii
+      name: Mauwii/DevOpsBuildAgent
+      trigger:
+        branches:
+          include:
+            - refs/heads/main
+            - experimental/*
+
+steps:
+  - bash: env
+    displayName: debug env
+  - bash: export
+    displayName: debug export

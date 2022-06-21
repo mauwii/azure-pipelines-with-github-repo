@@ -69,16 +69,31 @@ foreach ($AzSubscription in $AzSubscriptions) {
         $tags = $AzResource.Tags
         # Remove Tag if it is already existing (could be outdated/manipulated)
         if ( $tags.Keys -contains "DeletionDate" ) {
-          [void]($tags.Remove("DeletionDate"))
+          [void](
+            $tags.Remove("DeletionDate")
+          )
         }
         # Add DeletionDate Tag
-        $tags += @{DeletionDate=$DeletionDate}
-        [void](Set-AzResource `
-          -ResourceId $AzResource.Id `
-          -Tag $tags `
-          -Force:$true)
+        $tags += @{DeletionDate = $DeletionDate }
+        [void](
+          Set-AzResource `
+            -ResourceId $AzResource.Id `
+            -Tag $tags `
+            -Force:$true
+        )
       }
       else {
+        # Remove Resource Lock
+        $AzResourceLock = Get-AzResourceLock `
+          -ResourceName $AzResource.Name `
+          -ResourceType $AzResource.Type `
+          -ResourceGroupName $AzResource.ResourceGroupName
+        if ($AzResourceLock) {
+          Remove-AzResourceLock `
+            -LockId $AzResourceLock.LockId `
+            -Force:$true
+        }
+        # Remove Resource
         Remove-AzResource `
           -ResourceId $AzResource.Id `
           -WhatIf:$true

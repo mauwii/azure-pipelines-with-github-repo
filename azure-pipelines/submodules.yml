@@ -1,8 +1,9 @@
 resources:
   repositories:
     - repository: devopsbuildagent
-      endpoint: Mauwii
+      type: github
       name: Mauwii/DevOpsBuildAgent
+      endpoint: Mauwii
       trigger:
         branches:
           include:

@@ -76,10 +76,28 @@ The Deployment will only run if parameter `mkdocsDeploy` is `true`
 
 ### devopsbuildagent.yml
 
-This Pipeline will build a dockerized DevOps-Agent, if you want to find out more about it's features, look [here](https://github.com/Mauwii/DevOpsBuildAgent/blob/main/README.md)
+This Pipeline will build a docker image of a DevOps-Agent, if you want to find out more about it's features, look [here](https://github.com/Mauwii/DevOpsBuildAgent/blob/main/README.md)
 
 ??? quote "YAML"
 
     ```yaml title="azure-pipelines/devopsbuildagent.yml"
     --8<-- "azure-pipelines/devopsbuildagent.yml"
+    ```
+
+### cleanup_automation.yml
+
+This Pipeline will delete Resources in Subscriptions of the used Service Principal automatically. It differs between Resources which where available before and after a initial Date, which will have a defined range of days from creation before they will be deleted. While date is not reach, it will set a Tag on the Resource with the deletion date (which is just used for information). After the Resource has reached the defined age it will be deleted.
+
+Necessary to use this Pipeline is a Service Principal with permission to delete Resources and Resource Locks.
+
+??? quote "YAML"
+
+    ```yaml title="azure-pipelines/cleanup_automation.yml"
+    --8<-- "azure-pipelines/cleanup_automation.yml"
+    ```
+
+??? quote "PowerShell Script"
+
+    ```powershell title="scripts/cleanupautomation.ps1"
+    --8<-- "scripts/cleanupautomation.ps1"
     ```

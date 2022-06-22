@@ -94,7 +94,7 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github-alt
-      link: https://github.com/Mauwii/azure-pipelines-with-github-repo
+      link: https://github.com/Mauwii
     - icon: fontawesome/brands/keybase
       link: https://keybase.io/mauwi
     - icon: material/email-fast

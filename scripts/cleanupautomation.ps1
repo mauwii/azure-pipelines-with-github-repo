@@ -38,13 +38,13 @@ foreach ($AzSubscription in Get-AzSubscription) {
   Write-Host `
     -ForegroundColor Cyan `
     -NoNewline `
-    "Subscription: "
+    "`nSubscription: "
   Write-Host $AzSubscription.Name
   Write-Host `
     -ForegroundColor Cyan `
     -NoNewline `
     "Resource Count: "
-  Write-Host $AzResourceCount
+  Write-Host "$AzResourceCount`n"
 
   # Add Number of Resources in Subscription to AllAzResourceCount
   $AllAzResourceCount += $AzResourceCount

@@ -1,9 +1,11 @@
 # Connect to Azure-CLI as Service Principal
-az login `
-  --service-principal `
-  -u $env:ApplicationId `
-  -p $env:ClientSecret `
-  -t $env:SpTenantId
+[void](
+  az login `
+    --service-principal `
+    -u $env:ApplicationId `
+    -p $env:ClientSecret `
+    -t $env:SpTenantId
+)
 
 # Get Current UTC-Time
 $CurrentUTCtime = (Get-Date).ToUniversalTime()
@@ -19,6 +21,27 @@ $OlderResourceDays = 14
 $AllAzResourceCount = 0
 $DeletedResourceCount = 0
 
+# Function to Print Information
+function Write-Info {
+  param (
+    [System.String]$Title,
+    [System.String]$Value,
+    [Switch]$InitialNewLine,
+    [Switch]$FinalNewLine
+  )
+  if ($InitialNewLine) {
+    Write-Host ""
+  }
+  Write-Host `
+    -ForegroundColor Cyan `
+    -NoNewline `
+    $Title": "
+  Write-Host $Value
+  if ($FinalNewLine) {
+    Write-Host ""
+  }
+}
+
 # Iterate over subscriptions
 foreach ($AzSubscription in Get-AzSubscription) {
 
@@ -30,36 +53,40 @@ foreach ($AzSubscription in Get-AzSubscription) {
   [void](az account set `
       --subscription $AzSubscription.Id
   )
-
+  $AzResourceGroups = Get-AzResourceGroup
   # Get Number of Resources in current Context
   $AzResourceCount = (Get-AzResource).Length
 
   # Write Info to Host about current Subscription
-  Write-Host `
-    -ForegroundColor Cyan `
-    -NoNewline `
-    "`nSubscription: "
-  Write-Host $AzSubscription.Name
-  Write-Host `
-    -ForegroundColor Cyan `
-    -NoNewline `
-    "Resource Count: "
-  Write-Host "$AzResourceCount`n"
+  Write-Info `
+    -InitialNewLine `
+    -Title "Subscription" `
+    -Value $AzSubscription.Name
+  Write-Info `
+    -Title "Resource Groups" `
+    -Value $AzResourceGroups.Length
+  Write-Info `
+    -Title "Resource Count" `
+    -Value "$AzResourceCount" `
+    -FinalNewLine
 
   # Add Number of Resources in Subscription to AllAzResourceCount
   $AllAzResourceCount += $AzResourceCount
 
   # Iterate over Resource Groups
-  foreach ($AzResourceGroup in Get-AzResourceGroup) {
-    Write-Host `
-      -ForegroundColor Cyan `
-      -NoNewline `
-      "Resource Group: "
-    Write-Host $AzResourceGroup.ResourceGroupName
+  foreach ($AzResourceGroup in $AzResourceGroups) {
 
     # Get Resources in current Resource Group
     $AzRgResources = Get-AzResource `
       -ResourceGroupName $AzResourceGroup.ResourceGroupName
+
+    # Write Info to Host about Current Resource Group
+    Write-Info `
+      -Title "Resource Group" `
+      -Value $AzResourceGroup.ResourceGroupName
+    Write-Info `
+      -Title "Resource Count" `
+      -Value $AzRgResources.Length
 
     # Iterate over Resources in current Resource Group
     foreach ($AzResource in $AzRgResources) {
@@ -80,20 +107,26 @@ foreach ($AzSubscription in Get-AzSubscription) {
         $AzResourceAge = $CurrentUTCtime - $InitialDate
         $DaysToDelete = $OlderResourceDays - $AzResourceAge.Days
       }
+
       # Add/update Tag "DeletionDate" of Resource, or Delete it if defined age has been reached
       if ($DaysToDelete -gt 0) {
+
         # Write Info to Host when Resource will be deleted
         Write-Host ($AzCurrentResource.Name, "will be deleted in", $DaysToDelete, "Days")
+
         # Set DeletionDate
         $DeletionDate = $CurrentUTCtime.AddDays($DaysToDelete)
+
         # Create Tags Object
         $tags = $AzResource.Tags
+
         # Remove Tag if it is already existing (could be outdated/manipulated)
         if ( $tags.Keys -contains "DeletionDate" ) {
           [void](
             $tags.Remove("DeletionDate")
           )
         }
+
         # Add DeletionDate Tag
         $tags += @{
           "DeletionDate" = "$DeletionDate UTC"
@@ -106,40 +139,42 @@ foreach ($AzSubscription in Get-AzSubscription) {
         )
       }
       else {
+
         # Get Resource Lock
         $AzResourceLock = Get-AzResourceLock `
           -ResourceName $AzResource.Name `
           -ResourceType $AzResource.Type `
           -ResourceGroupName $AzResource.ResourceGroupName
+
         # Remove Resource Lock if existing
         if ($AzResourceLock) {
           Remove-AzResourceLock `
             -LockId $AzResourceLock.LockId `
             -Force:$true
         }
+
         # Remove Resource
         Remove-AzResource `
           -ResourceId $AzResource.Id `
           -WhatIf:$true
+
         # Update Deleted Resource Count
         $DeletedResourceCount ++
       }
     }
 
     # Write Info to Host that ResourceGroup is done
-    Write-Host `
-      -ForegroundColor Cyan `
-      -NoNewline `
-      "Done with ResourceGroup "
-    Write-Host $AzResourceGroup.ResourceGroupName `n
+    Write-Info `
+      -Title "Done with ResourceGroup" `
+      -Value $AzResourceGroup.ResourceGroupName `
+      -FinalNewLine
   }
 
   # Write Info to Host that Subscription is done
-  Write-Host `
-    -ForegroundColor Cyan `
-    -NoNewline `
-    "Done with Subscription "
-  Write-Host $AzSubscription.Name `n
+  Write-Info `
+    -Title "Done with Subscription" `
+    -Value $AzSubscription.Name `
+    -FinalNewLine
 }
 
 # Write Info to Host of Resource-Counts

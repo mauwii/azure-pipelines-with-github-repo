@@ -5,9 +5,6 @@ az login `
   -p $env:ClientSecret `
   -t $env:SpTenantId
 
-# Get Subscriptions
-$AzSubscriptions = Get-AzSubscription
-
 # Get Current UTC-Time
 $CurrentUTCtime = (Get-Date).ToUniversalTime()
 
@@ -18,19 +15,39 @@ $InitialDate = (Get-Date -Year 2022 -Month 06 -Day 15).ToUniversalTime()
 $NewerResourceDays = 7
 $OlderResourceDays = 14
 
+# Initialize Variable to count Resources
+$AllAzResourceCount = 0
+$DeletedResourceCount = 0
+
 # Iterate over subscriptions
-foreach ($AzSubscription in $AzSubscriptions) {
+foreach ($AzSubscription in Get-AzSubscription) {
+
+  # Set Context to current Subscription
+  [void](
+    Set-AzContext `
+      -Subscription $AzSubscription.Id
+  )
+  [void](az account set `
+      --subscription $AzSubscription.Id
+  )
+
+  # Get Number of Resources in current Context
+  $AzResourceCount = (Get-AzResource).Length
+
+  # Write Info to Host about current Subscription
   Write-Host `
     -ForegroundColor Cyan `
     -NoNewline `
-    "Subscription:"
-  Write-Host $AzSubscription.Name `n
+    "Subscription: "
+  Write-Host $AzSubscription.Name
+  Write-Host `
+    -ForegroundColor Cyan `
+    -NoNewline `
+    "Resource Count: "
+  Write-Host $AzResourceCount
 
-  # Set Context to current Subscription
-  Set-AzContext `
-    -Subscription $AzSubscription.Id
-  az account set `
-    --subscription $AzSubscription.Id
+  # Add Number of Resources in Subscription to AllAzResourceCount
+  $AllAzResourceCount += $AzResourceCount
 
   # Iterate over Resource Groups
   foreach ($AzResourceGroup in Get-AzResourceGroup) {
@@ -41,11 +58,12 @@ foreach ($AzSubscription in $AzSubscriptions) {
     Write-Host $AzResourceGroup.ResourceGroupName
 
     # Get Resources in current Resource Group
-    $AzResources = Get-AzResource `
+    $AzRgResources = Get-AzResource `
       -ResourceGroupName $AzResourceGroup.ResourceGroupName
 
     # Iterate over Resources in current Resource Group
-    foreach ($AzResource in $AzResources) {
+    foreach ($AzResource in $AzRgResources) {
+
       # Get Current Resource Creation Time
       $AzCurrentResource = az resource list `
         --location $AzResource.Location `
@@ -62,10 +80,13 @@ foreach ($AzSubscription in $AzSubscriptions) {
         $AzResourceAge = $CurrentUTCtime - $InitialDate
         $DaysToDelete = $OlderResourceDays - $AzResourceAge.Days
       }
-      # Add/update Tag "DeletionDate" to Resources or Delete if age has reached
+      # Add/update Tag "DeletionDate" of Resource, or Delete it if defined age has been reached
       if ($DaysToDelete -gt 0) {
+        # Write Info to Host when Resource will be deleted
         Write-Host ($AzCurrentResource.Name, "will be deleted in", $DaysToDelete, "Days")
+        # Set DeletionDate
         $DeletionDate = $CurrentUTCtime.AddDays($DaysToDelete)
+        # Create Tags Object
         $tags = $AzResource.Tags
         # Remove Tag if it is already existing (could be outdated/manipulated)
         if ( $tags.Keys -contains "DeletionDate" ) {
@@ -74,7 +95,9 @@ foreach ($AzSubscription in $AzSubscriptions) {
           )
         }
         # Add DeletionDate Tag
-        $tags += @{DeletionDate = $DeletionDate }
+        $tags += @{
+          "DeletionDate" = "$DeletionDate UTC"
+        }
         [void](
           Set-AzResource `
             -ResourceId $AzResource.Id `
@@ -83,11 +106,12 @@ foreach ($AzSubscription in $AzSubscriptions) {
         )
       }
       else {
-        # Remove Resource Lock
+        # Get Resource Lock
         $AzResourceLock = Get-AzResourceLock `
           -ResourceName $AzResource.Name `
           -ResourceType $AzResource.Type `
           -ResourceGroupName $AzResource.ResourceGroupName
+        # Remove Resource Lock if existing
         if ($AzResourceLock) {
           Remove-AzResourceLock `
             -LockId $AzResourceLock.LockId `
@@ -97,17 +121,31 @@ foreach ($AzSubscription in $AzSubscriptions) {
         Remove-AzResource `
           -ResourceId $AzResource.Id `
           -WhatIf:$true
+        # Update Deleted Resource Count
+        $DeletedResourceCount ++
       }
     }
+
+    # Write Info to Host that ResourceGroup is done
     Write-Host `
       -ForegroundColor Cyan `
       -NoNewline `
       "Done with ResourceGroup "
     Write-Host $AzResourceGroup.ResourceGroupName `n
   }
+
+  # Write Info to Host that Subscription is done
   Write-Host `
     -ForegroundColor Cyan `
     -NoNewline `
     "Done with Subscription "
   Write-Host $AzSubscription.Name `n
 }
+
+# Write Info to Host of Resource-Counts
+Write-Host (
+  $DeletedResourceCount,
+  "of",
+  $AllAzResourceCount,
+  "Resources where deleted"
+)

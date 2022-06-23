@@ -1,6 +1,6 @@
 # Azure-DevOps with GitHub-Repo
 
-[![Build Status](https://dev.azure.com/Mauwii/azure-pipelines-with-github-repo/_apis/build/status/azure-pipelines.yml?branchName=main)](https://dev.azure.com/Mauwii/azure-pipelines-with-github-repo/_build/latest?definitionId=10&branchName=main)
+[![Build Status](https://dev.azure.com/Mauwii/azure-pipelines-with-github-repo/_apis/build/status/azure-pipelines.yml?branchName=main)](https://dev.azure.com/Mauwii/azure-pipelines-with-github-repo/_build/latest?definitionId=19&branchName=main)
 
 ## Intro
 
@@ -33,9 +33,7 @@ Since I had the needs for things I could play around with build-pipelines as wel
 - is hostable for free
 - and maybe more ...
 
-You can find the Documentation [here](https://mauwii.github.io/azure-pipelines-with-github-repo/), while it's sources are located in the [docs](https://github.com/Mauwii/azure-pipelines-with-github-repo/tree/stable/docs) folder. Until yet I only build the stable Branch automatically, but I am already thinking about using the "mike" plugin to have the ability of versioning the Documentation.
-
-Also one of my next steps will be to have a second Environment for the Docs where I will build the docs for the main branch, which you will find here as soon as I have done so.
+You can find the built Documentation [here](https://mauwii.github.io/azure-pipelines-with-github-repo/), while it's sources are located in [`docs`](./docs/) and the framework which was used to built it is located in [`src/mkdocs-material`](src/mkdocs-material/). At the moment only the docs of the main Branch are built, but I am already thinking about using the plugin [`mike`](https://squidfunk.github.io/mkdocs-material/setup/setting-up-versioning/#versioning) to built it for the stable branch as well.
 
 ## Useful Stuff
 

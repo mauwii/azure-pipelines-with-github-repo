@@ -1,3 +1,13 @@
+param(
+  [Switch]$LocalTest
+)
+if ($LocalTest) {
+  $LocalTest = $true
+}
+else {
+  $LocalTest = $false
+}
+
 # Connect to Azure-CLI as Service Principal
 [void](
   az login `
@@ -29,17 +39,19 @@ function Write-Info {
     [Switch]$InitialNewLine,
     [Switch]$FinalNewLine
   )
+  $Title = "${Title}: "
+  $Value = "`t${Value}"
   if ($InitialNewLine) {
-    Write-Host ""
+    $Title = "`n${Title}"
+  }
+  if ($FinalNewLine) {
+    $Value = "${Value}`n"
   }
   Write-Host `
     -ForegroundColor Cyan `
     -NoNewline `
-    $Title": "
+    $Title
   Write-Host $Value
-  if ($FinalNewLine) {
-    Write-Host ""
-  }
 }
 
 # Iterate over subscriptions
@@ -60,10 +72,10 @@ foreach ($AzSubscription in Get-AzSubscription) {
   # Write Info to Host about current Subscription
   Write-Info `
     -InitialNewLine `
-    -Title "Subscription" `
+    -Title "Subscription Name" `
     -Value $AzSubscription.Name
   Write-Info `
-    -Title "Resource Groups" `
+    -Title "Resourcegroups" `
     -Value $AzResourceGroups.Length
   Write-Info `
     -Title "Resource Count" `
@@ -89,14 +101,16 @@ foreach ($AzSubscription in Get-AzSubscription) {
       -Value $AzRgResources.Length
 
     # Iterate over Resources in current Resource Group
-    foreach ($AzResource in $AzRgResources) {
+    foreach ($AzRgResource in $AzRgResources) {
 
       # Get Current Resource Creation Time
-      $AzCurrentResource = az resource list `
-        --location $AzResource.Location `
-        --name $AzResource.Name `
-        --query "[].{Name:name, RG:resourceGroup, Created:createdTime, Changed:changedTime}" `
-        -o json | ConvertFrom-Json
+      $AzCurrentResource = (
+        az resource list `
+          --location $AzRgResource.Location `
+          --name $AzRgResource.Name `
+          --query "[].{Name:name, RG:resourceGroup, Created:createdTime, Changed:changedTime}" `
+          -o json | ConvertFrom-Json
+      )
 
       # Check if Resource was created before or after initial date to give devs more days to react on older resources
       if (($AzCurrentResource.Created).ToUniversalTime() -gt $InitialDate) {
@@ -112,75 +126,70 @@ foreach ($AzSubscription in Get-AzSubscription) {
       if ($DaysToDelete -gt 0) {
 
         # Write Info to Host when Resource will be deleted
-        Write-Host ($AzCurrentResource.Name, "will be deleted in", $DaysToDelete, "Days")
+        Write-Host `
+          -NoNewline `
+          $AzCurrentResource.Name, "will be deleted in $DaysToDelete "
+        if ($DaysToDelete -gt 1) {
+          Write-Host "Days"
+        }
+        else {
+          Write-Host "Day"
+        }
 
         # Set DeletionDate
         $DeletionDate = $CurrentUTCtime.AddDays($DaysToDelete)
 
-        # Create Tags Object
-        $tags = $AzResource.Tags
-
-        # Remove Tag if it is already existing (could be outdated/manipulated)
-        if ( $tags.Keys -contains "DeletionDate" ) {
-          [void](
-            $tags.Remove("DeletionDate")
-          )
-        }
-
-        # Add DeletionDate Tag
-        $tags += @{
-          "DeletionDate" = "$DeletionDate UTC"
-        }
+        # Create Tag
+        $Tag = @{"DeletionDate" = "$DeletionDate UTC"; }
         [void](
-          Set-AzResource `
-            -ResourceId $AzResource.Id `
-            -Tag $tags `
-            -Force:$true
+          Update-AzTag `
+            -ResourceId $AzRgResource.Id `
+            -Tag $Tag `
+            -Operation Merge `
+            -WhatIf:$LocalTest
         )
       }
       else {
 
         # Get Resource Lock
         $AzResourceLock = Get-AzResourceLock `
-          -ResourceName $AzResource.Name `
-          -ResourceType $AzResource.Type `
-          -ResourceGroupName $AzResource.ResourceGroupName
+          -ResourceName $AzRgResource.Name `
+          -ResourceType $AzRgResource.Type `
+          -ResourceGroupName $AzRgResource.ResourceGroupName
 
         # Remove Resource Lock if existing
         if ($AzResourceLock) {
           Remove-AzResourceLock `
             -LockId $AzResourceLock.LockId `
-            -Force:$true
+            -Force:$true `
+            -WhatIf:$LocalTest
         }
 
         # Remove Resource
         Remove-AzResource `
-          -ResourceId $AzResource.Id `
-          -WhatIf:$true
+          -ResourceId $AzRgResource.Id `
+          -WhatIf:$LocalTest
 
         # Update Deleted Resource Count
-        $DeletedResourceCount ++
+        $DeletedResourceCount++
       }
     }
 
     # Write Info to Host that ResourceGroup is done
     Write-Info `
-      -Title "Done with ResourceGroup" `
+      -Title "Resourcegroup Done" `
       -Value $AzResourceGroup.ResourceGroupName `
       -FinalNewLine
   }
 
   # Write Info to Host that Subscription is done
   Write-Info `
-    -Title "Done with Subscription" `
+    -Title "Subscription Done" `
     -Value $AzSubscription.Name `
     -FinalNewLine
 }
 
 # Write Info to Host of Resource-Counts
-Write-Host (
-  $DeletedResourceCount,
-  "of",
-  $AllAzResourceCount,
-  "Resources where deleted"
-)
+Write-Info `
+  -Title "Resources deleted" `
+  -Value "$DeletedResourceCount of $AllAzResourceCount"

@@ -1,137 +1,59 @@
-name: 'devopsbuildagent'
+trigger:
+  branches:
+    include:
+      - refs/heads/main
+      - update/*
+      - feature/*
+      - issue/*
+  paths:
+    include:
+      - azure-pipelines/devopsbuildagent.yml
+      - azure-pipelines/stages/jobs/build_devopsbuildagent_job.yml
+      - src/DevOpsBuildAgent
 
-pool:
-  vmImage: ubuntu-latest
+pr: none
 
-resources:
-  repositories:
-    - repository: DevOpsBuildAgent
-      endpoint: Mauwii
-      name: Mauwii/DevOpsBuildAgent
-      trigger:
-        - main
+variables:
+  - name: baseOS
+    value: 'linux'
+  - name: baseDistro
+    value: 'ubuntu'
+  - name: baseVersion
+    value: '20.04'
+  - name: dockerRegistry
+    value: 'docker.io'
+  - name: dockerhubuser
+    value: 'mauwii'
+  - name: dockerimage
+    value: 'devopsbuildagent'
+
+parameters:
+  - name: matrix
+    type: object
+    displayName: Object which defines the matrix strategy
+    default:
+      amd64:
+        baseArch: 'amd64'
+        targetProc: 'x64'
+      arm64v8:
+        baseArch: 'arm64v8'
+        targetProc: 'arm64'
+  - name: maxParallelJobs
+    type: number
+    displayName: Defines how many Jobs can be running in parallel by the matrix strategy
+    default: 2
 
 stages:
-  - stage: docker
-    displayName: Docker
-    dependsOn:
+  - stage: build
     jobs:
-      - job: buildx64
-        displayName: linux-x64
-        dependsOn:
-        steps:
-          - template: jobs/steps/checkout_submodules.yml
-            parameters:
-              submodule: src/DevOpsBuildAgent
-
-          - task: Docker@2
-            displayName: login to dockerhub
-            inputs:
-              containerRegistry: 'docker-mauwii'
-              command: 'login'
-
-          - script: |
-              docker run --rm --privileged \
-              multiarch/qemu-user-static --reset -p yes
-            name: qemu
-            displayName: run QEMU
-
-          - task: Docker@2
-            displayName: Build x64
-            name: buildx64
-            inputs:
-              containerRegistry: 'docker-mauwii'
-              repository: 'mauwii/devopsbuildagent'
-              command: 'build'
-              Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
-              tags: |
-                linux-x64
-                linux-x64-$(Build.BuildId)
-              arguments: '--build-arg BASE_IMAGE=amd64/ubuntu:18.04 --build-arg TARGETARCH=linux-x64'
-            env:
-              DOCKER_DEFAULT_PLATFORM: linux/amd64
-
-          - task: Docker@2
-            displayName: push x64
-            inputs:
-              containerRegistry: 'docker-mauwii'
-              repository: 'mauwii/devopsbuildagent'
-              command: 'push'
-              tags: |
-                linux-x64
-                linux-x64-$(Build.BuildId)
-
-      - job: buildarm64
-        displayName: linux-arm64v8
-        dependsOn:
-        steps:
-          - template: jobs/steps/checkout_submodules.yml
-            parameters:
-              submodule: src/DevOpsBuildAgent
-
-          - task: Docker@2
-            displayName: login to dockerhub
-            inputs:
-              containerRegistry: 'docker-mauwii'
-              command: 'login'
-
-          - script: |
-              docker run --rm --privileged \
-              multiarch/qemu-user-static --reset -p yes
-            name: qemu
-            displayName: run QEMU
-
-          - task: Docker@2
-            displayName: build arm64
-            name: buildarm64
-            inputs:
-              containerRegistry: 'docker-mauwii'
-              repository: 'mauwii/devopsbuildagent'
-              command: 'build'
-              Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
-              tags: |
-                linux-arm64v8
-                linux-arm64v8-$(Build.BuildId)
-              arguments: '--build-arg BASE_IMAGE=arm64v8/ubuntu:18.04 --build-arg TARGETARCH=linux-arm64'
-            env:
-              DOCKER_DEFAULT_PLATFORM: linux/arm64
-
-          - task: Docker@2
-            displayName: push arm64
-            inputs:
-              containerRegistry: 'docker-mauwii'
-              repository: 'mauwii/devopsbuildagent'
-              command: 'push'
-              tags: |
-                linux-arm64v8
-                linux-arm64v8-$(Build.BuildId)
-
-      - job: manifest
-        displayName: push and create manifest
-        dependsOn:
-          - buildx64
-          - buildarm64
-        condition: succeeded()
-        steps:
-          - task: Docker@2
-            displayName: login to dockerhub
-            inputs:
-              containerRegistry: 'docker-mauwii'
-              command: 'login'
-
-          - script: |
-              docker manifest create \
-                mauwii/devopsbuildagent:latest \
-                mauwii/devopsbuildagent:linux-x64 \
-                mauwii/devopsbuildagent:linux-arm64v8 \
-              && docker manifest annotate \
-                mauwii/devopsbuildagent:latest \
-                mauwii/devopsbuildagent:linux-x64 \
-                --os linux --arch amd64 \
-              && docker manifest annotate \
-                mauwii/devopsbuildagent:latest \
-                mauwii/devopsbuildagent:linux-arm64v8 \
-                --os linux --arch arm64 --variant v8 \
-              && docker manifest push --purge \
-                mauwii/devopsbuildagent:latest
-            name: manifest
+      - template: stages/jobs/build_devopsbuildagent_job.yml
+        parameters:
+          matrix: ${{ parameters.matrix }}
+          maxParallelJobs: ${{ parameters.maxParallelJobs }}
+  - stage: manifest
+    dependsOn: build
+    jobs:
+      - template: stages/jobs/pushManifest_job.yml
+        parameters:
+          matrix: ${{ parameters.matrix }}
+          maxParallelJobs: ${{ parameters.maxParallelJobs }}

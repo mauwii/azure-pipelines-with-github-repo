@@ -1,0 +1,71 @@
+parameters:
+  - name: pythonVersion
+    default: '3.8'
+  - name: debug
+    type: boolean
+    default: false
+
+steps:
+  - ${{ if eq(parameters.debug, true) }}:
+      - script: |
+          echo "Variables:"
+          echo "SECRET_KEY: $SECRET_KEY"                                                       # no
+          #### -------------------------------------------------------------------------------- ####
+          echo "APPLICATIONINSIGHTS_CONNECTION_STRING: $APPLICATIONINSIGHTS_CONNECTION_STRING" # yes
+          echo "connectionString: $connectionString"                                           # yes
+          echo "secretKey: $secretKey"                                                         # yes
+          echo "SECRET_KEY: $(SECRET_KEY)"                                                     # yes
+          echo "AZURESUBSCRIPTION: $AZURESUBSCRIPTION"                                         # yes
+          echo "RESOURCEGROUPNAME: $RESOURCEGROUPNAME"                                         # yes
+          echo "PROJECTROOT: $PROJECTROOT"                                                     # yes
+          echo "APPLICATIONINSIGHTS_CONNECTION_STRING: $(connectionString)"                    # yes
+          echo "DJANGO_SUPERUSER_EMAIL: $DJANGO_SUPERUSER_EMAIL"                               # yes
+          echo "DJANGO_SUPERUSER_PASSWORD: $DJANGO_SUPERUSER_PASSWORD"                         # yes
+          echo "secretKey: $(secretKey)"                                                       # yes
+          #### -------------------------------------------------------------------------------- ####
+          echo "With 'set':"
+          set
+          echo "With 'env':"
+          env
+        displayName: debug script env
+        continueOnError: true
+        env:
+          secretKey: $(secretKey)
+          SECRET_KEY: $(SECRET_KEY)
+          APPLICATIONINSIGHTS_CONNECTION_STRING: $(APPLICATIONINSIGHTS_CONNECTION_STRING)
+          connectionString: $(connectionString)
+          DJANGO_SUPERUSER_EMAIL: $(DJANGO_SUPERUSER_EMAIL)
+          DJANGO_SUPERUSER_PASSWORD: $(DJANGO_SUPERUSER_PASSWORD)
+
+  - task: UsePythonVersion@0
+    displayName: 'Use Python ${{ parameters.pythonVersion }}'
+    inputs:
+      versionSpec: ${{ parameters.pythonVersion }}
+      addToPath: true
+
+  - script: |
+      python -m venv antenv
+      source antenv/bin/activate
+      python -m pip install --upgrade pip
+      pip install setup
+      pip install -r requirements.txt
+    workingDirectory: $(projectRoot)
+    displayName: 'Install Requirements'
+
+  - task: ArchiveFiles@2
+    displayName: 'Archive files'
+    condition: and(eq(variables.isStable, 'True'), succeeded())
+    inputs:
+      rootFolderOrFile: '$(projectRoot)'
+      includeRootFolder: false
+      archiveType: zip
+      archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      replaceExistingArchive: true
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Build Artifact
+    condition: and(eq(variables.isStable, 'True'), succeeded())
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'

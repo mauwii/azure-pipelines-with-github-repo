@@ -1,19 +1,20 @@
 ---
 title: Repository
+# template: overrides/main.html
 ---
 
-In this Section you will find Informations related to the Workflow of the Repository.
+In this Section you will find Information related to the Workflow of the Repository.
 
 ## Branching Strategy
 
 ### Table
 
-| Branch name            |  Create From   | deploy to  |            accept PR from            | Branch protection rules / other Info                                                                                       |
-| :--------------------- | :------------: | :--------: | :----------------------------------: | :------------------------------------------------------------------------------------------------------------------------- |
-| main                   |    git init    |  staging   | feature/\* <br>issue/\*<br>hotfix/\* | Require linear history<br>Require status checks to pass before merging<br>Require branches to be up to date before merging |
-| stable                 |  Pull-Request  | production |          main<br>hotfix/\*           |                                                                                                                            |
-| feature/\*<br>issue/\* |  Head of main  | test local |                  -                   | must be up to date with main for PR                                                                                        |
-| hotfix/*               | Head of stable | test local |                  -                   |
+| Branch name                         |  Create From   | deploy to  |                  accept PR from                  | Branch protection rules / other Info                                                                                       |
+| :---------------------------------- | :------------: | :--------: | :----------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------- |
+| main                                |    git init    |  staging   | feature/\*<br>issue/\*<br>update/\*<br>hotfix/\* | Require linear history<br>Require status checks to pass before merging<br>Require branches to be up to date before merging |
+| stable                              |  Pull-Request  | production |                main<br>hotfix/\*                 |                                                                                                                            |
+| feature/\*<br>issue/\*<br>update/\* |  Head of main  | test local |                        -                         | must be up to date with main for PR                                                                                        |
+| hotfix/*                            | Head of stable | test local |                        -                         |
 
 Main branch is used as the working branch. To develope new features, create branch from main branch called `feature/<jira-id>/<feature-name>` for new features, or `issue/<jira-id>/<issue-name>` when solving a issue. When development of the feature or issue is done, create a pull request to merge it into main branch.
 
@@ -27,7 +28,7 @@ For bigger problems, like f.E. a zero-day, create a branch from stable and name 
 
 ``` mermaid
 graph LR
-  featureBranch[feature/*<br>issue/*] --> main;
+  featureBranch[feature/*<br>issue/*<br>update/*] --> main;
   main -.-> featureBranch;
   main --> stable;
   stable -.-> hotfix;
@@ -40,7 +41,7 @@ graph LR
 
 ``` mermaid
 graph LR
-  featureBranch[feature/*<br>issue/*] -- Pull Request ---> main;
+  featureBranch[feature/*<br>issue/*<br>update/*] -- Pull Request ---> main;
   code[\update<br>Code/] -- Commit Changes --> featureBranch;
   main -. create branch .-> featureBranch;
   main -- Trigger Build --> CheckFeature{Built<br>successful};
@@ -57,10 +58,11 @@ graph LR
 graph LR
   main -- Pull Request ---> stable;
   stable -- Trigger<br>Build --> validateBuild{Built<br>succesfull};
-  stable -. create branch .-> hotfix;
   validateBuild -- Yes --> completePr[/merge PR/];
+  validateBuild -- No --> createHotfix;
   completePr --> deployStable[/Deploy to<br>production/];
-  validateBuild -- No --> hotfix;
+  stable -. create branch .-> createHotfix[create Hotfix];
+  createHotfix -- fix bugs --> hotfix
   hotfix -- Pull Request--> main & stable;
 ```
 

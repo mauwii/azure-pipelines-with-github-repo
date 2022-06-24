@@ -1,0 +1,29 @@
+parameters:
+  - name: pythonVersion
+    displayName: Python Version to use when building MkDocs-Material
+    type: string
+  - name: mkdocsSiteDir
+    displayName: Name of the Directory where MkDocs will be built to
+    type: string
+  - name: mkdocsDeploy
+    displayName: When disabled MkDocs will only be built
+    type: boolean
+  - name: agentpool
+    displayName: Agent-Pool to be used
+    values:
+      - 'Azure Pipelines'
+      - 'local'
+    default: 'Azure Pipelines'
+
+stages:
+  - stage: mkdocs
+    displayName: MkDocs-Material
+    condition: succeeded()
+    pool:
+      name: ${{ parameters.agentpool }}
+    jobs:
+      - template: jobs/mkdocs-material.yml
+        parameters:
+          pythonVersion: ${{ parameters.pythonVersion }}
+          mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
+          mkdocsDeploy: ${{ parameters.mkdocsDeploy }}

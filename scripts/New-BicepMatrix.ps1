@@ -13,12 +13,12 @@ function New-BicepMatrix() {
     Write-Host -NoNewline "`'resourceGroupName`':`'$env:resourceGroupName`', "
     Write-Host -NoNewline "`'azureSubscription`':`'$env:azureSubscription`', "
     Write-Host -NoNewline "`'location`':`'$env:location`'"
-    Write-Host -NoNewline '}'
+    Write-Host -NoNewline "}"
     if ($i -eq $bicepDeployFolders.Length) {
-      Write-Host '}'
+      Write-Host "}"
     }
     else {
-      Write-Host -NoNewline ', '
+      Write-Host -NoNewline ", "
     }
   }
 }

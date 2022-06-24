@@ -1,0 +1,44 @@
+parameters:
+  - name: bicepDir
+    displayName: Folder containing bicep template folders
+    type: string
+    default: $(System.DefaultWorkingDirectory)
+  - name: bicepTemplateDir
+    displayName: Folder containing the main.bicep
+    type: string
+  - name: resourceGroupName
+    displayName: Name of the Resourcegroup
+    default: $(resourceGroupName)
+    type: string
+  - name: azureSubscription
+    displayName: Name of the Azure Service Connection
+    default: $(azureSubscription)
+    type: string
+  - name: location
+    displayName: Location where Resources should be deployed to
+    default: $(location)
+    type: string
+  - name: bicepParameter
+    displayName: Bicep Parameter-File to use
+    values:
+      - 'dev'
+      - 'stg'
+      - 'prod'
+    type: string
+    default: dev
+
+steps:
+  - task: AzureCLI@2
+    name: DeployBicepFile
+    displayName: Deploy Bicep file
+    inputs:
+      azureSubscription: ${{ parameters.azureSubscription }}
+      scriptType: bash
+      scriptLocation: inlineScript
+      workingDirectory: ${{ parameters.bicepDir }}/${{ parameters.bicepTemplateDir }}
+      inlineScript: |
+        az deployment group create \
+          --name $(Build.BuildNumber) \
+          --resource-group ${{ parameters.ResourceGroupName }} \
+          --template-file main.bicep \
+          --parameters @main.parameters.${{parameters.bicepParameter}}.json

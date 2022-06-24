@@ -1,0 +1,30 @@
+parameters:
+  - name: pythonVersion
+    displayName: Python Version to use
+    values:
+      - '3.8'
+      - '3.9'
+    type: string
+    default: $(pythonVersion)
+  - name: mkdocsSiteDir
+    type: string
+    default: 'site'
+
+steps:
+  - task: UsePythonVersion@0
+    displayName: 'Use Python ${{ parameters.pythonVersion }}'
+    inputs:
+      versionSpec: '${{ parameters.pythonVersion }}'
+      addToPath: true
+
+  - script: pip install --upgrade pip wheel setuptools
+    displayName: update tools
+
+  - script: pip install -r src/requirements-mkdocs-material.txt
+    displayName: install requirements
+
+  - script: pip install -e src/mkdocs-material
+    displayName: install MkDocs-Material
+
+  - script: mkdocs build --site-dir ${{ parameters.mkdocsSiteDir }} --verbose
+    displayName: build docs

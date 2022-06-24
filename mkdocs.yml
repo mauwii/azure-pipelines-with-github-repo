@@ -3,9 +3,17 @@ site_url: https://mauwii.github.io/azure-pipelines-with-github-repo/
 dev_addr: 127.0.0.1:8000
 site_author: mauwii
 site_description: >-
-  Welcome to my Playground which I created to find out more about the
-  possibilities when using a GitHub-Repo in Azure-DevOps to run YAML
-  Files as Azure-Pipelines. Additionally Jira is used as Issue Tracker.
+  ...to my playground, which was originally created to find out more about the
+  possibilities when using GitHub-Repos  with Azure-DevOps to run YAML based
+  Azure-Pipelines, as well as the differences compared to the use of Azure-Repos.
+  Meanwhile I also begun using Jira to track Issues and Features and it's integrated
+  Service-Desk to have a Place for Bug reports or feature suggestions. Feel free
+  to compare it to the newly available GitHub Issue Templates, which imho are also
+  a very good approach when you need to support your user base. I also started to
+  play around with Jfrog's Artifactory which is a great option to find vulnerabilities
+  or supply container images, to name just a few of it's features.
+
+  So as u see, there is already a lot going on here and it's not getting boring at all
 
 # Repository
 repo_name: Mauwii/azure-pipelines-with-github-repo
@@ -37,7 +45,7 @@ theme:
     # - header.autohide
     - navigation.expand
     - navigation.indexes
-    # - navigation.instant
+    - navigation.instant
     - navigation.sections
     - navigation.tabs
     - navigation.tabs.sticky
@@ -50,11 +58,14 @@ theme:
     - toc.integrate
   palette:
     - media: '(prefers-color-scheme: light)'
+      primary: blue
       scheme: default
       toggle:
         icon: material/lightbulb
         name: Switch to dark mode
     - media: '(prefers-color-scheme: dark)'
+      primary: dark-blue
+      accent: white
       scheme: slate
       toggle:
         icon: material/lightbulb-outline
@@ -83,7 +94,7 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github-alt
-      link: https://github.com/Mauwii/azure-pipelines-with-github-repo
+      link: https://github.com/Mauwii
     - icon: fontawesome/brands/keybase
       link: https://keybase.io/mauwi
     - icon: material/email-fast
@@ -130,6 +141,7 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
+  - tables
 
 # Plugins
 plugins:

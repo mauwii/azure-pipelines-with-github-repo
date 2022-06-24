@@ -1,0 +1,58 @@
+trigger:
+  branches:
+    include:
+      - feature/*
+      - issue/*
+      - update/*
+  paths:
+    include:
+      - docs
+      - mkdocs.yml
+      - src/requirements-mkdocs-material.txt
+      - src/mkdocs-material
+      - azure-pipelines/validate_docs.yml
+      - azure-pipelines/stages/mkdocs_stage.yml
+      - azure-pipelines/stages/jobs/mkdocs-material.yml
+      - azure-pipelines/stages/jobs/steps/build_mkdocs.yml
+
+pr: none
+
+parameters:
+  - name: pythonVersion
+    displayName: Python Version to use when building MkDocs-Material
+    type: string
+    values:
+      - '3.7'
+      - '3.8'
+      - '3.9'
+    default: '3.9'
+  - name: mkdocsSiteDir
+    displayName: Name of the Directory where MkDocs will be built to
+    type: string
+    default: 'site'
+  - name: mkdocsDeploy
+    displayName: When disabled MkDocs will only be built
+    type: boolean
+    default: false
+  - name: agentpool
+    displayName: Agent-Pool to be used
+    values:
+      - 'Azure Pipelines'
+      - 'local'
+    default: 'Azure Pipelines'
+
+variables:
+  - template: variables/default.yml
+
+resources:
+  containers:
+    - container: ubuntu1804
+      image: ubuntu:18.04
+
+stages:
+  - template: stages/mkdocs_stage.yml
+    parameters:
+      pythonVersion: '${{ parameters.pythonVersion }}'
+      mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
+      mkdocsDeploy: '${{ parameters.mkdocsDeploy }}'
+      agentpool: '${{ parameters.agentpool }}'

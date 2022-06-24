@@ -1,5 +1,6 @@
 ---
 title: Home
+# template: overrides/home.html
 ---
 
 ## Intro
@@ -37,7 +38,7 @@ graph LR;
 
 This is the YAML file which was used to Configure the website you are currently viewing.
 
-??? quote YAML
+??? quote "mkdocs.yml"
 
     ```yaml title="mkdocs.yml" linenums="1"
     --8<-- "mkdocs.yml"
@@ -45,4 +46,5 @@ This is the YAML file which was used to Configure the website you are currently 
 
 ## License
 
---8<-- "LICENSE"
+??? quote "License"
+    --8<-- "LICENSE"

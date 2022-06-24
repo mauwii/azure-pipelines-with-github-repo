@@ -1,0 +1,63 @@
+parameters:
+  - name: bicepDir
+    displayName: Directory containing Folders with Bicep Templates
+    type: string
+  - name: bicepParameter
+    displayName: Used in some templates to change Resource Name or other variables
+    type: string
+    values:
+      - dev
+      - stg
+      - prod
+  - name: resourceGroupName
+    displayName: Name of the Resource Group where templates will be deployed to
+    type: string
+  - name: azureSubscription
+    displayName: Name of the ARM-Service Connection
+    type: string
+  - name: location
+    displayName: Location where the Resources will be deployed to
+    type: string
+  - name: agentpool
+    displayName: Agent-Pool to be used
+    values:
+      - 'Azure Pipelines'
+      - 'local'
+    default: 'Azure Pipelines'
+
+stages:
+  - stage: bicep
+    displayName: Bicep
+    pool:
+      name: ${{ parameters.agentpool }}
+    jobs:
+      - job: getTemplateFolders
+        displayName: Get Template Folders
+        steps:
+          - task: PowerShell@2
+            name: mtrx
+            env:
+              bicepDir: ${{ parameters.bicepDir }}
+              bicepParameter: ${{ parameters.bicepParameter }}
+              resourceGroupName: ${{ parameters.resourceGroupName }}
+              azureSubscription: ${{ parameters.azureSubscription }}
+              location: ${{ parameters.location }}
+            inputs:
+              targetType: filePath
+              filePath: scripts/New-BicepMatrix.ps1
+      - job: runner
+        displayName: Test and Deploy
+        dependsOn: getTemplateFolders
+        condition: succeeded()
+        strategy:
+          matrix: $[ dependencies.getTemplateFolders.outputs['mtrx.legs'] ]
+          maxParallel: 1
+        steps:
+          - template: jobs/steps/bicep_steps.yml
+            parameters:
+              bicepDir: $(bicepDir)
+              bicepTemplateDir: $(bicepTemplateDir)
+              bicepParameter: $(bicepParameter)
+              resourceGroupName: $(resourceGroupName)
+              azureSubscription: $(azureSubscription)
+              location: $(location)

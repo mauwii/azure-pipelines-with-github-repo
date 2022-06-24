@@ -7,16 +7,78 @@ trigger:
 
 pr: none
 
+resources:
+  repositories:
+    - repository: self
+      endpoint: Mauwii
+
 variables:
   - template: azure-pipelines/variables/default.yml
   - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/stable') }}:
       - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
 
-pool:
-  vmImage: $(vmImageName)
+parameters:
+  - name: pythonVersion
+    displayName: Python Version to use when building MkDocs-Material
+    type: string
+    values:
+      - '3.7'
+      - '3.8'
+      - '3.9'
+    default: '3.9'
+  - name: mkdocsSiteDir
+    displayName: Name of the Directory where MkDocs will be built to
+    type: string
+    default: 'site'
+  - name: mkdocsDeploy
+    displayName: Deploy MkDocs to GitHub-Pages
+    type: boolean
+    default: true
+  - name: bicepDir
+    displayName: Directory containing Folders with Bicep Templates
+    type: string
+    default: '$(bicepDir)'
+  - name: bicepParameter
+    displayName: Used in some templates to change Resource Name or other variables
+    type: string
+    values:
+      - dev
+      - stg
+      - prod
+    default: dev
+  - name: resourceGroupName
+    displayName: Name of the Resource Group where templates will be deployed to
+    type: string
+    default: '$(resourceGroupName)'
+  - name: azureSubscription
+    displayName: Name of the ARM-Service Connection
+    type: string
+    default: '$(azureSubscription)'
+  - name: location
+    displayName: Location where the Resources will be deployed
+    type: string
+    default: $(location)
+  - name: agentpool
+    displayName: Agent-Pool to be used
+    values:
+      - 'Azure Pipelines'
+      - 'local'
+    default: 'Azure Pipelines'
+  - name: cleanup
+    displayName: 'Run cleanup stage'
+    type: boolean
+    default: true
 
 extends:
-  template: azure-pipelines/main.yml
+  template: azure-pipelines/stages/main.yml
   parameters:
-    mkdocsDeploy: ${{ variables['mkdocsDeploy'] }}
-    bicepParameter: ${{ variables['bicepParameter'] }}
+    bicepDir: ${{ parameters.bicepDir }}
+    bicepParameter: ${{ parameters.bicepParameter }}
+    resourceGroupName: ${{ parameters.resourceGroupName }}
+    azureSubscription: ${{ parameters.azureSubscription }}
+    location: ${{ parameters.location }}
+    pythonVersion: ${{ parameters.pythonVersion }}
+    mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
+    mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
+    cleanup: ${{ parameters.cleanup }}
+    agentpool: ${{ parameters.agentpool }}

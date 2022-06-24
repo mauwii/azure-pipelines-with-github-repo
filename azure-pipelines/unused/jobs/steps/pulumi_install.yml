@@ -1,0 +1,15 @@
+parameters:
+  - name: pulumiUpgrade
+    type: boolean
+    default: false
+
+# Step will use choco on Windows and brew on Mac/Linux
+steps:
+- ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
+    - powershell: choco install pulumi
+    - ${{ if eq(parameters.pulumiUpgrade, 'True') }}:
+        - powershell: choco upgrade pulumi
+- ${{ if not(eq(variables['Agent.OS'], 'Windows_NT')) }}:
+    - script: brew install pulumi/tap/pulumi
+    - ${{ if eq(parameters.pulumiUpgrade, 'True') }}:
+        - script: brew update && brew upgrade pulumi/tap/pulumi

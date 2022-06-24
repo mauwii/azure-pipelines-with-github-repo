@@ -1,0 +1,25 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - feature/*
+      - issue/*
+      - update/*
+  paths:
+    include:
+      - IaC/bicep/deploy
+      - azure-pipelines/iac-bicep.yml
+
+pr: none
+
+variables:
+  - template: variables/default.yml
+
+stages:
+  - template: stages/bicep_stage.yml
+    parameters:
+      bicepDir: '${{ variables.bicepDir }}'
+      bicepParameter: '${{ variables.environment }}'
+      resourceGroupName: '${{ variables.resourceGroupName }}'
+      azureSubscription: '${{ variables.azureSubscription }}'
+      location: '${{ variables.location }}'

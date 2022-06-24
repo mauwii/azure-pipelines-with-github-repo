@@ -2,8 +2,8 @@ parameters:
   - name: pythonVersion
     displayName: Python Version to use
     values:
-      - '3.8'
       - '3.9'
+      - '3.10'
     type: string
     default: $(pythonVersion)
   - name: mkdocsSiteDir
@@ -22,6 +22,10 @@ steps:
 
   - script: pip install -r src/requirements-mkdocs-material.txt
     displayName: install requirements
+
+  - script: npm install --no-package-lock
+    displayName: npm install
+    workingDirectory: src/mkdocs-material
 
   - script: pip install -e src/mkdocs-material
     displayName: install MkDocs-Material

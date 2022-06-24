@@ -1636,31 +1636,32 @@ So as u see, there is already a lot going on here and it's not getting boring at
 <a id="__codelineno-8-168" name="__codelineno-8-168" href="#__codelineno-8-168"></a>        <span class="c"># Remove Resource</span>
 <a id="__codelineno-8-169" name="__codelineno-8-169" href="#__codelineno-8-169"></a>        <span class="nb">Remove-AzResource</span> <span class="p">`</span>
 <a id="__codelineno-8-170" name="__codelineno-8-170" href="#__codelineno-8-170"></a>          <span class="n">-ResourceId</span> <span class="nv">$AzRgResource</span><span class="p">.</span><span class="n">Id</span> <span class="p">`</span>
-<a id="__codelineno-8-171" name="__codelineno-8-171" href="#__codelineno-8-171"></a>          <span class="n">-WhatIf</span><span class="p">:</span><span class="nv">$LocalTest</span>
-<a id="__codelineno-8-172" name="__codelineno-8-172" href="#__codelineno-8-172"></a>
-<a id="__codelineno-8-173" name="__codelineno-8-173" href="#__codelineno-8-173"></a>        <span class="c"># Update Deleted Resource Count</span>
-<a id="__codelineno-8-174" name="__codelineno-8-174" href="#__codelineno-8-174"></a>        <span class="nv">$DeletedResourceCount</span><span class="p">++</span>
-<a id="__codelineno-8-175" name="__codelineno-8-175" href="#__codelineno-8-175"></a>      <span class="p">}</span>
-<a id="__codelineno-8-176" name="__codelineno-8-176" href="#__codelineno-8-176"></a>    <span class="p">}</span>
-<a id="__codelineno-8-177" name="__codelineno-8-177" href="#__codelineno-8-177"></a>
-<a id="__codelineno-8-178" name="__codelineno-8-178" href="#__codelineno-8-178"></a>    <span class="c"># Write Info to Host that ResourceGroup is done</span>
-<a id="__codelineno-8-179" name="__codelineno-8-179" href="#__codelineno-8-179"></a>    <span class="nb">Write-Info</span> <span class="p">`</span>
-<a id="__codelineno-8-180" name="__codelineno-8-180" href="#__codelineno-8-180"></a>      <span class="n">-Title</span> <span class="s2">&quot;Resourcegroup Done&quot;</span> <span class="p">`</span>
-<a id="__codelineno-8-181" name="__codelineno-8-181" href="#__codelineno-8-181"></a>      <span class="n">-Value</span> <span class="nv">$AzResourceGroup</span><span class="p">.</span><span class="n">ResourceGroupName</span> <span class="p">`</span>
-<a id="__codelineno-8-182" name="__codelineno-8-182" href="#__codelineno-8-182"></a>      <span class="n">-FinalNewLine</span>
-<a id="__codelineno-8-183" name="__codelineno-8-183" href="#__codelineno-8-183"></a>  <span class="p">}</span>
-<a id="__codelineno-8-184" name="__codelineno-8-184" href="#__codelineno-8-184"></a>
-<a id="__codelineno-8-185" name="__codelineno-8-185" href="#__codelineno-8-185"></a>  <span class="c"># Write Info to Host that Subscription is done</span>
-<a id="__codelineno-8-186" name="__codelineno-8-186" href="#__codelineno-8-186"></a>  <span class="nb">Write-Info</span> <span class="p">`</span>
-<a id="__codelineno-8-187" name="__codelineno-8-187" href="#__codelineno-8-187"></a>    <span class="n">-Title</span> <span class="s2">&quot;Subscription Done&quot;</span> <span class="p">`</span>
-<a id="__codelineno-8-188" name="__codelineno-8-188" href="#__codelineno-8-188"></a>    <span class="n">-Value</span> <span class="nv">$AzSubscription</span><span class="p">.</span><span class="n">Name</span> <span class="p">`</span>
-<a id="__codelineno-8-189" name="__codelineno-8-189" href="#__codelineno-8-189"></a>    <span class="n">-FinalNewLine</span>
-<a id="__codelineno-8-190" name="__codelineno-8-190" href="#__codelineno-8-190"></a><span class="p">}</span>
-<a id="__codelineno-8-191" name="__codelineno-8-191" href="#__codelineno-8-191"></a>
-<a id="__codelineno-8-192" name="__codelineno-8-192" href="#__codelineno-8-192"></a><span class="c"># Write Info to Host of Resource-Counts</span>
-<a id="__codelineno-8-193" name="__codelineno-8-193" href="#__codelineno-8-193"></a><span class="nb">Write-Info</span> <span class="p">`</span>
-<a id="__codelineno-8-194" name="__codelineno-8-194" href="#__codelineno-8-194"></a>  <span class="n">-Title</span> <span class="s2">&quot;Resources deleted&quot;</span> <span class="p">`</span>
-<a id="__codelineno-8-195" name="__codelineno-8-195" href="#__codelineno-8-195"></a>  <span class="n">-Value</span> <span class="s2">&quot;$DeletedResourceCount of $AllAzResourceCount&quot;</span>
+<a id="__codelineno-8-171" name="__codelineno-8-171" href="#__codelineno-8-171"></a>          <span class="n">-WhatIf</span><span class="p">:</span><span class="nv">$LocalTest</span> <span class="p">`</span>
+<a id="__codelineno-8-172" name="__codelineno-8-172" href="#__codelineno-8-172"></a>          <span class="n">-Force</span><span class="p">:</span><span class="nv">$true</span>
+<a id="__codelineno-8-173" name="__codelineno-8-173" href="#__codelineno-8-173"></a>
+<a id="__codelineno-8-174" name="__codelineno-8-174" href="#__codelineno-8-174"></a>        <span class="c"># Update Deleted Resource Count</span>
+<a id="__codelineno-8-175" name="__codelineno-8-175" href="#__codelineno-8-175"></a>        <span class="nv">$DeletedResourceCount</span><span class="p">++</span>
+<a id="__codelineno-8-176" name="__codelineno-8-176" href="#__codelineno-8-176"></a>      <span class="p">}</span>
+<a id="__codelineno-8-177" name="__codelineno-8-177" href="#__codelineno-8-177"></a>    <span class="p">}</span>
+<a id="__codelineno-8-178" name="__codelineno-8-178" href="#__codelineno-8-178"></a>
+<a id="__codelineno-8-179" name="__codelineno-8-179" href="#__codelineno-8-179"></a>    <span class="c"># Write Info to Host that ResourceGroup is done</span>
+<a id="__codelineno-8-180" name="__codelineno-8-180" href="#__codelineno-8-180"></a>    <span class="nb">Write-Info</span> <span class="p">`</span>
+<a id="__codelineno-8-181" name="__codelineno-8-181" href="#__codelineno-8-181"></a>      <span class="n">-Title</span> <span class="s2">&quot;Resourcegroup Done&quot;</span> <span class="p">`</span>
+<a id="__codelineno-8-182" name="__codelineno-8-182" href="#__codelineno-8-182"></a>      <span class="n">-Value</span> <span class="nv">$AzResourceGroup</span><span class="p">.</span><span class="n">ResourceGroupName</span> <span class="p">`</span>
+<a id="__codelineno-8-183" name="__codelineno-8-183" href="#__codelineno-8-183"></a>      <span class="n">-FinalNewLine</span>
+<a id="__codelineno-8-184" name="__codelineno-8-184" href="#__codelineno-8-184"></a>  <span class="p">}</span>
+<a id="__codelineno-8-185" name="__codelineno-8-185" href="#__codelineno-8-185"></a>
+<a id="__codelineno-8-186" name="__codelineno-8-186" href="#__codelineno-8-186"></a>  <span class="c"># Write Info to Host that Subscription is done</span>
+<a id="__codelineno-8-187" name="__codelineno-8-187" href="#__codelineno-8-187"></a>  <span class="nb">Write-Info</span> <span class="p">`</span>
+<a id="__codelineno-8-188" name="__codelineno-8-188" href="#__codelineno-8-188"></a>    <span class="n">-Title</span> <span class="s2">&quot;Subscription Done&quot;</span> <span class="p">`</span>
+<a id="__codelineno-8-189" name="__codelineno-8-189" href="#__codelineno-8-189"></a>    <span class="n">-Value</span> <span class="nv">$AzSubscription</span><span class="p">.</span><span class="n">Name</span> <span class="p">`</span>
+<a id="__codelineno-8-190" name="__codelineno-8-190" href="#__codelineno-8-190"></a>    <span class="n">-FinalNewLine</span>
+<a id="__codelineno-8-191" name="__codelineno-8-191" href="#__codelineno-8-191"></a><span class="p">}</span>
+<a id="__codelineno-8-192" name="__codelineno-8-192" href="#__codelineno-8-192"></a>
+<a id="__codelineno-8-193" name="__codelineno-8-193" href="#__codelineno-8-193"></a><span class="c"># Write Info to Host of Resource-Counts</span>
+<a id="__codelineno-8-194" name="__codelineno-8-194" href="#__codelineno-8-194"></a><span class="nb">Write-Info</span> <span class="p">`</span>
+<a id="__codelineno-8-195" name="__codelineno-8-195" href="#__codelineno-8-195"></a>  <span class="n">-Title</span> <span class="s2">&quot;Resources deleted&quot;</span> <span class="p">`</span>
+<a id="__codelineno-8-196" name="__codelineno-8-196" href="#__codelineno-8-196"></a>  <span class="n">-Value</span> <span class="s2">&quot;$DeletedResourceCount of $AllAzResourceCount&quot;</span>
 </code></pre></div>
 </details>
 

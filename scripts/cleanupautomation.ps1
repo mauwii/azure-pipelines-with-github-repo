@@ -174,6 +174,7 @@ foreach ($AzSubscription in Get-AzSubscription) {
 
         # Update Deleted Resource Count
         if ($RmResource) {
+          Write-Host "Deleted $($AzRgResource.Name)"
           $DeletedResourceCount++
         }
       }

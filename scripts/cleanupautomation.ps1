@@ -194,6 +194,7 @@ foreach ($AzSubscription in Get-AzSubscription) {
       [void](
         Remove-AzResourceGroup `
           -Name $AzResourceGroup.ResourceGroupName `
+          -Force:$true `
           -WhatIf:$LocalTest
       )
       # Write Info to Host that ResourceGroup was deleted

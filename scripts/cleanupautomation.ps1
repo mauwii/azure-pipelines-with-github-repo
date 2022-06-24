@@ -202,7 +202,7 @@ foreach ($AzSubscription in Get-AzSubscription) {
           -Name $AzResourceGroup.ResourceGroupName `
           -WhatIf:$LocalTest
       )
-      # Write Info to Host that ResourceGroup is done
+      # Write Info to Host that ResourceGroup was deleted
       Write-Info `
         -Title "Deleted Resourcegroup" `
         -Value $AzResourceGroup.ResourceGroupName `

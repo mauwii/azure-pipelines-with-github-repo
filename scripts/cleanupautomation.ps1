@@ -168,7 +168,8 @@ foreach ($AzSubscription in Get-AzSubscription) {
         # Remove Resource
         Remove-AzResource `
           -ResourceId $AzRgResource.Id `
-          -WhatIf:$LocalTest
+          -WhatIf:$LocalTest `
+          -Force:$true
 
         # Update Deleted Resource Count
         $DeletedResourceCount++

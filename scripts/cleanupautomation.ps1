@@ -150,7 +150,6 @@ foreach ($AzSubscription in Get-AzSubscription) {
         )
       }
       else {
-
         # Get Resource Lock
         $AzResourceLock = Get-AzResourceLock `
           -ResourceName $AzRgResource.Name `
@@ -159,20 +158,24 @@ foreach ($AzSubscription in Get-AzSubscription) {
 
         # Remove Resource Lock if existing
         if ($AzResourceLock) {
-          Remove-AzResourceLock `
+          Write-Host "Deleting Resource Lock of $($AzRgResource.Name)"
+          [void](Remove-AzResourceLock `
             -LockId $AzResourceLock.LockId `
             -Force:$true `
             -WhatIf:$LocalTest
+          )
         }
-
         # Remove Resource
-        Remove-AzResource `
+        $RmResource = Remove-AzResource `
           -ResourceId $AzRgResource.Id `
           -WhatIf:$LocalTest `
+          -ErrorAction:SilentlyContinue `
           -Force:$true
 
         # Update Deleted Resource Count
-        $DeletedResourceCount++
+        if ($RmResource) {
+          $DeletedResourceCount++
+        }
       }
     }
 

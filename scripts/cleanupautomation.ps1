@@ -1,12 +1,6 @@
 param(
   [Switch]$LocalTest
 )
-if ($LocalTest) {
-  $LocalTest = $true
-}
-else {
-  $LocalTest = $false
-}
 
 # Connect to Azure-CLI as Service Principal
 [void](

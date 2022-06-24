@@ -12,8 +12,6 @@ trigger:
       - src/requirements-mkdocs-material.txt
       - src/mkdocs-material
       - azure-pipelines/mkdocs-material.yml
-      - azure-pipelines/stages/mkdocs_stage.yml
-      - azure-pipelines/stages/jobs/mkdocs-material.yml
       - azure-pipelines/stages/jobs/steps/build_mkdocs.yml
 
 pr:

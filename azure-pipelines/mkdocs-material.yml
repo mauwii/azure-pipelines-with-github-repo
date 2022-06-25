@@ -1,6 +1,7 @@
 trigger:
   branches:
     include:
+      - fix-mike
       - refs/heads/main
       - feature/*
       - issue/*
@@ -53,12 +54,14 @@ jobs:
         parameters:
           pythonVersion: '${{ parameters.pythonVersion }}'
           mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
-      # - ${{ if in(variables['Build.SourceBranchName'], 'Main', 'Stable' }}:
-          # - script: mkdocs gh-deploy --force --site-dir '${{ parameters.mkdocsSiteDir }}' --verbose
-          #   displayName: deploy to GitHub-Pages
-      - script: |
-          mike deploy --update-aliases $(Build.SourceBranchName).$(Build.BuildId) $(Build.SourceBranchName)
-          mike set-default $(Build.SourceBranchName)
-          git push origin gh-pages
-        condition: in(variables['Build.SourceBranchName'], 'Main', 'Stable')
-        displayName: 'update gh-pages'
+      - ${{ if in(variables['Build.SourceBranchName'], 'Main', 'Stable') }}:
+          - script: |
+              git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-mauwii}"
+              git config user.email "${BUILD_REQUESTEDFOREMAIL:-mauwii@mauwii.onmicrosoft.com}"
+              mike delete "$BUILD_SOURCEBRANCHNAME"
+              deleteVersion=$(mike list | grep -m 1 ${BUILD_SOURCEBRANCHNAME})
+              mike delete $deleteVersion
+              mike deploy -t "$BUILD_SOURCEBRANCHNAME" --update-aliases "$BUILD_SOURCEBRANCHNAME.$BUILD_BUILDID" "$BUILD_SOURCEBRANCHNAME"
+              mike set-default "$BUILD_SOURCEBRANCHNAME"
+              git push origin gh-pages
+            displayName: 'update gh-pages'

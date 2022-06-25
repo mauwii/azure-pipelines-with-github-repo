@@ -57,10 +57,12 @@ jobs:
       # - ${{ if in(variables['Build.SourceBranchName'], 'Main', 'Stable' }}:
           # - script: mkdocs gh-deploy --force --site-dir '${{ parameters.mkdocsSiteDir }}' --verbose
           #   displayName: deploy to GitHub-Pages
+      - script: 'export'
+        displayName: debug exports
       - script: |
           git config user.name mauwii
           git config user.email mauwii@outlook.de
-          mike deploy --update-aliases $(Build.SourceBranchName) $(Build.SourceBranchName)
+          mike deploy --update-aliases $(Build.SourceBranchName).$(Build.BuildId) $(Build.SourceBranchName)
           mike set-default $(Build.SourceBranchName)
           git push origin gh-pages
         condition: in(variables['Build.SourceBranchName'], 'Main', 'Stable', 'fix-mike')

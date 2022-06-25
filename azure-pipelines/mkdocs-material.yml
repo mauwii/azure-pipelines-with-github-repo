@@ -54,16 +54,17 @@ jobs:
         parameters:
           pythonVersion: '${{ parameters.pythonVersion }}'
           mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
-      # - ${{ if in(variables['Build.SourceBranchName'], 'Main', 'Stable' }}:
+      - ${{ if in(variables['Build.SourceBranchName'], 'Main', 'Stable', 'fix-mike') }}:
           # - script: mkdocs gh-deploy --force --site-dir '${{ parameters.mkdocsSiteDir }}' --verbose
           #   displayName: deploy to GitHub-Pages
-      - script: 'export'
-        displayName: debug exports
-      - script: |
-          git config user.name mauwii
-          git config user.email mauwii@outlook.de
-          mike deploy --update-aliases $(Build.SourceBranchName).$(Build.BuildId) $(Build.SourceBranchName)
-          mike set-default $(Build.SourceBranchName)
-          git push origin gh-pages
-        condition: in(variables['Build.SourceBranchName'], 'Main', 'Stable', 'fix-mike')
-        displayName: 'update gh-pages'
+          - ${{ if not(in(variables['Build.SourceBranchName'], 'Main', 'Stable', 'fix-mike')) }}:
+              - script: 'export'
+                displayName: debug exports
+          - script: |
+              git config user.name $BUILD_SOURCEVERSIONAUTHOR
+              git config user.email $BUILD_REQUESTEDFOREMAIL
+              mike deploy --update-aliases $BUILD_SOURCEBRANCHNAME.$BUILD_BUILDID $BUILD_SOURCEBRANCHNAME
+              mike set-default $BUILD_SOURCEBRANCHNAME
+              git push origin gh-pages
+            condition: in(variables['Build.SourceBranchName'], 'Main', 'Stable', 'fix-mike')
+            displayName: 'update gh-pages'

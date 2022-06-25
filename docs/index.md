@@ -17,6 +17,7 @@ I used a combination of these tools and frameworks to have a useful playground I
 - :material-microsoft-azure-devops: [__Azure-DevOps__](https://dev.azure.com/mauwiidev/azure-pipelines-with-github-repo) to run the yaml pipelines
 - :fontawesome-brands-atlassian: [__Jira__](https://mauwii.atlassian.net/jira/software/c/projects/APWGR/issues) to manage issues
 - :material-file-document: [__MkDocs-Material__](https://squidfunk.github.io/mkdocs-material/) to host versionable documentation
+- :fontawesome-brands-docker: [__DevOpsBuildAgent__](https://hub.docker.com/r/mauwii/devopsbuildagent) a containerized DevOps-Agent
 
 ### coming soon
 
@@ -40,7 +41,7 @@ This is the YAML file which was used to Configure the website you are currently 
 
 ??? quote "mkdocs.yml"
 
-    ```yaml title="mkdocs.yml" linenums="1"
+    ```yaml linenums="1"
     --8<-- "mkdocs.yml"
     ```
 

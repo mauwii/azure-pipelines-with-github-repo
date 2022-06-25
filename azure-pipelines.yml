@@ -5,7 +5,8 @@ trigger:
       - refs/heads/main
       - refs/heads/stable
 
-pr: none
+pr:
+  - main
 
 resources:
   repositories:
@@ -18,22 +19,6 @@ variables:
       - template: azure-pipelines/variables/${{ variables['Build.SourceBranchName'] }}.yml
 
 parameters:
-  - name: pythonVersion
-    displayName: Python Version to use when building MkDocs-Material
-    type: string
-    values:
-      - '3.7'
-      - '3.8'
-      - '3.9'
-    default: '3.9'
-  - name: mkdocsSiteDir
-    displayName: Name of the Directory where MkDocs will be built to
-    type: string
-    default: 'site'
-  - name: mkdocsDeploy
-    displayName: Deploy MkDocs to GitHub-Pages
-    type: boolean
-    default: true
   - name: bicepDir
     displayName: Directory containing Folders with Bicep Templates
     type: string
@@ -77,8 +62,5 @@ extends:
     resourceGroupName: ${{ parameters.resourceGroupName }}
     azureSubscription: ${{ parameters.azureSubscription }}
     location: ${{ parameters.location }}
-    pythonVersion: ${{ parameters.pythonVersion }}
-    mkdocsSiteDir: ${{ parameters.mkdocsSiteDir }}
-    mkdocsDeploy: ${{ parameters.mkdocsDeploy }}
     cleanup: ${{ parameters.cleanup }}
     agentpool: ${{ parameters.agentpool }}

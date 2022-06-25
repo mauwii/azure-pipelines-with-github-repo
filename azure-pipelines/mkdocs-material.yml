@@ -1,0 +1,67 @@
+trigger:
+  branches:
+    include:
+      - fix-mike
+      - refs/heads/main
+      - feature/*
+      - issue/*
+      - update/*
+  paths:
+    include:
+      - docs
+      - mkdocs.yml
+      - src/requirements-mkdocs-material.txt
+      - src/mkdocs-material
+      - azure-pipelines/mkdocs-material.yml
+      - azure-pipelines/stages/jobs/steps/build_mkdocs.yml
+
+pr:
+  - main
+
+parameters:
+  - name: pythonVersion
+    displayName: Python Version to use when building MkDocs-Material
+    type: string
+    values:
+      - '3.9'
+      - '3.10'
+    default: '3.10'
+  - name: mkdocsSiteDir
+    displayName: Name of the Directory where MkDocs will be built to
+    type: string
+    default: 'site'
+  - name: agentpool
+    displayName: Agent-Pool to be used
+    values:
+      - 'Azure Pipelines'
+      - 'local'
+    default: 'Azure Pipelines'
+
+variables:
+  - template: variables/default.yml
+
+jobs:
+  - job:
+    displayName: MkDocs-Material
+    pool:
+      name: ${{ parameters.agentpool }}
+    steps:
+      - template: stages/jobs/steps/checkout_submodules.yml
+        parameters:
+          submodule: 'src/mkdocs-material'
+          checkoutSelf: true
+      - template: stages/jobs/steps/build_mkdocs.yml
+        parameters:
+          pythonVersion: '${{ parameters.pythonVersion }}'
+          mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
+      - ${{ if in(variables['Build.SourceBranchName'], 'Main', 'Stable') }}:
+          - script: |
+              git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-mauwii}"
+              git config user.email "${BUILD_REQUESTEDFOREMAIL:-mauwii@mauwii.onmicrosoft.com}"
+              mike delete "$BUILD_SOURCEBRANCHNAME"
+              deleteVersion=$(mike list | grep -m 1 ${BUILD_SOURCEBRANCHNAME})
+              mike delete $deleteVersion
+              mike deploy -t "$BUILD_SOURCEBRANCHNAME" --update-aliases "$BUILD_SOURCEBRANCHNAME.$BUILD_BUILDID" "$BUILD_SOURCEBRANCHNAME"
+              mike set-default "$BUILD_SOURCEBRANCHNAME"
+              git push origin gh-pages
+            displayName: 'update gh-pages'

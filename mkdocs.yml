@@ -95,10 +95,14 @@ extra:
   social:
     - icon: fontawesome/brands/github-alt
       link: https://github.com/Mauwii
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/r/mauwii/
     - icon: fontawesome/brands/keybase
       link: https://keybase.io/mauwi
     - icon: material/email-fast
       link: mailto:mauwii@outlook.de
+  version:
+    provider: mike
 
 # Extensions
 markdown_extensions:
@@ -147,3 +151,4 @@ markdown_extensions:
 plugins:
   - search
   - git-revision-date
+  - mike

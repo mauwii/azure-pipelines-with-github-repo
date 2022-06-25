@@ -57,4 +57,4 @@ jobs:
           # - script: mkdocs gh-deploy --force --site-dir '${{ parameters.mkdocsSiteDir }}' --verbose
           #   displayName: deploy to GitHub-Pages
           - script: 'mike deploy --push --update-aliases "$(Build.SourceBranchName).$(Build.BuildId)" "$(Build.SourceBranchName)"'
-            displayName: update gh-pages
+            displayName: 'update gh-pages $(Build.SourceBranchName)'

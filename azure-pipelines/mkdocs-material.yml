@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-      - fix-mike
+      - refs/heads/stable
       - refs/heads/main
       - feature/*
       - issue/*

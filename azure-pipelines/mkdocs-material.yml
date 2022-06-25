@@ -61,7 +61,7 @@ jobs:
               mike delete "$BUILD_SOURCEBRANCHNAME"
               deleteVersion=$(mike list | grep -m 1 ${BUILD_SOURCEBRANCHNAME})
               mike delete $deleteVersion
-              mike deploy --update-aliases "$BUILD_SOURCEBRANCHNAME.$BUILD_BUILDID" "$BUILD_SOURCEBRANCHNAME"
+              mike deploy -t "$BUILD_SOURCEBRANCHNAME" --update-aliases "$BUILD_SOURCEBRANCHNAME.$BUILD_BUILDID" "$BUILD_SOURCEBRANCHNAME"
               mike set-default "$BUILD_SOURCEBRANCHNAME"
               git push origin gh-pages
             displayName: 'update gh-pages'

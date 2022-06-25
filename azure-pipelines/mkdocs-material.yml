@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-      - fix-mike
+      - refs/heads/stable
       - refs/heads/main
       - feature/*
       - issue/*
@@ -60,6 +60,8 @@ jobs:
               git config user.email "${BUILD_REQUESTEDFOREMAIL:-mauwii@mauwii.onmicrosoft.com}"
               mike delete "$BUILD_SOURCEBRANCHNAME"
               deleteVersion=$(mike list | grep -m 1 ${BUILD_SOURCEBRANCHNAME})
+              deleteVersion=${deleteVersion##*\(}
+              deleteVersion=${deleteVersion%\)*}
               mike delete $deleteVersion
               mike deploy -t "$BUILD_SOURCEBRANCHNAME" --update-aliases "$BUILD_SOURCEBRANCHNAME.$BUILD_BUILDID" "$BUILD_SOURCEBRANCHNAME"
               mike set-default "$BUILD_SOURCEBRANCHNAME"

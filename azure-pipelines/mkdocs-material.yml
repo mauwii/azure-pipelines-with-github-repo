@@ -1,0 +1,60 @@
+trigger:
+  branches:
+    include:
+      - refs/heads/main
+      - feature/*
+      - issue/*
+      - update/*
+  paths:
+    include:
+      - docs
+      - mkdocs.yml
+      - src/requirements-mkdocs-material.txt
+      - src/mkdocs-material
+      - azure-pipelines/mkdocs-material.yml
+      - azure-pipelines/stages/jobs/steps/build_mkdocs.yml
+
+pr:
+  - main
+
+parameters:
+  - name: pythonVersion
+    displayName: Python Version to use when building MkDocs-Material
+    type: string
+    values:
+      - '3.9'
+      - '3.10'
+    default: '3.10'
+  - name: mkdocsSiteDir
+    displayName: Name of the Directory where MkDocs will be built to
+    type: string
+    default: 'site'
+  - name: agentpool
+    displayName: Agent-Pool to be used
+    values:
+      - 'Azure Pipelines'
+      - 'local'
+    default: 'Azure Pipelines'
+
+variables:
+  - template: variables/default.yml
+
+jobs:
+  - job:
+    displayName: MkDocs-Material
+    pool:
+      name: ${{ parameters.agentpool }}
+    steps:
+      - template: stages/jobs/steps/checkout_submodules.yml
+        parameters:
+          submodule: 'src/mkdocs-material'
+          checkoutSelf: true
+      - template: stages/jobs/steps/build_mkdocs.yml
+        parameters:
+          pythonVersion: '${{ parameters.pythonVersion }}'
+          mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
+      - ${{ if in('True', variables.isMain, variables.isStable) }}:
+          # - script: mkdocs gh-deploy --force --site-dir '${{ parameters.mkdocsSiteDir }}' --verbose
+          #   displayName: deploy to GitHub-Pages
+          - script: 'mike deploy --push --update-aliases "$(Build.SourceBranchName).$(Build.BuildId)" "$(Build.SourceBranchName)"'
+            displayName: 'update gh-pages $(Build.SourceBranchName)'

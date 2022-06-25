@@ -11,10 +11,13 @@ foreach ($AzSubscription in Get-AzSubscription) {
   $startDate = (Get-Date).AddDays(-$Days)
   $endDate = Get-Date
   try {
-    $currentCost = Get-AzConsumptionUsageDetail `
-      -StartDate $startDate `
-      -EndDate $endDate | `
-      Measure-Object -Property PretaxCost -Sum
+    $currentCost = (
+      Get-AzConsumptionUsageDetail `
+        -StartDate $startDate `
+        -EndDate $endDate | `
+        Measure-Object `
+        -Property PretaxCost -Sum
+    )
   }
   catch [System.Net.WebException] {
     "Cannot get Cost for ($AzSubscription.Name)"

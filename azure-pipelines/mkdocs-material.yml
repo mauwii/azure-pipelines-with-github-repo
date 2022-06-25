@@ -53,9 +53,12 @@ jobs:
         parameters:
           pythonVersion: '${{ parameters.pythonVersion }}'
           mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
-      # - ${{ if in('True', variables.isMain, variables.isStable) }}:
+      # - ${{ if in(variables['Build.SourceBranchName'], 'Main', 'Stable' }}:
           # - script: mkdocs gh-deploy --force --site-dir '${{ parameters.mkdocsSiteDir }}' --verbose
           #   displayName: deploy to GitHub-Pages
-      - script: 'mike deploy --push --update-aliases "$(Build.SourceBranchName).$(Build.BuildId)" "$(Build.SourceBranchName)"'
+      - script: |
+          mike deploy --update-aliases $(Build.SourceBranchName).$(Build.BuildId) $(Build.SourceBranchName)
+          mike set-default $(Build.SourceBranchName)
+          git push origin gh-pages
         condition: in(variables['Build.SourceBranchName'], 'Main', 'Stable')
         displayName: 'update gh-pages'

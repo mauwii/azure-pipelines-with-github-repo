@@ -63,7 +63,7 @@ jobs:
           - script: |
               git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-mauwii}"
               git config user.email "${BUILD_REQUESTEDFOREMAIL:-mauwii@mauwii.onmicrosoft.com}"
-              mike deploy --update-aliases "$BUILD_SOURCEBRANCHNAME.$BUILD_BUILDID" "$BUILD_SOURCEBRANCHNAME"
-              mike set-default $BUILD_SOURCEBRANCHNAME
-              git push origin gh-pages
+              mike delete "$BUILD_SOURCEBRANCHNAME"
+              mike deploy --push --update-aliases "$BUILD_SOURCEBRANCHNAME" "$BUILD_SOURCEBRANCHNAME"
+              # mike deploy --push --update-aliases "$BUILD_SOURCEBRANCHNAME.$BUILD_BUILDID" "$BUILD_SOURCEBRANCHNAME"
             displayName: 'update gh-pages'

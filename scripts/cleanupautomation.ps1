@@ -23,8 +23,8 @@ $OlderResourceDays = 14
 
 # Initialize Variables to count existing and deleted Resources/RGs
 $AllAzRgCount = 0
-$AllAzResourceCount = 0
 $DeletedAzRgCount = 0
+$AllAzResourceCount = 0
 $DeletedAzResourceCount = 0
 
 # Function to Print Information

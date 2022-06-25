@@ -5,7 +5,8 @@ trigger:
       - refs/heads/main
       - refs/heads/stable
 
-pr: none
+pr:
+  - main
 
 resources:
   repositories:

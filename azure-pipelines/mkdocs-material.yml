@@ -53,6 +53,8 @@ jobs:
         parameters:
           pythonVersion: '${{ parameters.pythonVersion }}'
           mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
-      - ${{ if eq(variables.isMain, 'True') }}:
-          - script: mkdocs gh-deploy --force --site-dir '${{ parameters.mkdocsSiteDir }}' --verbose
-            displayName: deploy to GitHub-Pages
+      - ${{ if in('True', variables.isMain, variables.isStable) }}:
+          # - script: mkdocs gh-deploy --force --site-dir '${{ parameters.mkdocsSiteDir }}' --verbose
+          #   displayName: deploy to GitHub-Pages
+          - script: mike deploy --push --update-aliases $(Build.SourceVersion) $(Build.SourceBranchName)
+            displayName: update gh-pages

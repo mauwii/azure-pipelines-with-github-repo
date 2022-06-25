@@ -54,7 +54,7 @@ jobs:
         parameters:
           pythonVersion: '${{ parameters.pythonVersion }}'
           mkdocsSiteDir: '${{ parameters.mkdocsSiteDir }}'
-      - ${{ if in(variables['Build.SourceBranchName'], 'Main', 'Stable', 'fix-mike') }}:
+      - ${{ if in(variables['Build.SourceBranchName'], 'Main', 'Stable') }}:
           - script: |
               git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-mauwii}"
               git config user.email "${BUILD_REQUESTEDFOREMAIL:-mauwii@mauwii.onmicrosoft.com}"

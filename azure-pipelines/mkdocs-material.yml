@@ -64,6 +64,5 @@ jobs:
               git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-mauwii}"
               git config user.email "${BUILD_REQUESTEDFOREMAIL:-mauwii@mauwii.onmicrosoft.com}"
               mike delete "$BUILD_SOURCEBRANCHNAME"
-              mike deploy --push --update-aliases "$BUILD_SOURCEBRANCHNAME" "$BUILD_SOURCEBRANCHNAME"
-              # mike deploy --push --update-aliases "$BUILD_SOURCEBRANCHNAME.$BUILD_BUILDID" "$BUILD_SOURCEBRANCHNAME"
+              mike deploy --push --update-aliases "$BUILD_SOURCEBRANCHNAME.$BUILD_BUILDID" "$BUILD_SOURCEBRANCHNAME"
             displayName: 'update gh-pages'

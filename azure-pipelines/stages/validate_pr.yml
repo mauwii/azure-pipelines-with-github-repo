@@ -15,5 +15,4 @@ variables:
 stages:
   - template: main.yml
     parameters:
-      mkdocsDeploy: ${{ false }}
       bicepParameter: ${{ variables['bicepParameter'] }}

@@ -3,12 +3,10 @@ title: ToDo
 # template: overrides/main.html
 ---
 
-- [ ] Clean up all the mess which has grown over the last weeks of development
-
 ### :material-notebook-outline: Documentation
 
-- [ ] Build MkDocs for main branch as well as stable branch, not sure if this will need the mkdocs-plugin `mike` to work properly or if I can have more Environments in GitHub-Pages (for free...).<br>Currently I am building MkDocs in main Branch as well, but not publishing it, to make sure it is buildable before allowing a PullRequest to be merged.
-- [x] Update Documentation (ongoing :see_no_evil:)
+- [ ] Update Documentation (will maybe never be finished since constantly updating features :see_no_evil:)
+- [x] Build MkDocs for main branch as well as stable branch, not sure if this will need the mkdocs-plugin `mike` to work properly or if I can have more Environments in GitHub-Pages (for free...).<br>Currently I am building MkDocs in main Branch as well, but not publishing it, to make sure it is buildable before allowing a PullRequest to be merged.
 - [x] integrate publish_docs into azure-pipelines.yml
 - [x] update [workflow chart and Diagrams](workflow/1-repository.md)
     - [x] update [commit flow example](workflow/1-repository.md#commit-flow-example)
@@ -21,16 +19,12 @@ title: ToDo
     - [ ] add a KeyVault to store:
         - [ ] application Insights
 - [ ] use the defaults.yaml for configuration relevant things like f.E. default location of pipeline YAMLs or Bicep templates
+- [x] Clean up all the mess which has grown over the last weeks of development
 - [x] use variables for default parameters in pipeline-templates
 - [x] create branch dependent variable templates (done for main)
     - [x] select correct template by destination branch
 - [x] create bicep templates
 - [x] link secrets between resources (like f.E. AppInsights Instrumentation Key into WebApp-Settings)
-
-#### Maybe unnecessary
-
-- [ ] Overwrite YAML Triggers for Main pipeline (azure-pipeline.yml) to prevent running it from other Branches (still open since unsure if even necessary)
-- [ ] Add Check to PR-Validation ,before building the WebApp, to see if the Resources already exist, since keys get read out while building the App, which is failing if they don't exist at all
 
 ### :material-head-lightbulb: Ideas
 

@@ -1,2 +1,2 @@
-mkdocs-git-revision-date-plugin
-mike
+mkdocs-git-revision-date-plugin==0.3.2
+mike==1.1.2

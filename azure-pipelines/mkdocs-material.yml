@@ -60,7 +60,7 @@ jobs:
       - script: |
           git config user.name mauwii
           git config user.email mauwii@outlook.de
-          mike deploy --update-aliases $(Build.SourceBranchName).$(Build.BuildId) $(Build.SourceBranchName)
+          mike deploy --update-aliases $(Build.SourceBranchName) $(Build.SourceBranchName)
           mike set-default $(Build.SourceBranchName)
           git push origin gh-pages
         condition: in(variables['Build.SourceBranchName'], 'Main', 'Stable', 'fix-mike')

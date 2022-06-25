@@ -59,7 +59,7 @@ jobs:
           #   displayName: deploy to GitHub-Pages
       - script: |
           git config user.name mauwii
-          git config user.mail mauwii@outlook.de
+          git config user.email mauwii@outlook.de
           mike deploy --update-aliases $(Build.SourceBranchName).$(Build.BuildId) $(Build.SourceBranchName)
           mike set-default $(Build.SourceBranchName)
           git push origin gh-pages

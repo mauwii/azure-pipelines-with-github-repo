@@ -3,11 +3,11 @@ trigger: none
 pr: none
 
 schedules:
-  - cron: "0 0 * * *"
+  - cron: '0 0 * * *'
     displayName: Daily cleanup
     branches:
       include:
-      - main
+        - main
 
 steps:
   - task: AzurePowerShell@5

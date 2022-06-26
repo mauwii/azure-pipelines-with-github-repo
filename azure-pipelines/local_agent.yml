@@ -33,5 +33,3 @@ stages:
               Inline: 'Get-AzContext'
               errorActionPreference: 'continue'
               azurePowerShellVersion: 'LatestVersion'
-
-

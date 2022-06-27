@@ -49,10 +49,6 @@ parameters:
       - 'Azure Pipelines'
       - 'local'
     default: 'Azure Pipelines'
-  - name: cleanup
-    displayName: 'Run cleanup stage'
-    type: boolean
-    default: true
 
 extends:
   template: azure-pipelines/stages/main.yml
@@ -62,5 +58,4 @@ extends:
     resourceGroupName: ${{ parameters.resourceGroupName }}
     azureSubscription: ${{ parameters.azureSubscription }}
     location: ${{ parameters.location }}
-    cleanup: ${{ parameters.cleanup }}
     agentpool: ${{ parameters.agentpool }}

@@ -17,7 +17,7 @@ I had the Idea to use this folder for pipeline Stage-Templates, then use the `az
 
 #### main.yml
 
-This stage-template contains is defining the complete pipeline. I had it separated from `azure-pipelines.yml` to be able to run `validate_pr.yml` (pull request validation) with the same stages than `azure-pipelines.yml`, but while Writing this, I already get thoughts about a restructure, but would first need to test it out before I start writing documentation for it. In the end it could not work out and everything stays as it is :hear_no_evil:
+This stage-template contains is defining the complete pipeline. I had it separated from `azure-pipelines.yml` to be able to run `validate_pr.yml` (pull request validation) with the same stages than `azure-pipelines.yml`, but after development moved on I got rid of `validate_pr.yml` but thought it could still be practical later on to have this `main.yml` template.
 
 ??? quote "azure-pipelines/main.yml"
 
@@ -66,7 +66,7 @@ This pipeline is validating, building and deploying the documentation you are ju
 
 Validation is done with building the docs, if there is no error I suggest that everything will be fine after it is just a static website.
 
-The Deployment step will only appear when the pipeline get run from `main` branch.
+The Deployment step `update gh-pages` will only appear when the pipeline is running from `main` or `stable` branch. Thanks to a mkdocs-plugin called `mike`, both Versions of the Documentation will be available via github-pages.
 
 ??? quote "azure-pipelines/mkdocs-material.yml"
 
@@ -94,9 +94,15 @@ This Pipeline will build a docker image of a DevOps-Agent, if you want to find o
 
 ### cleanup_automation.yml
 
-This Pipeline will delete Resources in Subscriptions of the used Service Principal automatically. It differs between Resources which where available before and after a initial Date, which will have a defined range of days from creation before they will be deleted. While date is not reach, it will set a Tag on the Resource with the deletion date (which is just used for information). After the Resource has reached the defined age it will be deleted.
+??? warning "Necessary to use this Pipeline is a Service Principal with permission to delete Resources and Resource Locks"
 
-Necessary to use this Pipeline is a Service Principal with permission to delete Resources and Resource Locks.
+    Besides a Service Connection in DevOps, add Secret Variables to the Pipeline for:
+
+    * ApplicationId
+    * ClientSecret
+    * SpTenantId
+
+This Pipeline will delete Resources in Subscriptions of the used Service Principal automatically. It differs between Resources which where available before and after a initial Date, which will have a defined range of days from creation before they will be deleted. While date is not reach, it will set a Tag on the Resource with the deletion date (which is just used for information). After the Resource has reached the defined age it will be deleted.
 
 ??? quote "azure-pipelines/cleanup_automation.yml"
 

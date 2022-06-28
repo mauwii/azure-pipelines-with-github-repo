@@ -11,12 +11,12 @@ fi
 
 mike delete "${branchname}"
 
-deleteVersion=$(mike list | grep -m 1 ${branchname})
+deleteVersion=$(mike list | grep -m 1 "${branchname}")
 
 if [[ -n $deleteVersion ]]; then
-  deleteVersion=${deleteVersion##*\(}
-  deleteVersion=${deleteVersion%\)*}
-  mike delete $deleteVersion
+  deleteVersion="${deleteVersion##*\(}"
+  deleteVersion="${deleteVersion%\)*}"
+  mike delete "${deleteVersion}"
 fi
 
 if [[ $ISPULLREQUEST != "True" ]]; then

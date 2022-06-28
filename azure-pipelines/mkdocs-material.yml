@@ -39,6 +39,8 @@ jobs:
     pool:
       name: ${{ parameters.agentpool }}
     steps:
+      - bash: 'export'
+        displayName: 'debug export'
       - template: stages/jobs/steps/checkout_submodules.yml
         parameters:
           submodule: 'src/mkdocs-material'

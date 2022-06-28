@@ -1,18 +1,36 @@
 #!/usr/bin/env bash
 
+# configure git to make mike work
 git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-'Mauwii'}"
 git config user.email "${BUILD_REQUESTEDFOREMAIL:-'mauwii@mauwii.onmicrosoft.com'}"
 
-[[ $ISPULLREQUEST == "True" ]] && branchname="${SYSTEM_PULLREQUEST_SOURCEBRANCH}" ||  branchname="${BUILD_SOURCEBRANCH#refs\/heads\/}"
-branchname=${branchname//\//-}
+# pull current deployed mkdocs version
+git fetch
+git pull origin gh-pages
 
-deleteVersion="$(mike list -j | jq '.[] | .version' | grep -m 1 ${branchname}.)"
+# set branchname for mike deployment
+[[ $ISPULLREQUEST == "True" ]] \
+  && branchname="${SYSTEM_PULLREQUEST_SOURCEBRANCH}" \
+  || branchname="${BUILD_SOURCEBRANCH#refs/heads/}"
 
-[[ -n "${deleteVersion}" ]] && mike delete "${deleteVersion}" || echo "no Version deployed yet for ${branchname}"
+# set versionname for mike deployment
+versionName=${branchname//\//-}
 
+# find currently deployed version for this branch
+deleteVersion="$(mike list -j | jq '.[] | .version' | grep -m 1 ${versionName})"
+
+# delete the currently deployed version
+[[ -n "${deleteVersion}" ]] \
+  && mike delete "${deleteVersion}" \
+  || echo "no Version deployed yet for ${versionName}"
+
+# if not pull request, deploy version
 if [[ $ISPULLREQUEST != "True" ]]; then
-  echo "deploying version ${branchname}.$BUILD_BUILDID to gh-pages"
-  mike deploy --title "${branchname}" --update-aliases "${branchname}.$BUILD_BUILDID" "${branchname}"
+  echo "deploying version ${versionName}.$BUILD_BUILDID to gh-pages"
+  mike deploy \
+    --title "${versionName}" \
+    --update-aliases "${versionName}.$BUILD_BUILDID" "${versionName}"
 fi
 
-mike set-default --push main
+# push to gh-pages
+git push origin gh-pages

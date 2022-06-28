@@ -5,7 +5,7 @@ git config user.email "${BUILD_REQUESTEDFOREMAIL:-'mauwii@mauwii.onmicrosoft.com
 
 if [[ $ISPULLREQUEST = "True" ]]; then
   branchname="${SYSTEM_PULLREQUEST_SOURCEBRANCH}"
-elif
+else
   branchname="${BUILD_SOURCEBRANCHNAME}"
 fi
 

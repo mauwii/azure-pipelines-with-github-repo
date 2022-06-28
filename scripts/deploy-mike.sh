@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-mauwii}"
+git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-'Mauwii'}"
 git config user.email "${BUILD_REQUESTEDFOREMAIL:-'mauwii@mauwii.onmicrosoft.com'}"
 
 if [[ $ISPULLREQUEST = "True" ]]; then
@@ -9,9 +9,7 @@ else
   branchname="${BUILD_SOURCEBRANCHNAME}"
 fi
 
-mike delete "${branchname}"
-
-deleteVersion=$(mike list | grep -m 1 "${branchname}")
+deleteVersion=$(mike list | grep -m 1 "${branchname}.")
 
 if [[ -n $deleteVersion ]]; then
   deleteVersion="${deleteVersion##*\(}"
@@ -20,6 +18,6 @@ if [[ -n $deleteVersion ]]; then
 fi
 
 if [[ $ISPULLREQUEST != "True" ]]; then
-  mike deploy --push --title "${branchname}" --update-aliases "${branchname}.$BUILD_BUILDID" "${branchname}"
-  mike set-default main
+  mike deploy --title "${branchname}" --update-aliases "${branchname}.$BUILD_BUILDID" "${branchname}"
+  mike set-default --push main
 fi

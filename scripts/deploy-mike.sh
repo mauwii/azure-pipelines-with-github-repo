@@ -9,11 +9,9 @@ else
   branchname="${BUILD_SOURCEBRANCHNAME}"
 fi
 
-deleteVersion=$(mike list | grep -m 1 "${branchname}.")
+deleteVersion="$(mike list -j | jq '.[] | .version' | grep -m 1 '"${branchname}."')"
 
 if [[ -n $deleteVersion ]]; then
-  deleteVersion="${deleteVersion##*\(}"
-  deleteVersion="${deleteVersion%\)*}"
   echo "deleting version ${deleteVersion} from mkdocs"
   mike delete --push "${deleteVersion}"
 fi

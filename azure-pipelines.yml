@@ -3,7 +3,6 @@ trigger:
   branches:
     include:
       - refs/heads/main
-      - refs/heads/stable
 
 pr:
   - main

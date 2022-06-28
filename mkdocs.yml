@@ -103,6 +103,7 @@ extra:
       link: mailto:mauwii@outlook.de
   version:
     provider: mike
+    default: main
 
 # Extensions
 markdown_extensions:

@@ -64,9 +64,7 @@ Well, I think the headline has already explained what this step is all about :sp
 
 This pipeline is validating, building and deploying the documentation you are just looking at :sweat_smile:
 
-Validation is done with building the docs, if there is no error I suggest that everything will be fine after it is just a static website.
-
-The Deployment step `update gh-pages` will only appear when the pipeline is running from `main` or `stable` branch. Thanks to a mkdocs-plugin called `mike`, both Versions of the Documentation will be available via github-pages.
+Validation is done with building the docs, if there is no error I suggest that everything will be fine since it is just a static website.
 
 ??? quote "azure-pipelines/mkdocs-material.yml"
 

@@ -12,14 +12,12 @@ git config user.email "${BUILD_REQUESTEDFOREMAIL:-'mauwii@mauwii.onmicrosoft.com
 # set versionname for mike deployment
 versionName=${branchname//\//-}
 
-mike delete $versionName
-
 # find currently deployed version for this branch
 deleteVersion=$(mike list -j | jq '.[] | .version' | grep -m 1 ${versionName})
 
 # delete the previously deployed version
 if [[ -n "${deleteVersion}" ]]; then
-  mike delete --push $deleteVersion
+  mike delete "$deleteVersion"
 fi
 
 # if not pull request deploy currnent version, otherwise delete alias

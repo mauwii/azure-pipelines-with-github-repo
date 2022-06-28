@@ -3,10 +3,11 @@ trigger:
     include:
       - docs
       - mkdocs.yml
-      - src/requirements-mkdocs-material.txt
-      - src/mkdocs-material
       - azure-pipelines/mkdocs-material.yml
       - azure-pipelines/stages/jobs/steps/build_mkdocs.yml
+      - scripts/deploy-mike.sh
+      - src/requirements-mkdocs-material.txt
+      - src/mkdocs-material
 
 pr:
   - main
@@ -39,6 +40,8 @@ jobs:
     pool:
       name: ${{ parameters.agentpool }}
     steps:
+      - bash: 'export'
+        displayName: 'debug export'
       - template: stages/jobs/steps/checkout_submodules.yml
         parameters:
           submodule: 'src/mkdocs-material'

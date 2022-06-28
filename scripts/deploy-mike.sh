@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
 
-git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-mauwii}"
+git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-'Mauwii'}"
 git config user.email "${BUILD_REQUESTEDFOREMAIL:-'mauwii@mauwii.onmicrosoft.com'}"
-mike delete "$BUILD_SOURCEBRANCHNAME"
-deleteVersion=$(mike list | grep -m 1 ${BUILD_SOURCEBRANCHNAME})
+
+if [[ $ISPULLREQUEST = "True" ]]; then
+  branchname="${SYSTEM_PULLREQUEST_SOURCEBRANCH##*/}"
+else
+  branchname="${BUILD_SOURCEBRANCHNAME}"
+fi
+
+deleteVersion="$(mike list -j | jq '.[] | .version' | grep -m 1 '"${branchname}."')"
+
 if [[ -n $deleteVersion ]]; then
-  deleteVersion=${deleteVersion##*\(}
-  deleteVersion=${deleteVersion%\)*}
-  mike delete $deleteVersion
+  echo "deleting version ${deleteVersion} from mkdocs"
+  mike delete --push "${deleteVersion}"
 fi
+
 if [[ $ISPULLREQUEST != "True" ]]; then
-  mike deploy -t "$BUILD_SOURCEBRANCHNAME" --update-aliases "$BUILD_SOURCEBRANCHNAME.$BUILD_BUILDID" "$BUILD_SOURCEBRANCHNAME"
-  mike set-default main
+  echo "deploying version ${branchname}.$BUILD_BUILDID to mkdocs"
+  mike deploy --title "${branchname}" --update-aliases "${branchname}.$BUILD_BUILDID" "${branchname}"
+  mike set-default --push main
 fi
-git push origin gh-pages

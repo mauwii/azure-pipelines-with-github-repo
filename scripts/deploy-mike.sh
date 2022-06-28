@@ -17,7 +17,7 @@ deleteVersion=$(mike list -j | jq '.[] | .version' | grep -m 1 ${versionName})
 
 # delete the previously deployed version
 if [[ -n "${deleteVersion}" ]]; then
-  mike delete "$deleteVersion"
+  mike delete ${deleteVersion//\"/}
 fi
 
 # if not pull request deploy currnent version, otherwise delete alias

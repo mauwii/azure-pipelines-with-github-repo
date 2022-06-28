@@ -14,10 +14,12 @@ deleteVersion=$(mike list | grep -m 1 "${branchname}.")
 if [[ -n $deleteVersion ]]; then
   deleteVersion="${deleteVersion##*\(}"
   deleteVersion="${deleteVersion%\)*}"
+  echo "deleting version ${deleteVersion} from mkdocs"
   mike delete --push "${deleteVersion}"
 fi
 
 if [[ $ISPULLREQUEST != "True" ]]; then
+  echo "deploying version ${branchname}.$BUILD_BUILDID to mkdocs"
   mike deploy --title "${branchname}" --update-aliases "${branchname}.$BUILD_BUILDID" "${branchname}"
   mike set-default --push main
 fi

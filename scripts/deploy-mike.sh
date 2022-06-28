@@ -5,6 +5,7 @@ git config user.email "${BUILD_REQUESTEDFOREMAIL:-'mauwii@mauwii.onmicrosoft.com
 
 if [[ $ISPULLREQUEST = "True" ]]; then
   branchname="${SYSTEM_PULLREQUEST_SOURCEBRANCH##*/}"
+  git pull origin gh-pages
 else
   branchname="${BUILD_SOURCEBRANCHNAME}"
 fi

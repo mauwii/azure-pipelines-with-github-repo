@@ -59,6 +59,7 @@ jobs:
           fi
           if [[ $ISPULLREQUEST != "True" ]]; then
             mike deploy -t "$BUILD_SOURCEBRANCHNAME" --update-aliases "$BUILD_SOURCEBRANCHNAME.$BUILD_BUILDID" "$BUILD_SOURCEBRANCHNAME"
+            mike set-default main
           fi
           git push origin gh-pages
         displayName: 'update gh-pages'

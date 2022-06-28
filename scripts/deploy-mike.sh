@@ -4,9 +4,8 @@
 git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-'Mauwii'}"
 git config user.email "${BUILD_REQUESTEDFOREMAIL:-'mauwii@mauwii.onmicrosoft.com'}"
 
-# pull current deployed mkdocs version
-git fetch
-git pull origin gh-pages
+# delete local gh-pages branch
+git branch -D gh-pages
 
 # set branchname for mike deployment
 [[ $ISPULLREQUEST == "True" ]] \

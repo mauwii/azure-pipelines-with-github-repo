@@ -2,10 +2,11 @@
 
 git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-mauwii}"
 git config user.email "${BUILD_REQUESTEDFOREMAIL:-'mauwii@mauwii.onmicrosoft.com'}"
+git fetch
+git pull origin gh-pages
 
 if [[ $ISPULLREQUEST = "True" ]]; then
   branchname="${SYSTEM_PULLREQUEST_SOURCEBRANCH##*/}"
-  git pull origin gh-pages
 else
   branchname="${BUILD_SOURCEBRANCHNAME}"
 fi

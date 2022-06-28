@@ -3,7 +3,8 @@
 git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-'Mauwii'}"
 git config user.email "${BUILD_REQUESTEDFOREMAIL:-'mauwii@mauwii.onmicrosoft.com'}"
 
-[[ $ISPULLREQUEST == "True" ]] && branchname="${SYSTEM_PULLREQUEST_SOURCEBRANCH//\//-}" ||  branchname="${BUILD_SOURCEBRANCH//\//-}"
+[[ $ISPULLREQUEST == "True" ]] && branchname="${SYSTEM_PULLREQUEST_SOURCEBRANCH}" ||  branchname="${BUILD_SOURCEBRANCH#refs\/heads\/}"
+branchname=${branchname//\//-}
 
 deleteVersion="$(mike list -j | jq '.[] | .version' | grep -m 1 ${branchname}.)"
 

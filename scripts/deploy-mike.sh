@@ -2,8 +2,6 @@
 
 git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-mauwii}"
 git config user.email "${BUILD_REQUESTEDFOREMAIL:-'mauwii@mauwii.onmicrosoft.com'}"
-git fetch
-git pull origin gh-pages
 
 if [[ $ISPULLREQUEST = "True" ]]; then
   branchname="${SYSTEM_PULLREQUEST_SOURCEBRANCH##*/}"
@@ -18,12 +16,10 @@ deleteVersion=$(mike list | grep -m 1 "${branchname}")
 if [[ -n $deleteVersion ]]; then
   deleteVersion="${deleteVersion##*\(}"
   deleteVersion="${deleteVersion%\)*}"
-  mike delete "${deleteVersion}"
+  mike delete --push "${deleteVersion}"
 fi
 
 if [[ $ISPULLREQUEST != "True" ]]; then
-  mike deploy -t "${branchname}" --update-aliases "${branchname}.$BUILD_BUILDID" "${branchname}"
+  mike deploy --push --title "${branchname}" --update-aliases "${branchname}.$BUILD_BUILDID" "${branchname}"
   mike set-default main
 fi
-
-git push origin gh-pages

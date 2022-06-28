@@ -15,7 +15,12 @@ param(
 $CurrentUTCtime = (Get-Date).ToUniversalTime()
 
 # Set Initial Date
-$InitialDate = (Get-Date -Year 2022 -Month 06 -Day 15).ToUniversalTime()
+$InitialDate = (
+  Get-Date `
+    -Year 2022 `
+    -Month 06 `
+    -Day 15
+).ToUniversalTime()
 
 # Days until Resources get deleted
 $NewerResourceDays = 7
@@ -150,11 +155,12 @@ foreach ($AzSubscription in Get-AzSubscription) {
       }
       else {
         # Get Resource Lock
-        $AzResourceLock = Get-AzResourceLock `
-          -ResourceName $AzResource.Name `
-          -ResourceType $AzResource.Type `
-          -ResourceGroupName $AzResource.ResourceGroupName
-
+        $AzResourceLock = (
+          Get-AzResourceLock `
+            -ResourceName $AzResource.Name `
+            -ResourceType $AzResource.Type `
+            -ResourceGroupName $AzResource.ResourceGroupName
+        )
         # Remove Resource Lock if existing
         if ($AzResourceLock) {
           Write-Host "Deleting Resource Lock of $($AzResource.Name)"

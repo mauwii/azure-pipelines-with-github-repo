@@ -3,7 +3,6 @@
 # configure git to make mike work
 git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-'Mauwii'}"
 git config user.email "${BUILD_REQUESTEDFOREMAIL:-'mauwii@mauwii.onmicrosoft.com'}"
-git fetch
 
 # set branchname for mike deployment
 [[ $ISPULLREQUEST == "True" ]] \
@@ -20,16 +19,14 @@ deleteVersion=$(mike list -j | jq '.[] | .version' | grep -m 1 ${versionName})
 if [[ $ISPULLREQUEST != "True" ]]; then
   echo "deploying version ${versionName}.$BUILD_BUILDID to gh-pages"
   mike deploy \
+    --push \
     --title "${versionName}" \
     --update-aliases "${versionName}.$BUILD_BUILDID" "${versionName}"
 else
-  mike delete "${versionName}"
+  mike delete --push "${versionName}"
 fi
 
 # delete the previously deployed version
 if [[ -n "${deleteVersion}" ]]; then
-  mike delete "${deleteVersion}"
+  mike delete --push "${deleteVersion}"
 fi
-
-# push to gh-pages
-git push origin gh-pages

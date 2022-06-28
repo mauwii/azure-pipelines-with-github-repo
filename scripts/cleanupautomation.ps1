@@ -1,5 +1,5 @@
 param(
-  [Switch]$LocalTest
+  [Switch]$WhatIf
 )
 
 # Connect to Azure-CLI as Service Principal
@@ -150,7 +150,7 @@ foreach ($AzSubscription in Get-AzSubscription) {
             -ResourceId $AzResource.Id `
             -Tag $Tag `
             -Operation Merge `
-            -WhatIf:$LocalTest
+            -WhatIf:$WhatIf
         )
       }
       else {
@@ -168,13 +168,13 @@ foreach ($AzSubscription in Get-AzSubscription) {
             Remove-AzResourceLock `
               -LockId $AzResourceLock.LockId `
               -Force:$true `
-              -WhatIf:$LocalTest
+              -WhatIf:$WhatIf
           )
         }
         # Remove Resource
         $RmResource = Remove-AzResource `
           -ResourceId $AzResource.Id `
-          -WhatIf:$LocalTest `
+          -WhatIf:$WhatIf `
           -ErrorAction:SilentlyContinue `
           -Force:$true
 
@@ -201,7 +201,7 @@ foreach ($AzSubscription in Get-AzSubscription) {
         Remove-AzResourceGroup `
           -Name $AzResourceGroup.ResourceGroupName `
           -Force:$true `
-          -WhatIf:$LocalTest
+          -WhatIf:$WhatIf
       )
       # Write Info to Host that ResourceGroup was deleted
       Write-Info `

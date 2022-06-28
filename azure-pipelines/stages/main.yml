@@ -29,9 +29,6 @@ parameters:
       - 'Azure Pipelines'
       - 'local'
     default: 'Azure Pipelines'
-  - name: cleanup
-    type: boolean
-    default: false
 
 stages:
   - template: bicep_stage.yml
@@ -43,7 +40,7 @@ stages:
       location: ${{ parameters.location }}
       agentpool: ${{ parameters.agentpool }}
 
-  - ${{ if eq(parameters.cleanup, 'True') }}:
+  - ${{ if in(variables['Build.SourceBranchName'], 'main', 'stable') }}:
       - template: cleanup.yml
         parameters:
           agentpool: ${{ parameters.agentpool }}

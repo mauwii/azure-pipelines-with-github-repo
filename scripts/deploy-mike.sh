@@ -15,6 +15,12 @@ versionName=${branchname//\//-}
 # find currently deployed version for this branch
 deleteVersion=$(mike list -j | jq '.[] | .version' | grep -m 1 ${versionName})
 
+# delete the previously deployed version
+if [[ -n "${deleteVersion}" ]]; then
+  mike delete "${versionName}"
+  mike delete --push "${deleteVersion}"
+fi
+
 # if not pull request deploy currnent version, otherwise delete alias
 if [[ $ISPULLREQUEST != "True" ]]; then
   echo "deploying version ${versionName}.$BUILD_BUILDID to gh-pages"
@@ -22,11 +28,4 @@ if [[ $ISPULLREQUEST != "True" ]]; then
     --push \
     --title "${versionName}" \
     --update-aliases "${versionName}.$BUILD_BUILDID" "${versionName}"
-else
-  mike delete --push "${versionName}"
-fi
-
-# delete the previously deployed version
-if [[ -n "${deleteVersion}" ]]; then
-  mike delete --push "${deleteVersion}"
 fi

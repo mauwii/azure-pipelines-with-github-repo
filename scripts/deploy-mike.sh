@@ -8,10 +8,11 @@ branchname=${branchname//\//-}
 
 deleteVersion="$(mike list -j | jq '.[] | .version' | grep -m 1 ${branchname}.)"
 
-[[ -n "${deleteVersion}" ]] && mike delete --push "${deleteVersion}" || echo "no Version deployed yet for ${branchname}"
+[[ -n "${deleteVersion}" ]] && mike delete "${deleteVersion}" || echo "no Version deployed yet for ${branchname}"
 
 if [[ $ISPULLREQUEST != "True" ]]; then
   echo "deploying version ${branchname}.$BUILD_BUILDID to gh-pages"
   mike deploy --title "${branchname}" --update-aliases "${branchname}.$BUILD_BUILDID" "${branchname}"
-  mike set-default --push main
 fi
+
+mike set-default --push main

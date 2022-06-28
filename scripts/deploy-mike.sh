@@ -3,9 +3,7 @@
 # configure git to make mike work
 git config user.name "${BUILD_SOURCEVERSIONAUTHOR:-'Mauwii'}"
 git config user.email "${BUILD_REQUESTEDFOREMAIL:-'mauwii@mauwii.onmicrosoft.com'}"
-
-# delete local gh-pages branch
-git branch -D gh-pages
+git fetch
 
 # set branchname for mike deployment
 [[ $ISPULLREQUEST == "True" ]] \
@@ -16,12 +14,14 @@ git branch -D gh-pages
 versionName=${branchname//\//-}
 
 # find currently deployed version for this branch
-deleteVersion="$(mike list -j | jq '.[] | .version' | grep -m 1 ${versionName})"
+deleteVersion=$(mike list -j | jq '.[] | .version' | grep -m 1 ${versionName})
 
 # delete the currently deployed version
-[[ -n "${deleteVersion}" ]] \
-  && mike delete "${deleteVersion}" \
-  || echo "no Version deployed yet for ${versionName}"
+if [[ -n "${deleteVersion}" ]]; then
+  mike delete "${deleteVersion}"
+else
+  echo "no Version deployed yet for ${versionName}"
+fi
 
 # if not pull request, deploy version
 if [[ $ISPULLREQUEST != "True" ]]; then

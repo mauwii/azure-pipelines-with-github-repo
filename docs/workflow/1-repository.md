@@ -12,9 +12,7 @@ In this Section you will find Information related to the Workflow of the Reposit
 | Branch name                         |  Create From   | deploy to  |                  accept PR from                  | Branch protection rules / other Info                                                                                       |
 | :---------------------------------- | :------------: | :--------: | :----------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------- |
 | main                                |    git init    |  staging   | feature/\*<br>issue/\*<br>update/\*<br>hotfix/\* | Require linear history<br>Require status checks to pass before merging<br>Require branches to be up to date before merging |
-| stable                              |  Pull-Request  | production |                main<br>hotfix/\*                 |                                                                                                                            |
 | feature/\*<br>issue/\*<br>update/\* |  Head of main  | test local |                        -                         | must be up to date with main for PR                                                                                        |
-| hotfix/*                            | Head of stable | test local |                        -                         |
 
 Main branch is used as the working branch. To develope new features, create branch from main branch called `feature/<jira-id>/<feature-name>` for new features, or `issue/<jira-id>/<issue-name>` when solving a issue. When development of the feature or issue is done, create a pull request to merge it into main branch.
 
@@ -37,7 +35,7 @@ graph LR
 
 #### Detailed
 
-##### From feature/issue to main
+##### From feature/issue/update to main
 
 ``` mermaid
 graph LR
@@ -50,20 +48,6 @@ graph LR
   mergePR --> deleteFeature;
   TryFixBugsFeature -- No --> deleteFeature[\Delete feature/issue branch\];
   TryFixBugsFeature -- Yes --> code;
-```
-
-##### From main to stable
-
-``` mermaid
-graph LR
-  main -- Pull Request ---> stable;
-  stable -- Trigger<br>Build --> validateBuild{Built<br>succesfull};
-  validateBuild -- Yes --> completePr[/merge PR/];
-  validateBuild -- No --> createHotfix;
-  completePr --> deployStable[/Deploy to<br>production/];
-  stable -. create branch .-> createHotfix[create Hotfix];
-  createHotfix -- fix bugs --> hotfix
-  hotfix -- Pull Request--> main & stable;
 ```
 
 #### commit flow example

@@ -15,14 +15,47 @@ trigger:
 
 pr: none
 
+parameters:
+  - name: bicepDir
+    displayName: Directory containing Folders with Bicep Templates
+    type: string
+    default: '$(bicepDir)'
+  - name: bicepParameter
+    displayName: Used in some templates to change Resource Name or other variables
+    type: string
+    values:
+      - dev
+      - stg
+      - prod
+    default: dev
+  - name: resourceGroupName
+    displayName: Name of the Resource Group where templates will be deployed to
+    type: string
+    default: '$(resourceGroupName)'
+  - name: azureSubscription
+    displayName: Name of the ARM-Service Connection
+    type: string
+    default: '$(azureSubscription)'
+  - name: location
+    displayName: Location where the Resources will be deployed
+    type: string
+    default: $(location)
+  - name: agentpool
+    displayName: Agent-Pool to be used
+    values:
+      - 'Azure Pipelines'
+      - 'local'
+    default: 'Azure Pipelines'
+
 variables:
   - template: variables/default.yml
 
-stages:
-  - template: stages/bicep_stage.yml
-    parameters:
-      bicepDir: '${{ variables.bicepDir }}'
-      bicepParameter: '${{ variables.environment }}'
-      resourceGroupName: '${{ variables.resourceGroupName }}'
-      azureSubscription: '${{ variables.azureSubscription }}'
-      location: '${{ variables.location }}'
+extends:
+  template: stages/bicep_stage.yml
+  parameters:
+    bicepDir: ${{ parameters.bicepDir }}
+    bicepParameter: ${{ parameters.bicepParameter }}
+    resourceGroupName: ${{ parameters.resourceGroupName }}
+    azureSubscription: ${{ parameters.azureSubscription }}
+    location: ${{ parameters.location }}
+    agentpool: ${{ parameters.agentpool }}

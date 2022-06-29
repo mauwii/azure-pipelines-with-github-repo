@@ -39,9 +39,9 @@ steps:
       scriptLocation: inlineScript
       inlineScript: |
         [[ -e main.parameters.${{parameters.bicepParameter}}.json ]] \
-          && bicepParameterFile="--parameters=@main.parameters.${{parameters.bicepParameter}}.json" \
+          && bicepParameterFile="--parameters=main.parameters.${{parameters.bicepParameter}}.json" \
           || [[ -e main.parameters.json ]] \
-          && bicepParameterFile="--parameters=@main.parameters.json" \
+          && bicepParameterFile="--parameters=main.parameters.json" \
           || echo "will try to use template without parameterfile"
         if [[ -e mg.${{parameters.bicepParameter}} ]]; then
           deploymentScope=mg
@@ -63,9 +63,9 @@ steps:
       scriptLocation: inlineScript
       inlineScript: |
         [[ -e main.parameters.${{parameters.bicepParameter}}.json ]] \
-          && bicepParameterFile="--parameters=@main.parameters.${{parameters.bicepParameter}}.json" \
+          && bicepParameterFile="--parameters=main.parameters.${{parameters.bicepParameter}}.json" \
           || [[ -e main.parameters.json ]] \
-          && bicepParameterFile="--parameters=@main.parameters.json" \
+          && bicepParameterFile="--parameters=main.parameters.json" \
           || echo "will try to use template without parameterfile"
         if [[ -e mg.${{parameters.bicepParameter}} ]]; then
           deploymentScope=mg
@@ -88,9 +88,9 @@ steps:
       workingDirectory: $(bicepDir)/$(bicepTemplateDir)
       inlineScript: |
         [[ -e main.parameters.${{parameters.bicepParameter}}.json ]] \
-          && bicepParameterFile="--parameters=@main.parameters.${{parameters.bicepParameter}}.json" \
+          && bicepParameterFile="--parameters=main.parameters.${{parameters.bicepParameter}}.json" \
           || [[ -e main.parameters.json ]] \
-          && bicepParameterFile="--parameters=@main.parameters.json" \
+          && bicepParameterFile="--parameters=main.parameters.json" \
           || echo "will try to use template without parameterfile"
         if [[ -e mg.${{parameters.bicepParameter}} ]]; then
           deploymentScope=mg

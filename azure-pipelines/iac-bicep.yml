@@ -39,7 +39,7 @@ parameters:
   - name: location
     displayName: Location where the Resources will be deployed
     type: string
-    default: $(location)
+    default: westeurope
   - name: agentpool
     displayName: Agent-Pool to be used
     values:

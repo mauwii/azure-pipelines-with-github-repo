@@ -57,22 +57,25 @@ foreach ($r in $releases) {
     --output json | ConvertFrom-Json
   foreach ($environment in $release.environments) {
     if ($environment.name -eq $Stage) {
+      Write-Host `
+      -NoNewline `
+      "$(($release.createdOn).toString("dd/MM/yyyy, HH:mm")) - Release $($release.id) was "
       if ($environment.status -eq "succeeded") {
         Write-Host `
           -NoNewline `
-          "Release $($release.id) succeeded`t"
+          "deployed"
         $success++
       }
       elseif ($environment.status -eq "canceled") {
         Write-Host `
           -NoNewline `
-          "Release $($release.id) was canceled"
+          "canceled"
         $canceled++
       }
       else {
         Write-Host `
           -NoNewline `
-          "Release $($release.id) was rejected"
+          "rejected"
         $rejected++
       }
       Write-Host ("`t", $release.description)

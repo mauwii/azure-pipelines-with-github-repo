@@ -75,10 +75,10 @@ steps:
         if [[ -e mg.${{parameters.bicepParameter}} ]]; then
           deploymentScope=mg
           deployTo="--management-group-id=$(cat mg.${{parameters.bicepParameter}})"
+          location="--location=${{parameters.location}}"
         else
           deploymentScope=group
           deployTo='--resource-group=${{ parameters.resourceGroupName }}'
-          location="--location=${{parameters.location}}"
         fi
         az deployment ${deploymentScope} what-if \
           ${deployTo} \

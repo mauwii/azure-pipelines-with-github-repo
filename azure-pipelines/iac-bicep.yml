@@ -9,6 +9,9 @@ trigger:
     include:
       - IaC/bicep/deploy
       - azure-pipelines/iac-bicep.yml
+      - azure-pipelines/stages/bicep_stage.yml
+      - azure-pipelines/stages/jobs/steps/bicep_steps.yml
+      - scripts/New-BicepMatrix.ps1
 
 pr: none
 

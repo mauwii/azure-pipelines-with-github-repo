@@ -38,11 +38,13 @@ steps:
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
-        [[ -e main.parameters.${{parameters.bicepParameter}}.json ]] \
-          && bicepParameterFile="--parameters=main.parameters.${{parameters.bicepParameter}}.json" \
-          || [[ -e main.parameters.json ]] \
-          && bicepParameterFile="--parameters=main.parameters.json" \
-          || echo "will try to use template without parameterfile"
+        if [[ -e main.parameters.${{parameters.bicepParameter}}.json ]]; then
+          bicepParameterFile="--parameters=main.parameters.${{parameters.bicepParameter}}.json"
+        elif [[ -e main.parameters.json ]]; then
+          bicepParameterFile="--parameters=main.parameters.json"
+        else
+          echo "will try to use template without parameterfile"
+        fi
         if [[ -e mg.${{parameters.bicepParameter}} ]]; then
           deploymentScope=mg
           deployTo="--management-group-id=$(cat mg.${{parameters.bicepParameter}})"
@@ -62,11 +64,13 @@ steps:
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
-        [[ -e main.parameters.${{parameters.bicepParameter}}.json ]] \
-          && bicepParameterFile="--parameters=main.parameters.${{parameters.bicepParameter}}.json" \
-          || [[ -e main.parameters.json ]] \
-          && bicepParameterFile="--parameters=main.parameters.json" \
-          || echo "will try to use template without parameterfile"
+        if [[ -e main.parameters.${{parameters.bicepParameter}}.json ]]; then
+          bicepParameterFile="--parameters=main.parameters.${{parameters.bicepParameter}}.json"
+        elif [[ -e main.parameters.json ]]; then
+          bicepParameterFile="--parameters=main.parameters.json"
+        else
+          echo "will try to use template without parameterfile"
+        fi
         if [[ -e mg.${{parameters.bicepParameter}} ]]; then
           deploymentScope=mg
           deployTo="--management-group-id=$(cat mg.${{parameters.bicepParameter}})"
@@ -87,11 +91,13 @@ steps:
       scriptLocation: inlineScript
       workingDirectory: $(bicepDir)/$(bicepTemplateDir)
       inlineScript: |
-        [[ -e main.parameters.${{parameters.bicepParameter}}.json ]] \
-          && bicepParameterFile="--parameters=main.parameters.${{parameters.bicepParameter}}.json" \
-          || [[ -e main.parameters.json ]] \
-          && bicepParameterFile="--parameters=main.parameters.json" \
-          || echo "will try to use template without parameterfile"
+        if [[ -e main.parameters.${{parameters.bicepParameter}}.json ]]; then
+          bicepParameterFile="--parameters=main.parameters.${{parameters.bicepParameter}}.json"
+        elif [[ -e main.parameters.json ]]; then
+          bicepParameterFile="--parameters=main.parameters.json"
+        else
+          echo "will try to use template without parameterfile"
+        fi
         if [[ -e mg.${{parameters.bicepParameter}} ]]; then
           deploymentScope=mg
           deployTo="--management-group-id=$(cat mg.${{parameters.bicepParameter}})"

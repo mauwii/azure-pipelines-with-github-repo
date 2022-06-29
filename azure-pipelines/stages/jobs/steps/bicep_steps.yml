@@ -38,10 +38,13 @@ steps:
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
+        [[ -e main.parameters.${{parameters.bicepParameter}}.json ]] \
+          && bicepParameterFile='@main.parameters.${{parameters.bicepParameter}}.json' \
+          || bicepParameterFile='@main.parameters.json'
         az deployment group validate \
           --resource-group ${{ parameters.resourceGroupName }} \
           --template-file main.bicep \
-          --parameters @main.parameters.${{parameters.bicepParameter}}.json
+          --parameters $bicepParameterFile
   - task: AzureCLI@2
     name: RunWhatIf
     displayName: Run what-if
@@ -51,10 +54,13 @@ steps:
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
+        [[ -e main.parameters.${{parameters.bicepParameter}}.json ]] \
+          && bicepParameterFile='@main.parameters.${{parameters.bicepParameter}}.json' \
+          || bicepParameterFile='@main.parameters.json'
         az deployment group what-if \
           --resource-group ${{ parameters.resourceGroupName }} \
           --template-file main.bicep \
-          --parameters @main.parameters.${{parameters.bicepParameter}}.json
+          --parameters $bicepParameterFile
   - task: AzureCLI@2
     name: DeployBicepFile
     condition: and(succeeded(), in('True', variables['isMain'], variables['isStable']))
@@ -65,8 +71,11 @@ steps:
       scriptLocation: inlineScript
       workingDirectory: $(bicepDir)/$(bicepTemplateDir)
       inlineScript: |
+        [[ -e main.parameters.${{parameters.bicepParameter}}.json ]] \
+          && bicepParameterFile='@main.parameters.${{parameters.bicepParameter}}.json' \
+          || bicepParameterFile='@main.parameters.json'
         az deployment group create \
           --name $(Build.BuildNumber) \
           --resource-group ${{ parameters.ResourceGroupName }} \
           --template-file main.bicep \
-          --parameters @main.parameters.${{parameters.bicepParameter}}.json
+          --parameters $bicepParameterFile

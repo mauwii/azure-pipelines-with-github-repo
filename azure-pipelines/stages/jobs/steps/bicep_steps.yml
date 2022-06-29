@@ -55,7 +55,7 @@ steps:
         fi
         az deployment ${deploymentScope} validate \
           ${deployTo} \
-          --template-file main.bicep ${bicepParameterFile}
+          --template-file main.bicep ${bicepParameterFile} ${location}
   - task: AzureCLI@2
     name: RunWhatIf
     displayName: Run what-if
@@ -82,7 +82,7 @@ steps:
         fi
         az deployment ${deploymentScope} what-if \
           ${deployTo} \
-          --template-file main.bicep ${bicepParameterFile}
+          --template-file main.bicep ${bicepParameterFile} ${location}
   - task: AzureCLI@2
     name: DeployBicepFile
     condition: and(succeeded(), in('True', variables['isMain'], variables['isStable']))

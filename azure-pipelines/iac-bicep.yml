@@ -15,6 +15,9 @@ trigger:
 
 pr: none
 
+variables:
+  - template: variables/default.yml
+
 parameters:
   - name: bicepDir
     displayName: Directory containing Folders with Bicep Templates
@@ -39,16 +42,13 @@ parameters:
   - name: location
     displayName: Location where the Resources will be deployed
     type: string
-    default: westeurope
+    default: $(location)
   - name: agentpool
     displayName: Agent-Pool to be used
     values:
       - 'Azure Pipelines'
       - 'local'
     default: 'Azure Pipelines'
-
-variables:
-  - template: variables/default.yml
 
 extends:
   template: stages/bicep_stage.yml

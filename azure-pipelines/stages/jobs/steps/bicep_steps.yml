@@ -39,12 +39,20 @@ steps:
       scriptLocation: inlineScript
       inlineScript: |
         [[ -e main.parameters.${{parameters.bicepParameter}}.json ]] \
-          && bicepParameterFile='@main.parameters.${{parameters.bicepParameter}}.json' \
-          || bicepParameterFile='@main.parameters.json'
-        az deployment group validate \
-          --resource-group ${{ parameters.resourceGroupName }} \
-          --template-file main.bicep \
-          --parameters $bicepParameterFile
+          && bicepParameterFile="--parameters=@main.parameters.${{parameters.bicepParameter}}.json" \
+          || [[ -e main.parameters.json ]] \
+          && bicepParameterFile="--parameters=@main.parameters.json" \
+          || echo "will try to use template without parameterfile"
+        if [[ -e mg.${{parameters.bicepParameter}} ]]; then
+          deploymentScope=mg
+          deployTo="--management-group-id=$(cat mg.${{parameters.bicepParameter}})"
+        else
+          deploymentScope=group
+          deployTo='--resource-group=${{ parameters.resourceGroupName }}'
+        fi
+        az deployment ${deploymentScope} validate \
+          ${deployTo} \
+          --template-file main.bicep ${bicepParameterFile}
   - task: AzureCLI@2
     name: RunWhatIf
     displayName: Run what-if
@@ -55,12 +63,20 @@ steps:
       scriptLocation: inlineScript
       inlineScript: |
         [[ -e main.parameters.${{parameters.bicepParameter}}.json ]] \
-          && bicepParameterFile='@main.parameters.${{parameters.bicepParameter}}.json' \
-          || bicepParameterFile='@main.parameters.json'
-        az deployment group what-if \
-          --resource-group ${{ parameters.resourceGroupName }} \
-          --template-file main.bicep \
-          --parameters $bicepParameterFile
+          && bicepParameterFile="--parameters=@main.parameters.${{parameters.bicepParameter}}.json" \
+          || [[ -e main.parameters.json ]] \
+          && bicepParameterFile="--parameters=@main.parameters.json" \
+          || echo "will try to use template without parameterfile"
+        if [[ -e mg.${{parameters.bicepParameter}} ]]; then
+          deploymentScope=mg
+          deployTo="--management-group-id=$(cat mg.${{parameters.bicepParameter}})"
+        else
+          deploymentScope=group
+          deployTo='--resource-group=${{ parameters.resourceGroupName }}'
+        fi
+        az deployment ${deploymentScope} what-if \
+          ${deployTo} \
+          --template-file main.bicep ${bicepParameterFile}
   - task: AzureCLI@2
     name: DeployBicepFile
     condition: and(succeeded(), in('True', variables['isMain'], variables['isStable']))
@@ -72,10 +88,18 @@ steps:
       workingDirectory: $(bicepDir)/$(bicepTemplateDir)
       inlineScript: |
         [[ -e main.parameters.${{parameters.bicepParameter}}.json ]] \
-          && bicepParameterFile='@main.parameters.${{parameters.bicepParameter}}.json' \
-          || bicepParameterFile='@main.parameters.json'
-        az deployment group create \
+          && bicepParameterFile="--parameters=@main.parameters.${{parameters.bicepParameter}}.json" \
+          || [[ -e main.parameters.json ]] \
+          && bicepParameterFile="--parameters=@main.parameters.json" \
+          || echo "will try to use template without parameterfile"
+        if [[ -e mg.${{parameters.bicepParameter}} ]]; then
+          deploymentScope=mg
+          deployTo="--management-group-id=$(cat mg.${{parameters.bicepParameter}})"
+        else
+          deploymentScope=group
+          deployTo='--resource-group=${{ parameters.resourceGroupName }}'
+        fi
+        az deployment ${deploymentScope} create \
           --name $(Build.BuildNumber) \
-          --resource-group ${{ parameters.ResourceGroupName }} \
-          --template-file main.bicep \
-          --parameters $bicepParameterFile
+          ${deployTo} \
+          --template-file main.bicep ${bicepParameterFile}

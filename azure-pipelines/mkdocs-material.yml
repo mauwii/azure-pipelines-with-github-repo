@@ -19,7 +19,7 @@ parameters:
     values:
       - '3.9'
       - '3.10'
-    default: '3.10'
+    default: '3.9'
   - name: mkdocsSiteDir
     displayName: Name of the Directory where MkDocs will be built to
     type: string

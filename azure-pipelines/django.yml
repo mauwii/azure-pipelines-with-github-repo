@@ -3,6 +3,11 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
+trigger:
+  paths:
+    include:
+      - azure-pipelines/django.yml
+
 parameters:
   - name: pythonVersions
     type: object

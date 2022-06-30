@@ -9,3 +9,7 @@
 [submodule "src/DevOpsBuildAgent"]
 	path = src/DevOpsBuildAgent
 	url = ../DevOpsBuildAgent/
+[submodule "src/msdocs-python-django-webapp-quickstart"]
+	path = src/msdocs-python-django-webapp-quickstart
+	url = https://github.com/Mauwii/msdocs-python-django-webapp-quickstart.git
+	branch = main

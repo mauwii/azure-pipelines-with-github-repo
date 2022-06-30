@@ -38,6 +38,11 @@ steps:
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
+        function az_deploy() {
+          az deployment ${deploymentScope} validate \
+            ${deployTo} \
+            --template-file main.bicep ${bicepParameterFile} ${location}
+        }
         if [[ -e main.parameters.${{ parameters.bicepParameter }}.json ]]; then
           bicepParameterFile="--parameters=main.parameters.${{ parameters.bicepParameter }}.json"
         elif [[ -e main.parameters.json ]]; then
@@ -46,16 +51,18 @@ steps:
           echo "will try to use template without parameterfile"
         fi
         if [[ -e mg ]]; then
-          deploymentScope=mg
-          deployTo="--management-group-id=$(cat mg)"
+          deploymentScope="mg"
           location="--location=${{parameters.location}}"
+          mgs="$(cat mg)"
+          for mg in ${mgs[@]}; do
+            deployTo="--management-group-id=${mg}"
+            az_deploy
+          done
         else
           deploymentScope=group
           deployTo='--resource-group=${{ parameters.resourceGroupName }}'
+          az_deploy
         fi
-        az deployment ${deploymentScope} validate \
-          ${deployTo} \
-          --template-file main.bicep ${bicepParameterFile} ${location}
   - task: AzureCLI@2
     name: RunWhatIf
     displayName: Run what-if
@@ -65,6 +72,11 @@ steps:
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
+        function az_deploy() {
+          az deployment ${deploymentScope} what-if \
+            ${deployTo} \
+            --template-file main.bicep ${bicepParameterFile} ${location}
+        }
         if [[ -e main.parameters.${{ parameters.bicepParameter }}.json ]]; then
           bicepParameterFile="--parameters=main.parameters.${{ parameters.bicepParameter }}.json"
         elif [[ -e main.parameters.json ]]; then
@@ -73,16 +85,18 @@ steps:
           echo "will try to use template without parameterfile"
         fi
         if [[ -e mg ]]; then
-          deploymentScope=mg
-          deployTo="--management-group-id=$(cat mg)"
+          deploymentScope="mg"
           location="--location=${{parameters.location}}"
+          mgs="$(cat mg)"
+          for mg in ${mgs[@]}; do
+            deployTo="--management-group-id=${mg}"
+            az_deploy
+          done
         else
           deploymentScope=group
           deployTo='--resource-group=${{ parameters.resourceGroupName }}'
+          az_deploy
         fi
-        az deployment ${deploymentScope} what-if \
-          ${deployTo} \
-          --template-file main.bicep ${bicepParameterFile} ${location}
   - task: AzureCLI@2
     name: DeployBicepFile
     condition: and(succeeded(), in('True', variables['isMain'], variables['isStable']))
@@ -93,6 +107,12 @@ steps:
       scriptLocation: inlineScript
       workingDirectory: $(bicepDir)/$(bicepTemplateDir)
       inlineScript: |
+        function az_deploy() {
+          az deployment ${deploymentScope} create \
+            --name $(Build.BuildNumber) \
+            ${deployTo} \
+            --template-file main.bicep ${bicepParameterFile} ${location}
+        }
         if [[ -e main.parameters.${{ parameters.bicepParameter }}.json ]]; then
           bicepParameterFile="--parameters=main.parameters.${{ parameters.bicepParameter }}.json"
         elif [[ -e main.parameters.json ]]; then
@@ -101,14 +121,15 @@ steps:
           echo "will try to use template without parameterfile"
         fi
         if [[ -e mg ]]; then
-          deploymentScope=mg
-          deployTo="--management-group-id=$(cat mg)"
+          deploymentScope="mg"
           location="--location=${{parameters.location}}"
+          mgs="$(cat mg)"
+          for mg in ${mgs[@]}; do
+            deployTo="--management-group-id=${mg}"
+            az_deploy
+          done
         else
           deploymentScope=group
           deployTo='--resource-group=${{ parameters.resourceGroupName }}'
+          az_deploy
         fi
-        az deployment ${deploymentScope} create \
-          --name $(Build.BuildNumber) \
-          ${deployTo} \
-          --template-file main.bicep ${bicepParameterFile} ${location}

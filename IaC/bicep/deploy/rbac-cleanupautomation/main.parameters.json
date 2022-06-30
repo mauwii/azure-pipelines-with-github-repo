@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "managementGroupIDs": {
+      "value": [
+        "mngmtgrp001",
+        "mngmtgrp002"
+      ]
+    },
+    "servicePrincipalID": {
+      "value": "30228e2d-7650-4590-9862-e72fe8971584"
+    }
+  }
+}

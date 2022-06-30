@@ -21,6 +21,9 @@ param notActions array = []
 @description('Array of ManagementGroup IDs this role should be assignable to')
 param managementGroupIDs array
 
+@description('ObjectID of the ServicePrincipal who the role should be assigned to')
+param servicePrincipalID string
+
 @description('Friendly name of the role definition')
 param roleName string = 'Custom Role - cleanupautomation'
 
@@ -45,3 +48,14 @@ resource roleDef 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' = 
     assignableScopes: assignableScopeArray
   }
 }
+
+resource roleAssign 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = [ for assignableScope in assignableScopeArray: {
+    name: guid(roleDef.id, assignableScope)
+    scope: managementGroup()
+    properties: {
+      principalId: servicePrincipalID
+      roleDefinitionId: roleDef.id
+      principalType: 'ServicePrincipal'
+      description: roleDef.properties.description
+    }
+  }]

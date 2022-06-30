@@ -10,6 +10,10 @@ parameters:
       - '3.9'
 
 steps:
+  - template: steps/checkout_submodules.yml
+    parameters:
+      submodule: src/msdocs-python-django-webapp-quickstart
+
   - ${{ each pythonVersion in parameters.pythonVersions }}:
       - task: UsePythonVersion@0
         displayName: 'Use Python ${{ pythonVersion }}'

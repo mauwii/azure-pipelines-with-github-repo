@@ -22,7 +22,7 @@ param notActions array = []
 param servicePrincipalID string
 
 @description('Friendly name of the role definition')
-param roleName string = 'Custom Role - cleanupautomation'
+param roleName string = 'Custom Role - cleanupautomation ${managementGroup().name}'
 
 @description('Detailed description of the role definition')
 param roleDescription string = 'Custom Role for the Cleanup Automation Script'

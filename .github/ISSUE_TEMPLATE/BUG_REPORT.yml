@@ -1,7 +1,7 @@
 name: 🐞 Bug Report
 description: File a bug report
-title: '[Bug]: '
-labels: ['bug', 'triage']
+title: '[bug]: '
+labels: ['bug']
 assignees:
   - mauwii
 body:
@@ -37,12 +37,7 @@ body:
     attributes:
       label: What happened?
       description: Briefly describe what happened and what you expected to happen.
-      placeholder: |
-        Tell us what you see:
-          - Step x throws error y
-
-        Also tell us what you expected to happen:
-          - Step x should deploy template y to z
+      placeholder: Tell us what you see (like Step x throws error y). Also tell us what you expected to happen (like Step x should deploy template y to z)
     validations:
       required: true
   - type: input

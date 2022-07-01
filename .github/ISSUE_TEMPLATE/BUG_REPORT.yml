@@ -1,4 +1,4 @@
-name: Bug Report
+name: 🐞 Bug Report
 description: File a bug report
 title: '[Bug]: '
 labels: ['bug', 'triage']
@@ -17,7 +17,7 @@ body:
     attributes:
       label: Jira Issue
       description: If there is already a open issue in Jira, please enter the issue's ID surrounded in Brackets [], otherwise leave empty.
-      placeholder: 'ex. [DG-42]'
+      placeholder: 'ex. [APWGR-42]'
     validations:
       required: false
   - type: markdown
@@ -36,9 +36,13 @@ body:
     id: what-happened
     attributes:
       label: What happened?
-      description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see!
-      value: 'A bug happened!'
+      description: Briefly describe what happened and what you expected to happen.
+      placeholder: |
+        Tell us what you see:
+          - Step x throws error y
+
+        Also tell us what you expected to happen:
+          - Step x should deploy template y to z
     validations:
       required: true
   - type: input
@@ -46,6 +50,6 @@ body:
     attributes:
       label: Link to a failed run of the pipeline
       description: Please open a failed pipeline run, copy the URL and paste it here.
-      placeholder: ex. https://dev.azure.com/mauwii/azure-pipelines-with-github-repo/_build/results?buildId=1337&view=results
+      placeholder: f.e. https://dev.azure.com/Mauwii/azure-pipelines-with-github-repo/_build/results?buildId=477&view=results
     validations:
       required: true

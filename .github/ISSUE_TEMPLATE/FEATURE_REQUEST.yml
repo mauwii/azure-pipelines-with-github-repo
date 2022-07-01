@@ -1,9 +1,9 @@
 name: Feature Request
 description: Request a new feature
-title: "[feature-request]: "
-labels: ["feature-request"]
+title: '[enhancement]: '
+labels: ["enhancement"]
 assignees:
-  - mauwii
+  - Mauwii
 body:
   - type: markdown
     attributes:
@@ -21,7 +21,7 @@ body:
     attributes:
       label: Jira Issue
       description: If there is already a open issue in Jira, please enter the issue's ID surrounded in Brackets [], otherwise leave empty.
-      placeholder: "ex. [DG-42]"
+      placeholder: 'ex. [DG-42]'
     validations:
       required: false
   - type: input

@@ -4,11 +4,9 @@ Thank you for contributing to this project! You must fill out the information be
 
 ### Why:
 
-Closes [Jira ID]
-
 <!--
-- If there's an existing Jira issue for your change, please put it's ID between brackets [like this].
-- If there's _not_ an existing Jira issue, nor a issue here on Github, please open one first to make it more likely that this update will be accepted: https://github.com/mauwii/django_devops/issues/new/choose. -->
+- If there's an existing Jira issue for your change, please put it's ID between brackets like this: Closes [Jira ID]
+- If there's _isn't_ an existing Jira issue, nor a issue here on Github, please open one first to make it more likely that this update will be accepted: https://github.com/Mauwii/azure-pipelines-with-github-repo/issues/new/choose. -->
 
 ### What's being changed:
 

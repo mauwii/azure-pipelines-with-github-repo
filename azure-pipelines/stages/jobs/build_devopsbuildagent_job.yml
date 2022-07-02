@@ -19,9 +19,12 @@ jobs:
           command: 'login'
       - bash: 'echo "##vso[task.setvariable variable=TAG]$(baseOS).$(baseDistro).$(baseVersion).$(baseArch).${DEVTAG:-$(Build.BuildId)}"'
         displayName: 'set $(baseArch) tag'
-        ${{ if not(in(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+        ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
           env:
             DEVTAG: 'dev'
+        ${{ if and(eq(variables['Build.Reason'], 'Schedule'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+          env:
+            DEVTAG: 'nightly'
       - bash: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
         displayName: 'qemu for $(baseArch)'
       - task: Docker@2

@@ -11,6 +11,13 @@ trigger:
       - azure-pipelines/stages/jobs/build_devopsbuildagent_job.yml
       - src/DevOpsBuildAgent
 
+schedules:
+  - cron: '0 0 * * * *'
+    displayName: 'Nightly Build'
+    branches:
+      include:
+        - refs/heads/main
+
 pr: none
 
 variables:

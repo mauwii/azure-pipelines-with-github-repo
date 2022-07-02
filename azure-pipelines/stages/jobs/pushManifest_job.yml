@@ -16,7 +16,10 @@ jobs:
           command: 'login'
       - ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
           - bash: 'echo "##vso[task.setvariable variable=DEVTAG]dev"'
-            displayName: 'set DEVTAG'
+            displayName: 'set DEVTAG to dev'
+      - ${{ if and(eq(variables['Build.Reason'], 'Schedule'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+          - bash: 'echo "##vso[task.setvariable variable=DEVTAG]nightly"'
+            displayName: 'set DEVTAG to nightly'
       - ${{ each value in parameters.matrix }}:
           - bash: |
               export ARCHPARAMETERS_${{ value.key }}="$(dockerhubuser)/$(dockerimage):$(baseOS).$(baseDistro).$(baseVersion).${{ value.key }}.${DEVTAG:-$(Build.BuildId)}"

@@ -12,11 +12,11 @@ trigger:
       - src/DevOpsBuildAgent
 
 schedules:
-  - cron: '0 0 * * * *'
-    displayName: 'Nightly Build'
+  - cron: '0 0 * * *'
+    displayName: Nightly Build
     branches:
       include:
-        - refs/heads/main
+        - main
 
 pr: none
 

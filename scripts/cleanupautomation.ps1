@@ -23,7 +23,7 @@ $InitialDate = (
 ).ToUniversalTime()
 
 # Days until Resources get deleted
-$NewerResourceDays = 0
+$NewerResourceDays = 7
 $OlderResourceDays = 14
 
 # Initialize Variables to count existing and deleted Resources/RGs

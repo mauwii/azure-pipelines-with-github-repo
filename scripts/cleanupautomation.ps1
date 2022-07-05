@@ -23,7 +23,7 @@ $InitialDate = (
 ).ToUniversalTime()
 
 # Days until Resources get deleted
-$NewerResourceDays = 7
+$NewerResourceDays = 0
 $OlderResourceDays = 14
 
 # Initialize Variables to count existing and deleted Resources/RGs
@@ -63,13 +63,15 @@ foreach ($AzSubscription in Get-AzSubscription) {
     Set-AzContext `
       -Subscription $AzSubscription.Id
   )
-  [void](az account set `
+  [void](
+    az account set `
       --subscription $AzSubscription.Id
   )
+
   # Get Resourcegroups of current Context
   $AzResourceGroups = Get-AzResourceGroup
 
-  # Add Number of ResourceGroups to AllAzRg
+  # Add Number of ResourceGroups to AllAzRgCount
   $AllAzRgCount += $AzResourceGroups.Length
 
   # Get Number of Resources in current Context
@@ -107,102 +109,105 @@ foreach ($AzSubscription in Get-AzSubscription) {
       -Value $AzResources.Length
 
     # Iterate over Resources in current Resource Group
-    foreach ($AzResource in $AzResources) {
+    $AzResources | ForEach-Object -Parallel {
 
       # Get Current Resource Creation Time
       $AzCurrentResource = (
         az resource list `
-          --location $AzResource.Location `
-          --name $AzResource.Name `
+          --location $_.Location `
+          --name $_.Name `
           --query "[].{Name:name, RG:resourceGroup, Created:createdTime, Changed:changedTime}" `
           -o json | ConvertFrom-Json
       )
 
       # Check if Resource was created before or after initial date to give devs more days to react on older resources
-      if (($AzCurrentResource.Created).ToUniversalTime() -gt $InitialDate) {
-        $DaysToDelete = $NewerResourceDays - ($CurrentUTCtime - ($AzCurrentResource.Created).ToUniversalTime()).Days
+      if (($AzCurrentResource.Created).ToUniversalTime() -gt $using:InitialDate) {
+        $DaysToDelete = (
+          $using:NewerResourceDays - (
+            $using:CurrentUTCtime - ($AzCurrentResource.Created).ToUniversalTime()
+          ).Days
+        )
       }
       else {
-        $DaysToDelete = $OlderResourceDays - ($CurrentUTCtime - $InitialDate).Days
+        $DaysToDelete = (
+          $using:OlderResourceDays - ($using:CurrentUTCtime - $using:InitialDate).Days
+        )
       }
 
       # Add/update Tag "DeletionDate" of Resource, or Delete it if defined age has been reached
       if ($DaysToDelete -gt 0) {
 
         # Write Info to Host when Resource will be deleted
-        Write-Host `
-          -NoNewline `
-          $AzCurrentResource.Name, "will be deleted in $DaysToDelete "
-        if ($DaysToDelete -gt 1) {
-          Write-Host "Days"
-        }
-        else {
-          Write-Host "Day"
-        }
-
-        # Set DeletionDate
-        $DeletionDate = $CurrentUTCtime.AddDays($DaysToDelete)
-
+        Write-Host (
+          $AzCurrentResource.Name,
+          "will get deleted on",
+          (Get-Date).AddDays($DaysToDelete).ToString("yyyy-MM-dd")
+        )
         # Create Tag
-        $Tag = @{"DeletionDate" = "$DeletionDate UTC"; }
+        $Tag = @{"DeletionDate" = "$(
+          (Get-Date).AddDays($DaysToDelete).ToUniversalTime().ToString("yyyy-MM-dd")
+          )";
+        }
         [void](
           Update-AzTag `
-            -ResourceId $AzResource.Id `
+            -ResourceId $_.Id `
             -Tag $Tag `
             -Operation Merge `
-            -WhatIf:$WhatIf
+            -WhatIf:$using:WhatIf
         )
       }
       else {
         # Get Resource Lock
         $AzResourceLock = (
           Get-AzResourceLock `
-            -ResourceName $AzResource.Name `
-            -ResourceType $AzResource.Type `
-            -ResourceGroupName $AzResource.ResourceGroupName
+            -ResourceName $_.Name `
+            -ResourceType $_.Type `
+            -ResourceGroupName $_.ResourceGroupName
         )
+
         # Remove Resource Lock if existing
         if ($AzResourceLock) {
-          Write-Host "Deleting Resource Lock of $($AzResource.Name)"
+          Write-Host "Deleting Resource Lock of $($_.Name)"
           [void](
             Remove-AzResourceLock `
               -LockId $AzResourceLock.LockId `
               -Force:$true `
-              -WhatIf:$WhatIf
+              -WhatIf:$using:WhatIf
           )
         }
+
         # Remove Resource
         $RmResource = Remove-AzResource `
-          -ResourceId $AzResource.Id `
-          -WhatIf:$WhatIf `
+          -ResourceId $_.Id `
+          -WhatIf:$using:WhatIf `
           -ErrorAction:SilentlyContinue `
           -Force:$true
 
         # Write Info and Increment Deleted Resource Count if succeeded
         if ($RmResource) {
-          Write-Host "Deleted $($AzResource.Name)"
-          $DeletedAzResourceCount++
+          Write-Host "Deleted $($_.Name)"
         }
         else {
-          Write-Host "Could not delete $($AzResource.Name)"
+          Write-Host "Could not delete $($_.Name)"
         }
       }
     }
 
     # Get Resourcecount in current Resource Group
-    $AzRgResourceCount = (
+    $AzRgResourceCountPostDeletion = (
       Get-AzResource `
         -ResourceGroupName $AzResourceGroup.ResourceGroupName
     ).Length
 
     # Delete Resourcegroup if empty
-    if ($AzRgResourceCount -eq 0) {
+    if ($AzRgResourceCountPostDeletion -eq 0) {
       [void](
         Remove-AzResourceGroup `
           -Name $AzResourceGroup.ResourceGroupName `
           -Force:$true `
           -WhatIf:$WhatIf
       )
+
       # Write Info to Host that ResourceGroup was deleted
       Write-Info `
         -Title "Deleted Resourcegroup" `
@@ -220,6 +225,9 @@ foreach ($AzSubscription in Get-AzSubscription) {
         -FinalNewLine
     }
   }
+
+  $AzResourceCountPostDeletion = (Get-AzResource).Length
+  $DeletedAzResourceCount += $AzResourceCount - $AzResourceCountPostDeletion
 
   # Write Info to Host that Subscription is done
   Write-Info `

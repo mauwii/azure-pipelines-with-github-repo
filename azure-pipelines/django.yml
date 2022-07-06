@@ -78,12 +78,13 @@ steps:
 
       - bash: |
           for testresult in $(ls -1 TEST-*.xml); do
-              echo "publishing $testresult"
-              curl -H "Content-Type: multipart/form-data" \
-                  -H "Authorization: Bearer ${jira_token}"  \
-                  -F "file=@${testresult}" \
-                  "http://${{ parameters.jiraServerName }}/rest/raven/1.0/import/execution/junit?projectKey=${{ parameters.jiraProjectKey }}"
+            echo "adding $testresult"
+            files+="--form file=@${testresult} "
           done
+          curl \
+            --header "Content-Type: multipart/form-data" \
+            --header "Authorization: Bearer ${jira_token}"  \
+            ${files[@]} "http://${{ parameters.jiraServerName }}/rest/raven/1.0/import/execution/junit/multipart?projectKey=${{ parameters.jiraProjectKey }}"
         displayName: Publish Results to Jira-XRAY
         workingDirectory: $(projectRoot)
         env:

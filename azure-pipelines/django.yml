@@ -58,13 +58,15 @@ steps:
         workingDirectory: $(projectRoot)
 
       - script: |
+          export SECRET_KEY="$(secretKey)"
+          export APPLICATIONINSIGHTS_CONNECTION_STRING="$APPLICATIONINSIGHTS_CONNECTION_STRING"
           pushd '$(projectRoot)'
           python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
         displayName: 'Run tests'
         workingDirectory: $(projectRoot)
         continueOnError: true
         env:
-          SECRET_KEY: $(secretKey)
+          secretKey: $(secretKey)
           APPLICATIONINSIGHTS_CONNECTION_STRING: $(APPLICATIONINSIGHTS_CONNECTION_STRING)
 
       - task: PublishTestResults@2

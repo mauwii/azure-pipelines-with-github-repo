@@ -13,6 +13,14 @@ parameters:
     type: object
     default:
       - '3.9'
+  - name: jiraServerName
+    displayName: Jira Instance Server Name
+    type: string
+    default: qaland.atlassian.net
+  - name: jiraProjectKey
+    displayName: Jira Project Key
+    type: string
+    default: DJANGO
 
 steps:
   - template: stages/jobs/steps/checkout_submodules.yml
@@ -50,21 +58,31 @@ steps:
         workingDirectory: $(projectRoot)
 
       - script: |
-          export SECRET_KEY="$(secretKey)"
-          export APPLICATIONINSIGHTS_CONNECTION_STRING="$APPLICATIONINSIGHTS_CONNECTION_STRING"
-          echo $SECRET_KEY
-          echo $APPLICATIONINSIGHTS_CONNECTION_STRING
           pushd '$(projectRoot)'
           python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
         displayName: 'Run tests'
         workingDirectory: $(projectRoot)
         continueOnError: true
         env:
-          secretKey: $(secretKey)
+          SECRET_KEY: $(secretKey)
           APPLICATIONINSIGHTS_CONNECTION_STRING: $(APPLICATIONINSIGHTS_CONNECTION_STRING)
 
       - task: PublishTestResults@2
+        displayName: Publish Results to DevOps
         inputs:
           testResultsFiles: '**/TEST-*.xml'
           testRunTitle: 'Python ${{ pythonVersion }}'
         condition: succeededOrFailed()
+
+      - bash: |
+          for testresult in $(ls -1 TEST-*.xml); do
+              echo "publishing $testresult"
+              curl -H "Content-Type: multipart/form-data" \
+                  -H "Authorization: Bearer ${jira_token}"  \
+                  -F "file=@${testresult}" \
+                  "http://${{ parameters.jiraServerName }}/rest/raven/1.0/import/execution/junit?projectKey=${{ parameters.jiraProjectKey }}"
+          done
+        displayName: Publish Results to Jira-XRAY
+        workingDirectory: $(projectRoot)
+        env:
+          jira_token: $(jira_token)

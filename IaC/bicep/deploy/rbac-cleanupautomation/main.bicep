@@ -4,16 +4,15 @@ targetScope = 'managementGroup'
 param actions array = [
   'Microsoft.Management/managementGroups/read'
   'Microsoft.Resources/subscriptions/resourceGroups/delete'
-  'Microsoft.Resources/tags/delete'
   'Microsoft.Authorization/locks/read'
   'Microsoft.Authorization/locks/write'
-  'Microsoft.Authorization/locks/delete'
   'Microsoft.Resources/tags/read'
   'Microsoft.Resources/tags/write'
   'Microsoft.Resources/subscriptions/resources/read'
   'Microsoft.Resources/subscriptions/resourceGroups/read'
   'Microsoft.Resources/subscriptions/read'
   'Microsoft.Resources/subscriptions/resourcegroups/resources/read'
+  '*/delete'
 ]
 
 @description('Array of notActions for the roleDefinition')

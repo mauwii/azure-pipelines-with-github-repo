@@ -17,6 +17,7 @@ steps:
       azurePowerShellVersion: 'LatestVersion'
       pwsh: true
       ScriptPath: 'scripts/cleanupautomation.ps1'
+      ScriptArguments: -NewerResourceDays 7 -OlderResourceDays 14
     env:
       ApplicationId: $(ApplicationId)
       ClientSecret: $(ClientSecret)

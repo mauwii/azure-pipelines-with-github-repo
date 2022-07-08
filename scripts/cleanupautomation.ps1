@@ -1,6 +1,24 @@
 param(
-  [Switch]$WhatIf
+  [Switch]$WhatIf,
+  [Int16]$NewerResourceDays,
+  [Int16]$OlderResourceDays
 )
+
+# Days until Resources get deleted
+if (-not($NewerResourceDays)) {
+  $NewerResourceDays = 7
+}
+if (-not($OlderResourceDays)) {
+  $OlderResourceDays = 14
+}
+
+# Set Initial Date
+$InitialDate = (
+  Get-Date `
+    -Year 2022 `
+    -Month 06 `
+    -Day 15
+).ToUniversalTime()
 
 # Connect to Azure-CLI as Service Principal
 [void](
@@ -13,18 +31,6 @@ param(
 
 # Get Current UTC-Time
 $CurrentUTCtime = (Get-Date).ToUniversalTime()
-
-# Set Initial Date
-$InitialDate = (
-  Get-Date `
-    -Year 2022 `
-    -Month 06 `
-    -Day 15
-).ToUniversalTime()
-
-# Days until Resources get deleted
-$NewerResourceDays = 7
-$OlderResourceDays = 14
 
 # Initialize Variables to count existing and deleted Resources/RGs
 $AllAzRgCount = 0
@@ -55,8 +61,13 @@ function Write-Info {
   Write-Host $Value
 }
 
-# Iterate over subscriptions
-foreach ($AzSubscription in Get-AzSubscription) {
+# Get Azure Subscriptions
+$AzSubscriptions = (
+  Get-AzSubscription
+)
+
+# Iterate over Subscriptions
+foreach ($AzSubscription in $AzSubscriptions) {
 
   # Set Context to current Subscription
   [void](
@@ -69,10 +80,10 @@ foreach ($AzSubscription in Get-AzSubscription) {
   )
 
   # Get Resourcegroups of current Context
-  $AzResourceGroups = Get-AzResourceGroup
+  $AzResourceGroups = (Get-AzResourceGroup)
 
   # Add Number of ResourceGroups to AllAzRgCount
-  $AllAzRgCount += $AzResourceGroups.Length
+  $AllAzRgCount += ($AzResourceGroups).Length
 
   # Get Number of Resources in current Context
   $AzResourceCount = (Get-AzResource).Length

@@ -2,6 +2,7 @@ targetScope = 'managementGroup'
 
 @description('Array of actions for the roleDefinition')
 param actions array = [
+  'Microsoft.Management/managementGroups/read'
   'Microsoft.Resources/subscriptions/resourceGroups/delete'
   'Microsoft.Resources/tags/delete'
   'Microsoft.Authorization/locks/read'

@@ -1,0 +1,7 @@
+{
+  "ResourceTypes": [
+    "Microsoft.KeyVault/vaults",
+    "Microsoft.Storage/storageAccounts"
+  ],
+  "ResourceIDs": []
+}

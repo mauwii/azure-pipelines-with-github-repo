@@ -30,7 +30,15 @@ $InitialDate = (
 )
 
 # Get Current UTC-Time
-$CurrentUTCtime = (Get-Date).ToUniversalTime()
+$CurrentUTCtime = (
+  Get-Date
+).ToUniversalTime()
+
+# Get Resources to be excluded
+$cleanupexeclution = (
+  Get-Content `
+    -Path ./cleanupexclution.json | ConvertFrom-Json
+)
 
 # Initialize Variables to count existing and deleted Resources/RGs
 $AllAzRgCount = 0
@@ -122,84 +130,92 @@ foreach ($AzSubscription in $AzSubscriptions) {
     # Iterate over Resources in current Resource Group
     $AzResources | ForEach-Object -Parallel {
 
-      # Get Current Resource Creation Time
-      $AzCurrentResource = (
-        az resource list `
-          --location $_.Location `
-          --name $_.Name `
-          --query "[].{Name:name, RG:resourceGroup, Created:createdTime, Changed:changedTime}" `
-          -o json | ConvertFrom-Json
-      )
-
-      # Check if Resource was created before or after initial date to give devs more days to react on older resources
-      if (($AzCurrentResource.Created).ToUniversalTime() -gt $using:InitialDate) {
-        $DaysToDelete = (
-          $using:NewerResourceDays - (
-            $using:CurrentUTCtime - ($AzCurrentResource.Created).ToUniversalTime()
-          ).Days
-        )
+      # Check if Resource should be excluded
+      if ($using:cleanupexeclution.ResourceTypes -contains $_.Type -or $using:cleanupexeclution.ResourceIDs -contains $_.ResourceId) {
+        Write-Host "Skipping" $_.ResourceName
       }
       else {
-        $DaysToDelete = (
-          $using:OlderResourceDays - ($using:CurrentUTCtime - $using:InitialDate).Days
-        )
-      }
 
-      # Add/update Tag "DeletionDate" of Resource, or Delete it if defined age has been reached
-      if ($DaysToDelete -gt 0) {
-
-        # Write Info to Host when Resource will be deleted
-        Write-Host (
-          $AzCurrentResource.Name,
-          "will get deleted on",
-          (Get-Date).AddDays($DaysToDelete).ToString("yyyy-MM-dd")
+        # Get Current Resource Creation Time
+        $AzCurrentResource = (
+          az resource list `
+            --location $_.Location `
+            --name $_.Name `
+            --query "[].{Name:name, RG:resourceGroup, Created:createdTime, Changed:changedTime}" `
+            -o json | ConvertFrom-Json
         )
-        # Create Tag
-        $Tag = @{"DeletionDate" = "$(
-          (Get-Date).AddDays($DaysToDelete).ToUniversalTime().ToString("yyyy-MM-dd")
-          )";
+
+        # Check if Resource was created before or after initial date to give devs more days to react on older resources
+        if (($AzCurrentResource.Created).ToUniversalTime() -gt $using:InitialDate) {
+          $DaysToDelete = (
+            $using:NewerResourceDays - (
+              $using:CurrentUTCtime - ($AzCurrentResource.Created).ToUniversalTime()
+            ).Days
+          )
         }
-        [void](
-          Update-AzTag `
-            -ResourceId $_.Id `
-            -Tag $Tag `
-            -Operation Merge `
-            -WhatIf:$using:WhatIf
-        )
-      }
-      else {
-        # Get Resource Lock
-        $AzResourceLock = (
-          Get-AzResourceLock `
-            -ResourceName $_.Name `
-            -ResourceType $_.Type `
-            -ResourceGroupName $_.ResourceGroupName
-        )
-
-        # Remove Resource Lock if existing
-        if ($AzResourceLock) {
-          Write-Host "Deleting Resource Lock of $($_.Name)"
-          [void](
-            Remove-AzResourceLock `
-              -LockId $AzResourceLock.LockId `
-              -Force:$true `
-              -WhatIf:$using:WhatIf
+        else {
+          $DaysToDelete = (
+            $using:OlderResourceDays - ($using:CurrentUTCtime - $using:InitialDate).Days
           )
         }
 
-        # Remove Resource
-        $RmResource = Remove-AzResource `
-          -ResourceId $_.Id `
-          -WhatIf:$using:WhatIf `
-          -ErrorAction:SilentlyContinue `
-          -Force:$true
+        # Add/update Tag "DeletionDate" of Resource, or Delete it if defined age has been reached
+        if ($DaysToDelete -gt 0) {
 
-        # Write Info and Increment Deleted Resource Count if succeeded
-        if ($RmResource) {
-          Write-Host "Deleted $($_.Name)"
+          # Write Info to Host when Resource will be deleted
+          Write-Host (
+            $AzCurrentResource.Name,
+            "will get deleted on",
+          (Get-Date).AddDays($DaysToDelete).ToString("yyyy-MM-dd")
+          )
+          # Create Tag
+          $Tag = @{"DeletionDate" = "$(
+            (Get-Date).AddDays($DaysToDelete).ToUniversalTime().ToString("yyyy-MM-dd")
+          )";
+          }
+          [void](
+            Update-AzTag `
+              -ResourceId $_.Id `
+              -Tag $Tag `
+              -Operation Merge `
+              -ErrorAction:SilentlyContinue `
+              -WhatIf:$using:WhatIf
+          )
         }
         else {
-          Write-Host "Could not delete $($_.Name)"
+          # Get Resource Lock
+          $AzResourceLock = (
+            Get-AzResourceLock `
+              -ResourceName $_.Name `
+              -ResourceType $_.Type `
+              -ResourceGroupName $_.ResourceGroupName
+          )
+
+          # Remove Resource Lock if existing
+          if ($AzResourceLock) {
+            Write-Host "Deleting Resource Lock of $($_.Name)"
+            [void](
+              Remove-AzResourceLock `
+                -LockId $AzResourceLock.LockId `
+                -Force:$true `
+                -WhatIf:$using:WhatIf
+            )
+          }
+
+          # Remove Resource
+          $RmResource = Remove-AzResource `
+            -ResourceId $_.Id `
+            -WhatIf:$using:WhatIf `
+            -ErrorAction:SilentlyContinue `
+            -Force:$true
+
+          # Write Info and Increment Deleted Resource Count if succeeded
+          if ($RmResource) {
+            Write-Host "Deleted $($_.Name)"
+          }
+          else {
+            Write-Host "Could not delete $($_.Name)"
+          }
         }
       }
     }
@@ -237,7 +253,9 @@ foreach ($AzSubscription in $AzSubscriptions) {
     }
   }
 
-  $AzResourceCountPostDeletion = (Get-AzResource).Length
+  $AzResourceCountPostDeletion = (
+    Get-AzResource
+  ).Length
   $DeletedAzResourceCount += $AzResourceCount - $AzResourceCountPostDeletion
 
   # Write Info to Host that Subscription is done

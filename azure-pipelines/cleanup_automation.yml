@@ -11,13 +11,15 @@ schedules:
 
 steps:
   - task: AzurePowerShell@5
+    displayName: 'Cleanup Script'
     inputs:
       azureSubscription: 'mngmtgrp001'
       ScriptType: 'FilePath'
       azurePowerShellVersion: 'LatestVersion'
       pwsh: true
-      ScriptPath: 'scripts/cleanupautomation.ps1'
+      ScriptPath: 'cleanupautomation.ps1'
       ScriptArguments: -NewerResourceDays 7 -OlderResourceDays 14
+      workingDirectory: 'scripts'
     env:
       ApplicationId: $(ApplicationId)
       ClientSecret: $(ClientSecret)

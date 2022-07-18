@@ -40,8 +40,8 @@ stages:
       location: ${{ parameters.location }}
       agentpool: ${{ parameters.agentpool }}
 
-  - ${{ if in(variables['Build.SourceBranchName'], 'main', 'stable') }}:
-      - template: cleanup.yml
-        parameters:
-          agentpool: ${{ parameters.agentpool }}
-          resourceGroupName: ${{ parameters.resourceGroupName }}
+  # - ${{ if in(variables['Build.SourceBranchName'], 'main', 'stable') }}:
+  #     - template: cleanup.yml
+  #       parameters:
+  #         agentpool: ${{ parameters.agentpool }}
+  #         resourceGroupName: ${{ parameters.resourceGroupName }}

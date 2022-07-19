@@ -18,7 +18,7 @@ steps:
       ScriptType: 'FilePath'
       azurePowerShellVersion: 'LatestVersion'
       pwsh: true
-      ScriptPath: 'cleanupautomation.ps1'
+      ScriptPath: 'scripts/cleanupautomation.ps1'
       ScriptArguments: -NewerResourceDays 7 -OlderResourceDays 14
       workingDirectory: 'scripts'
     env:

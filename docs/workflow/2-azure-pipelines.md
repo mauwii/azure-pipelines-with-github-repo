@@ -110,6 +110,16 @@ This Pipeline will delete Resources in Subscriptions of the used Service Princip
 
 ??? quote "scripts/cleanupautomation.ps1"
 
+    This is the Script which will be used to clean-up the Resources
+
     ```powershell linenums="1"
     --8<-- "scripts/cleanupautomation.ps1"
+    ```
+
+??? quote "scripts/cleanupexclution.json"
+
+    This is a configuration File for ResourceTypes/ResourceIDs which should be excluded.
+
+    ```json linenums="1"
+    --8<-- "scripts/cleanupexclution.json"
     ```

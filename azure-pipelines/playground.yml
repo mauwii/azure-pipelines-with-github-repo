@@ -14,6 +14,9 @@ parameters:
       - C
     default: 'A'
 
+variables:
+  - group: playground_${{ parameters['just_a_test'] }}
+
 steps:
   - task: Bash@3
     displayName: Bash Task

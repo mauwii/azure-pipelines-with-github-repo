@@ -6,7 +6,7 @@ trigger:
 pr: none
 
 parameters:
-  - name: just-a-test
+  - name: just_a_test
     type: string
     values:
       - A
@@ -21,6 +21,6 @@ steps:
       script: |
         export
     env:
-      A_TEST_VAR: ${{ parameters.just-a-test }}
-      ${{ if eq(parameters.just-a-test, 'C') }}:
+      A_TEST_VAR: ${{ parameters['just_a_test'] }}
+      ${{ if eq(parameters['just_a_test'], 'C') }}:
         ANOTHER_TEST_VAR: 'I am just another Testvariable'

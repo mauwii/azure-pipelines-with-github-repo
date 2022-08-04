@@ -12,6 +12,7 @@ parameters:
       - A
       - B
       - C
+    default: 'A'
 
 steps:
   - task: Bash@3

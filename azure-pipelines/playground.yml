@@ -20,7 +20,7 @@ parameters:
 variables:
   - group: playground_${{ parameters['just_a_test'] }}
   - name: another-variable
-    value: ${{ parameter['another-parameter'] }}
+    value: ${{ parameters['another-parameter'] }}
 
 steps:
   - task: Bash@3

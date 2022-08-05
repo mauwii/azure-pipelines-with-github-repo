@@ -13,9 +13,14 @@ parameters:
       - B
       - C
     default: 'A'
+  - name: another-parameter
+    type: boolean
+    default: false
 
 variables:
   - group: playground_${{ parameters['just_a_test'] }}
+  - name: another-variable
+    value: ${{ parameter['another-parameter'] }}
 
 steps:
   - task: Bash@3

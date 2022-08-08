@@ -16,6 +16,9 @@ parameters:
   - name: another-parameter
     type: boolean
     default: false
+  - name: optional
+    type: string
+    default: ''
 
 variables:
   - group: playground_${{ parameters['just_a_test'] }}
@@ -31,3 +34,5 @@ steps:
         env
     env:
       variableGroupSecret: $(variableGroupSecret)
+      ${{ if ne(parameters.optional, '') }}:
+        optional: ${{ parameters.optional }}

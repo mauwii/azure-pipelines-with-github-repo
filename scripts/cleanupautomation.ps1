@@ -131,8 +131,23 @@ foreach ($AzSubscription in $AzSubscriptions) {
     $AzResources | ForEach-Object -Parallel {
 
       # Check if Resource should be excluded
-      if ($using:cleanupexeclution.ResourceTypes -contains $_.Type -or $using:cleanupexeclution.ResourceIDs -contains $_.ResourceId) {
+      if ($using:cleanupexeclution.ResourceTypes -contains $_.Type `
+          -or $using:cleanupexeclution.ResourceIDs -contains $_.ResourceId
+      ) {
         Write-Host "Skipping" $_.ResourceName
+
+        # Create/update Tag
+        $Tag = @{
+          "DeletionDate" = "skipped";
+        }
+        [void](
+          Update-AzTag `
+            -ResourceId $_.Id `
+            -Tag $Tag `
+            -Operation Merge `
+            -ErrorAction:SilentlyContinue `
+            -WhatIf:$using:WhatIf
+        )
       }
       else {
 
@@ -169,9 +184,8 @@ foreach ($AzSubscription in $AzSubscriptions) {
           (Get-Date).AddDays($DaysToDelete).ToString("yyyy-MM-dd")
           )
           # Create Tag
-          $Tag = @{"DeletionDate" = "$(
-            (Get-Date).AddDays($DaysToDelete).ToUniversalTime().ToString("yyyy-MM-dd")
-          )";
+          $Tag = @{
+            "DeletionDate" = "$((Get-Date).AddDays($DaysToDelete).ToUniversalTime().ToString("yyyy-MM-dd"))";
           }
           [void](
             Update-AzTag `

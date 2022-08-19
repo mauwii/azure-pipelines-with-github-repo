@@ -35,9 +35,9 @@ $CurrentUTCtime = (
 ).ToUniversalTime()
 
 # Get Resources to be excluded
-$cleanupexeclution = (
+$cleanupexclusion = (
   Get-Content `
-    -Path ./cleanupexclution.json | ConvertFrom-Json
+    -Path ./cleanupexclusion.json | ConvertFrom-Json
 )
 
 # Initialize Variables to count existing and deleted Resources/RGs
@@ -131,8 +131,8 @@ foreach ($AzSubscription in $AzSubscriptions) {
     $AzResources | ForEach-Object -Parallel {
 
       # Check if Resource should be excluded
-      if ($using:cleanupexeclution.ResourceTypes -contains $_.Type `
-          -or $using:cleanupexeclution.ResourceIDs -contains $_.ResourceId
+      if ($using:cleanupexclusion.ResourceTypes -contains $_.Type `
+          -or $using:cleanupexclusion.ResourceIDs -contains $_.ResourceId
       ) {
         Write-Host "Skipping" $_.ResourceName
 

@@ -116,10 +116,10 @@ This Pipeline will delete Resources in Subscriptions of the used Service Princip
     --8<-- "scripts/cleanupautomation.ps1"
     ```
 
-??? quote "scripts/cleanupexclution.json"
+??? quote "scripts/cleanupexclusion.json"
 
     This is a configuration File for ResourceTypes/ResourceIDs which should be excluded.
 
     ```json linenums="1"
-    --8<-- "scripts/cleanupexclution.json"
+    --8<-- "scripts/cleanupexclusion.json"
     ```

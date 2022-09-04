@@ -3,6 +3,9 @@ trigger:
     include:
       - azure-pipelines/playground.yml
 
+pool:
+  name: local
+
 pr: none
 
 parameters:

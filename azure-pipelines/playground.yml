@@ -34,7 +34,7 @@ steps:
     inputs:
       targetType: inline
       script: |
-        env
+        export
     env:
       variableGroupSecret: $(variableGroupSecret)
       ${{ if ne(parameters.optional, '') }}:

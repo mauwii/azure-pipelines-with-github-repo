@@ -38,6 +38,6 @@ steps:
         echo "optional ${optional:+was set to }${optional:-was empty}"
     env:
       variableGroupSecret: $(variableGroupSecret)
-      justatest: ${parameters['just_a_test']}
+      justatest: ${{ parameters['just_a_test'] }}
       ${{ if ne(parameters.optional, '') }}:
         optional: ${{ parameters.optional }}

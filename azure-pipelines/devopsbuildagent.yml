@@ -44,7 +44,7 @@ parameters:
         baseArch: 'amd64'
         targetProc: 'x64'
       arm64v8:
-        baseArch: 'arm64v8'
+        baseArch: 'arm64/v8'
         targetProc: 'arm64'
   - name: maxParallelJobs
     type: number

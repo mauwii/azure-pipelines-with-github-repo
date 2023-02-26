@@ -36,6 +36,8 @@ jobs:
           Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
           tags: '$(TAG)'
           arguments: '--build-arg "BASEARCH=$(baseArch)" --build-arg "targetproc=$(targetProc)"'
+        env:
+          TARGETPLATFORM: 'linux/$(baseArch)'
       - task: Docker@2
         displayName: 'Push $(baseArch)'
         inputs:

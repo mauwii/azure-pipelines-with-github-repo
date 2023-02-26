@@ -25,7 +25,7 @@ jobs:
         ${{ if and(eq(variables['Build.Reason'], 'Schedule'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
           env:
             DEVTAG: 'nightly'
-      - bash: 'docker run --rm --privileged moby/buildkit'
+      - bash: 'docker run --rm --privileged --detach moby/buildkit'
         displayName: 'Run BuildKit'
       - task: Docker@2
         displayName: 'Build $(baseArch)'

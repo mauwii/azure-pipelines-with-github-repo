@@ -1,15 +1,16 @@
 [submodule "src/mkdocs-material"]
 	path = src/mkdocs-material
-	url = https://github.com/Mauwii/mkdocs-material
+	url = ../mkdocs-material
 	branch = master
 [submodule "src/opencensus-with-fastapi-and-azure-monitor"]
 	path = src/opencensus-with-fastapi-and-azure-monitor
-	url = https://github.com/Mauwii/opencensus-with-fastapi-and-azure-monitor.git
+	url = ../opencensus-with-fastapi-and-azure-monitor
 	branch = main
 [submodule "src/DevOpsBuildAgent"]
 	path = src/DevOpsBuildAgent
 	url = ../DevOpsBuildAgent/
+	branch = main
 [submodule "src/msdocs-python-django-webapp-quickstart"]
 	path = src/msdocs-python-django-webapp-quickstart
-	url = https://github.com/Mauwii/msdocs-python-django-webapp-quickstart.git
+	url = ../msdocs-python-django-webapp-quickstart
 	branch = main

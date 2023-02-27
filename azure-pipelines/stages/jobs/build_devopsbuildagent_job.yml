@@ -25,19 +25,29 @@ jobs:
         ${{ if and(eq(variables['Build.Reason'], 'Schedule'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
           env:
             DEVTAG: 'nightly'
-      - bash: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
-        displayName: 'qemu for $(baseArch)'
+      - bash: |
+          docker run \
+            --privileged \
+            --rm \
+            tonistiigi/binfmt \
+            --install all
+        displayName: 'Install binfmt'
       - task: Docker@2
-        displayName: 'build $(baseArch)'
+        displayName: 'Build $(baseArch)'
         inputs:
           containerRegistry: 'docker-mauwii'
           repository: 'mauwii/devopsbuildagent'
           command: 'build'
           Dockerfile: 'src/DevOpsBuildAgent/Dockerfile'
           tags: '$(TAG)'
-          arguments: '--build-arg "BASEARCH=$(baseArch)" --build-arg "targetproc=$(targetProc)"'
+          arguments: |
+            --platform "linux/$(baseArch)"
+            --build-arg "BASEARCH=$(baseArch)"
+            --build-arg "targetproc=$(targetProc)"
+        env:
+          DOCKER_BUILDKIT: 1
       - task: Docker@2
-        displayName: 'push $(baseArch)'
+        displayName: 'Push $(baseArch)'
         inputs:
           containerRegistry: 'docker-mauwii'
           repository: 'mauwii/devopsbuildagent'

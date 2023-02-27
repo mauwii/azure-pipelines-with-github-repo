@@ -25,6 +25,13 @@ jobs:
         ${{ if and(eq(variables['Build.Reason'], 'Schedule'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
           env:
             DEVTAG: 'nightly'
+      - bash: |
+          docker run \
+            --privileged \
+            --rm \
+            tonistiigi/binfmt \
+            --install all
+        displayName: 'Install binfmt'
       - task: Docker@2
         displayName: 'Build $(baseArch)'
         inputs:
